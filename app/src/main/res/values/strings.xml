@@ -1,0 +1,101 @@
+<resources>
+    <string name="app_name" translatable="false">Quizle</string>
+
+    <string name="issue_type_title">ISSUE TYPE</string>
+    <string name="issue_type_incorrect_answer">Incorrect Answer</string>
+    <string name="issue_type_question_unclear">Question is Unclear</string>
+    <string name="issue_type_typo_grammar_mistake">Typo or Grammar Mistake</string>
+    <string name="issue_type_other_label">Other</string>
+
+
+
+    <string name="seconds_short">%d Sec</string>
+    <string name="minutes_short">%d Min</string>
+    <string name="hours_minutes_short">%1$d Hr %2$d Min</string>
+    <string name="hours_short">%1$d Hr</string>
+    <string name="english">English</string>
+    <string name="arabic">العربية</string>
+
+
+
+    <string name="error_no_internet">No internet connection. Please check your network.</string>
+    <string name="error_request_timeout">Request timed out. Please try again later.</string>
+    <string name="error_serialization">Failed to process data. Please try again.</string>
+    <string name="error_server">Server error occurred. Please try again later.</string>
+    <string name="error_too_many_requests">Too many requests. Please slow down.</string>
+    <string name="error_request_entity_too_large">File upload too large. Please upload a smaller file.</string>
+    <string name="error_internal_server">Internal server error.</string>
+    <string name="error_not_found">Not data found.</string>
+    <string name="error_service_unavailable">Service unavailable.</string>
+    <string name="error_unauthorized">Unauthorized.</string>
+    <string name="error_unknown">An unknown error occurred. Please try again.</string>
+    <string name="error_data_conflict">Data conflict. Please review server information and try again.</string>
+
+
+    <string name="invalid_custom_time">Time must be greater than 0 min</string>
+    <string name="completion_date_message">Completed on: %1$s</string>
+    <string name="search_for_title_subtitle_or_tag">Search for title, subtitle or tag</string>
+    <string name="loading">Loading</string>
+    <string name="delete">Delete</string>
+    <string name="try_again">Try Again</string>
+    <string name="total_quizzes">Total Quizzes</string>
+    <string name="correct_answers">Correct Answers</string>
+    <string name="accurate_rate">Accurate Rate</string>
+    <string name="report_an_issue">Report an issue</string>
+    <string name="additional_comment">Additional Comment</string>
+    <string name="issue_type">ISSUE TYPE</string>
+    <string name="incorrect_answer">Incorrect Answer</string>
+    <string name="question_is_unclear">Question is unclear</string>
+    <string name="type_or_grammar_mistaken">Type or Grammar Mistaken</string>
+    <string name="describe_the_issue_in_more_detail_optional">Describe the issue in more detail (optional)</string>
+    <string name="submit_report">Submit Report</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="remember_me">Remember me</string>
+    <string name="_3_months">(3 Months)</string>
+    <string name="forgot_your_password">Forgot your password?</string>
+    <string name="you_don_t_have_an_account">You don\'t have an account</string>
+    <string name="signup">SignUp</string>
+    <string name="edit_profile">Edit Profile</string>
+    <string name="full_name">Full Name</string>
+    <string name="save_changes">Save Changes</string>
+    <string name="male">Male</string>
+    <string name="female">Female</string>
+    <string name="correct">Correct</string>
+    <string name="total">Total</string>
+    <string name="quiz_question">Quiz Question</string>
+    <string name="finish">#### Finish ####</string>
+    <string name="return_home">Return Home</string>
+    <string name="settings">Settings</string>
+    <string name="enable_quiz_time">Enable Quiz Time</string>
+    <string name="use_custom_quiz_time">Use Custom Quiz Time</string>
+    <string name="min">Min</string>
+    <string name="language">Language</string>
+    <string name="save">Save</string>
+    <string name="logout">Logout</string>
+    <string name="your_name">Your name</string>
+    <string name="confirm_password">Confirm password</string>
+    <string name="login">Login</string>
+    <string name="loading_please_wait">Loading, please wait</string>
+    <string name="try_to_search_for_a_topic">Try to search for a topic</string>
+    <string name="home">Home</string>
+    <string name="topic">Topic</string>
+    <string name="favorite">Favorite</string>
+    <string name="history">History</string>
+    <string name="new_update_available">New Update Available %1$s</string>
+    <string name="show_less">Show Less</string>
+    <string name="show_more">Show More</string>
+    <string name="what_s_new">What\'s New:</string>
+
+
+    <string name="validation_name_empty">Name can\'t be empty.</string>
+    <string name="validation_name_too_short">Name must be at least 2 characters long.</string>
+    <string name="validation_email_empty">Email can\'t be empty.</string>
+    <string name="validation_email_invalid">Invalid email format.</string>
+    <string name="validation_password_empty">Password can\'t be empty.</string>
+    <string name="validation_password_too_short">Password must be at least 8 characters long.</string>
+    <string name="validation_confirm_password_empty">Confirm Password can\'t be empty.</string>
+    <string name="validation_passwords_no_match">Passwords don\'t match.</string>
+
+
+</resources>

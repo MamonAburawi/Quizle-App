@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+        <string name="english">English</string>
+        <string name="arabic">العربية</string>
+
+        <string name="issue_type_title">نوع المشكلة</string>
+        <string name="issue_type_incorrect_answer">إجابة غير صحيحة</string>
+        <string name="issue_type_question_unclear">سؤال غير واضح</string>
+        <string name="issue_type_typo_grammar_mistake">خطأ إملائي أو نحوي</string>
+        <string name="issue_type_other_label">أخرى</string>
+
+
+
+        <string name="seconds_short">ثانية %d</string>
+        <string name="minutes_short">دقيقة %d</string>
+        <string name="hours_minutes_short">ساعة %1$d دقيقة %2$d</string>
+        <string name="hours_short">%1$d ساعة</string>
+
+        <string name="error_no_internet">لا يوجد اتصال بالإنترنت. يرجى التحقق من الشبكة.</string>
+        <string name="error_request_timeout">انتهت مهلة الطلب. يرجى المحاولة مرة أخرى لاحقًا.</string>
+        <string name="error_serialization">فشل في معالجة البيانات. يرجى المحاولة مرة أخرى.</string>
+        <string name="error_server">حدث خطأ في الخادم. يرجى المحاولة مرة أخرى لاحقًا.</string>
+        <string name="error_too_many_requests">عدد كبير جدًا من الطلبات. يرجى التمهل.</string>
+        <string name="error_request_entity_too_large">حجم الملف المحمّل كبير جدًا. يرجى تحميل ملف أصغر.</string>
+        <string name="error_internal_server">خطأ داخلي في الخادم.</string>
+        <string name="error_not_found">لا توجد بيانات.</string>
+        <string name="error_service_unavailable">الخدمة غير متاحة.</string>
+        <string name="error_unauthorized">غير مصرح به.</string>
+        <string name="error_unknown">حدث خطأ غير معروف. يرجى المحاولة مرة أخرى.</string>
+        <string name="error_data_conflict">تعارض في البيانات. يرجى مراجعة معلومات الخادم والمحاولة مرة أخرى.</string>
+
+        <string name="invalid_custom_time">الوقت يجب أن يكون أكبر من 0 دقيقة</string>
+        <string name="completion_date_message">أُكمل في: %1$s</string>
+        <string name="search_for_title_subtitle_or_tag">ابحث عن عنوان أو عنوان فرعي أو وسم</string>
+        <string name="loading">جارٍ التحميل</string>
+        <string name="delete">حذف</string>
+        <string name="try_again">حاول مرة أخرى</string>
+        <string name="total_quizzes">إجمالي الاختبارات</string>
+        <string name="correct_answers">الإجابات الصحيحة</string>
+        <string name="accurate_rate">معدل الدقة</string>
+        <string name="report_an_issue">الإبلاغ عن مشكلة</string>
+        <string name="additional_comment">تعليق إضافي</string>
+        <string name="issue_type">نوع المشكلة</string>
+        <string name="incorrect_answer">إجابة غير صحيحة</string>
+        <string name="question_is_unclear">السؤال غير واضح</string>
+        <string name="type_or_grammar_mistaken">خطأ إملائي أو نحوي</string>
+        <string name="describe_the_issue_in_more_detail_optional">صف المشكلة بمزيد من التفصيل (اختياري)</string>
+        <string name="submit_report">إرسال البلاغ</string>
+        <string name="email">البريد الإلكتروني</string>
+        <string name="password">كلمة المرور</string>
+        <string name="remember_me">تذكرني</string>
+        <string name="_3_months">(3 أشهر)</string>
+        <string name="forgot_your_password">هل نسيت كلمة المرور؟</string>
+        <string name="you_don_t_have_an_account">ليس لديك حساب</string>
+        <string name="signup">إنشاء حساب</string>
+        <string name="edit_profile">تعديل الملف الشخصي</string>
+        <string name="full_name">الاسم الكامل</string>
+        <string name="save_changes">حفظ التغييرات</string>
+        <string name="male">ذكر</string>
+        <string name="female">أنثى</string>
+        <string name="correct">صحيح</string>
+        <string name="total">الإجمالي</string>
+        <string name="quiz_question">سؤال الاختبار</string>
+        <string name="finish">#### النهاية ####</string>
+        <string name="return_home">العودة للرئيسية</string>
+        <string name="settings">الإعدادات</string>
+        <string name="enable_quiz_time">تفعيل وقت الاختبار</string>
+        <string name="use_custom_quiz_time">استخدام وقت اختبار مخصص</string>
+        <string name="min">دقيقة</string>
+        <string name="language">اللغة</string>
+        <string name="save">حفظ</string>
+        <string name="logout">تسجيل الخروج</string>
+        <string name="your_name">اسمك</string>
+        <string name="confirm_password">تأكيد كلمة المرور</string>
+        <string name="login">تسجيل الدخول</string>
+        <string name="loading_please_wait">جاري التحميل، الرجاء الانتظار</string>
+        <string name="try_to_search_for_a_topic">حاول البحث عن موضوع</string>
+        <string name="home">الرئيسية</string>
+        <string name="topic">الموضوع</string>
+        <string name="favorite">المفضلة</string>
+        <string name="history">السجل</string>
+        <string name="new_update_available">يوجد تحديث جديد %1$s</string>
+        <string name="show_less">عرض أقل</string>
+        <string name="show_more">عرض المزيد</string>
+        <string name="what_s_new">ما الجديد:</string>
+
+        <string name="validation_name_empty">لا يمكن أن يكون الاسم فارغاً.</string>
+        <string name="validation_name_too_short">يجب أن يتكون الاسم من حرفين على الأقل.</string>
+        <string name="validation_email_empty">لا يمكن أن يكون البريد الإلكتروني فارغاً.</string>
+        <string name="validation_email_invalid">صيغة البريد الإلكتروني غير صالحة.</string>
+        <string name="validation_password_empty">لا يمكن أن تكون كلمة المرور فارغة.</string>
+        <string name="validation_password_too_short">يجب أن تتكون كلمة المرور من 8 أحرف على الأقل.</string>
+        <string name="validation_confirm_password_empty">لا يمكن أن تكون خانة تأكيد كلمة المرور فارغة.</string>
+        <string name="validation_passwords_no_match">كلمات المرور غير متطابقة.</string>
+
+
+</resources>
