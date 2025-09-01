@@ -6,4 +6,6 @@ class FeatureA {
     fun updated(){}
     fun delete() {}
 
+    fun add(){}
+
 }
