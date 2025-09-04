@@ -24,6 +24,8 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlin.time.Duration.Companion.milliseconds
+import kotlin.time.Duration.Companion.seconds
 
 class QuizViewModel(
     private val quizQuestionRepository: QuizQuestionRepository,
@@ -179,9 +181,14 @@ class QuizViewModel(
     }
 
     private suspend fun getQuizQuestions(topicId: String) {
+        val startTimeOut = System.currentTimeMillis()
+//        Log.i("QuizViewModel", " start timeout: $startTimeOut")
         quizQuestionRepository.loadQuizQuestions(topicId)
             .onSuccess(
                 onDataSuccess = { questions ->
+                    val endTimeOut = System.currentTimeMillis()
+//                    Log.i("QuizViewModel", "end timeout: ${endTimeOut}")
+                    Log.i("QuizViewModel", "duration request: ${(endTimeOut - startTimeOut).milliseconds}")
                     _state.update { it.copy(quizQuestions = questions) }
                 }
             )
