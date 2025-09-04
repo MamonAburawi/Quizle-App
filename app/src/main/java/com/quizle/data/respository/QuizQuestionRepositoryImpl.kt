@@ -36,7 +36,8 @@ class QuizQuestionRepositoryImpl(
                     Success(questions)
                 }
                 is Failure -> {
-                    val cachedQuestions = quizQuestionDao.getAllQuizQuestion().entityToQuizQuestions()
+                    val cachedQuestions = topicId?.let { quizQuestionDao.getQuizQuestionsByTopicId(it) }
+                        ?.entityToQuizQuestions() ?: emptyList()
                     if (cachedQuestions.isNotEmpty()){
                         Success(cachedQuestions)
                     }else {

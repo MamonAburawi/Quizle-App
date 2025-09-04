@@ -19,6 +19,9 @@ interface QuizQuestionDao {
     @Query("SELECT * FROM quiz_question")
     suspend fun getAllQuizQuestion(): List<QuizQuestionEntity>
 
+    @Query("SELECT * FROM quiz_question WHERE topicId = :topicId")
+    suspend fun getQuizQuestionsByTopicId(topicId: String): List<QuizQuestionEntity>
+
     @Query("SELECT * FROM quiz_question WHERE id = :questionId")
     suspend fun getQuizQuestionById(questionId: String): QuizQuestionEntity?
 
