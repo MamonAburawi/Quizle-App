@@ -20,13 +20,29 @@ import com.quizle.data.util.Constant.TOPICS_SEARCH_ROUTE
 import com.quizle.domain.util.DataError
 import com.quizle.domain.util.Result
 import io.ktor.client.HttpClient
+import io.ktor.client.engine.cio.CIO
+import io.ktor.client.plugins.HttpTimeout
+import io.ktor.client.plugins.cache.HttpCache
+import io.ktor.client.plugins.cache.storage.FileStorage
+import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
+import io.ktor.client.plugins.defaultRequest
+import io.ktor.client.plugins.logging.LogLevel
+import io.ktor.client.plugins.logging.Logger
+import io.ktor.client.plugins.logging.Logging
+import io.ktor.client.plugins.logging.SIMPLE
 import io.ktor.client.request.bearerAuth
 import io.ktor.client.request.get
 import io.ktor.client.request.header
 import io.ktor.client.request.parameter
 import io.ktor.client.request.post
 import io.ktor.client.request.setBody
+import io.ktor.http.ContentDisposition.Companion.File
+import io.ktor.http.ContentType
 import io.ktor.http.HttpHeaders
+import io.ktor.http.contentType
+import io.ktor.serialization.kotlinx.json.json
+import kotlinx.serialization.json.Json
+import java.io.File
 
 class KtorQuizRemoteDataSource(
     private val httpClient: HttpClient,
@@ -43,12 +59,13 @@ class KtorQuizRemoteDataSource(
         }
     }
 
-    override suspend fun loadTopicQuestions(topicId: String?): Result< List<QuizQuestionDto>,DataError> {
-        return safeCall<List<QuizQuestionDto>> {
-            httpClient.get(urlString = QUESTIONS_ROUTE){
-                header(HttpHeaders.AcceptLanguage, language)
-                parameter(key = Constant.TOPIC_ID_PARAMETER, value = topicId)
+    override suspend fun loadTopicQuestions(topicId: String?): Result<List<QuizQuestionDto>, DataError> {
 
+        return safeCall<List<QuizQuestionDto>> {
+            httpClient.get(urlString = QUESTIONS_ROUTE) {
+                header(HttpHeaders.AcceptLanguage, language)
+//                header( "Cache-Control", "public, max-age=60")
+                parameter(key = Constant.TOPIC_ID_PARAMETER, value = topicId)
             }
         }
     }
