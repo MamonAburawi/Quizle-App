@@ -14,7 +14,7 @@ suspend fun <T> retryNetworkRequest(
 ): T = retrying(
     fallbackValue = fallbackValue,
     tryCnt = 3, // Total attempts, the request will be retried 2 times
-    intervalMillis = { 2000L * it }, // Delay: 2s, 4s
+    intervalMillis = { 2000L * it }, // Delay: 2s, 4s between every request
     retryCheck = networkRetryCheck,
     block = block
 )

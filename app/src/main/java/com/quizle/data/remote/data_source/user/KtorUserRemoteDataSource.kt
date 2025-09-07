@@ -22,6 +22,7 @@ import com.quizle.data.utils.Constant.USER_ROUTE
 import com.quizle.data.utils.Constant.USER_TOKEN_EXP_PARAMETER
 import com.quizle.data.utils.FileReader
 import com.quizle.data.utils.ServerDataError
+import com.quizle.data.utils.retryNetworkRequest
 import com.quizle.domain.utils.Result
 import io.ktor.client.HttpClient
 import io.ktor.client.plugins.onUpload
@@ -46,8 +47,10 @@ class KtorUserRemoteDataSource(
     private val language = appPreferences.loadSettings().language
     override suspend fun getUserById(id: String): Result<UserDto, ServerDataError> {
         return safeCall<UserDto> {
-            httpClient.get(urlString = "$USER_ROUTE/$id"){
-                header(HttpHeaders.AcceptLanguage, language)
+            retryNetworkRequest {
+                httpClient.get(urlString = "$USER_ROUTE/$id"){
+                    header(HttpHeaders.AcceptLanguage, language)
+                }
             }
         }
     }
@@ -56,9 +59,11 @@ class KtorUserRemoteDataSource(
 
     override suspend fun updateUser(user: UserDto): Result<String, ServerDataError> {
         return safeCall<String> {
-            httpClient.patch(urlString = USER_UPDATE_ROUTE){
-                header(HttpHeaders.AcceptLanguage, language)
-                setBody(user)
+            retryNetworkRequest {
+                httpClient.patch(urlString = USER_UPDATE_ROUTE){
+                    header(HttpHeaders.AcceptLanguage, language)
+                    setBody(user)
+                }
             }
         }
     }
@@ -66,11 +71,13 @@ class KtorUserRemoteDataSource(
 
     override suspend fun login(email: String, password: String, tokenExp: Long?): Result<UserDto, ServerDataError> {
         return safeCall<UserDto> {
-            httpClient.post(urlString = USER_LOGIN_ROUTE){
-                header(HttpHeaders.AcceptLanguage, language)
-                parameter(key = USER_EMAIL_PARAMETER, value = email)
-                parameter(key = USER_PASSWORD_PARAMETER, value = password)
-                parameter(key = USER_TOKEN_EXP_PARAMETER, value = tokenExp)
+            retryNetworkRequest {
+                httpClient.post(urlString = USER_LOGIN_ROUTE){
+                    header(HttpHeaders.AcceptLanguage, language)
+                    parameter(key = USER_EMAIL_PARAMETER, value = email)
+                    parameter(key = USER_PASSWORD_PARAMETER, value = password)
+                    parameter(key = USER_TOKEN_EXP_PARAMETER, value = tokenExp)
+                }
             }
         }
     }
@@ -79,9 +86,11 @@ class KtorUserRemoteDataSource(
 
     override suspend fun register(user: UserDto): Result<UserDto, ServerDataError> {
         return safeCall<UserDto> {
-            httpClient.post(urlString = USER_REGISTER_ROUTE){
-                header(HttpHeaders.AcceptLanguage, language)
-                setBody(user)
+            retryNetworkRequest {
+                httpClient.post(urlString = USER_REGISTER_ROUTE){
+                    header(HttpHeaders.AcceptLanguage, language)
+                    setBody(user)
+                }
             }
         }
     }
@@ -89,18 +98,22 @@ class KtorUserRemoteDataSource(
 
     override suspend fun logUserActivity(activity: UserActivityDto): Result<UserActivityDto, ServerDataError> {
         return safeCall<UserActivityDto> {
-            httpClient.post(urlString = LOG_USER_ACTIVITY_ROUTE){
-                header(HttpHeaders.AcceptLanguage, language)
-                setBody(activity)
+            retryNetworkRequest {
+                httpClient.post(urlString = LOG_USER_ACTIVITY_ROUTE){
+                    header(HttpHeaders.AcceptLanguage, language)
+                    setBody(activity)
+                }
             }
         }
     }
 
     override suspend fun logout(userId: String): Result<String, ServerDataError> {
         return safeCall<String> {
-            httpClient.post(urlString = USER_LOGOUT_ROUTE) {
-                header(HttpHeaders.AcceptLanguage, language)
-                parameter(USER_ID_PARAMETER, userId)
+            retryNetworkRequest {
+                httpClient.post(urlString = USER_LOGOUT_ROUTE) {
+                    header(HttpHeaders.AcceptLanguage, language)
+                    parameter(USER_ID_PARAMETER, userId)
+                }
             }
         }
     }
@@ -109,7 +122,8 @@ class KtorUserRemoteDataSource(
 
     override suspend fun upsertImageProfile(image: Uri): Result<String, ServerDataError> {
         return safeCall<String> {
-            val info = fileReader.uriToFileInfo(image)
+            retryNetworkRequest {
+                val info = fileReader.uriToFileInfo(image)
                 httpClient.submitFormWithBinaryData(
                     url = USER_IMAGE_PROFILE_ADD_ROUTE ,
                     formData = formData {
@@ -136,23 +150,28 @@ class KtorUserRemoteDataSource(
 //                        }
                     }
                 }
+            }
         }
     }
 
     override suspend fun deleteImageProfile(imageUri: String): Result<String, ServerDataError> {
         return safeCall<String> {
-            httpClient.delete(urlString = USER_IMAGE_PROFILE_DELETE_ROUTE){
-                header(HttpHeaders.AcceptLanguage, language)
-                parameter(IMAGE_URL_PARAMETER, imageUri)
+            retryNetworkRequest {
+                httpClient.delete(urlString = USER_IMAGE_PROFILE_DELETE_ROUTE){
+                    header(HttpHeaders.AcceptLanguage, language)
+                    parameter(IMAGE_URL_PARAMETER, imageUri)
+                }
             }
         }
     }
 
     override suspend fun downloadImageProfile(imageUri: String): Result<ByteArray, ServerDataError> {
         return safeCall<ByteArray> {
-            httpClient.get(urlString = USER_IMAGE_PROFILE_ROUTE){
-                header(HttpHeaders.AcceptLanguage, language)
-                parameter(IMAGE_URL_PARAMETER, imageUri)
+            retryNetworkRequest {
+                httpClient.get(urlString = USER_IMAGE_PROFILE_ROUTE){
+                    header(HttpHeaders.AcceptLanguage, language)
+                    parameter(IMAGE_URL_PARAMETER, imageUri)
+                }
             }
         }
     }

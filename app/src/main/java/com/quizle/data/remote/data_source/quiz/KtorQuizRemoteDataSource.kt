@@ -37,8 +37,10 @@ class KtorQuizRemoteDataSource(
 
     override suspend fun getQuizTopics(): Result< List<TopicDto>,ServerDataError> {
         return safeCall<List<TopicDto>> {
-            httpClient.get(urlString = TOPICS_ROUTE){
-                header(HttpHeaders.AcceptLanguage, language)
+            retryNetworkRequest {
+                httpClient.get(urlString = TOPICS_ROUTE){
+                    header(HttpHeaders.AcceptLanguage, language)
+                }
             }
         }
     }
@@ -46,18 +48,21 @@ class KtorQuizRemoteDataSource(
     override suspend fun loadTopicQuestions(topicId: String?): Result<List<QuestionDto>, ServerDataError> {
 
         return safeCall<List<QuestionDto>> {
-            httpClient.get(urlString = QUESTIONS_ROUTE) {
-                header(HttpHeaders.AcceptLanguage, language)
-//                header( "Cache-Control", "public, max-age=60")
-                parameter(key = Constant.TOPIC_ID_PARAMETER, value = topicId)
+            retryNetworkRequest {
+                httpClient.get(urlString = QUESTIONS_ROUTE) {
+                    header(HttpHeaders.AcceptLanguage, language)
+                    parameter(key = Constant.TOPIC_ID_PARAMETER, value = topicId)
+                }
             }
         }
     }
 
     override suspend fun getQuestionById(questionId: String): Result<QuestionDto, ServerDataError> {
         return safeCall<QuestionDto> {
-            httpClient.get(urlString = "$QUESTIONS_ROUTE/$questionId"){
-                header(HttpHeaders.AcceptLanguage, language)
+            retryNetworkRequest {
+                httpClient.get(urlString = "$QUESTIONS_ROUTE/$questionId"){
+                    header(HttpHeaders.AcceptLanguage, language)
+                }
             }
         }
     }
@@ -74,14 +79,16 @@ class KtorQuizRemoteDataSource(
 
     override suspend fun searchTopics(query: String, limit: Int?): Result<List<TopicDto>, ServerDataError> {
         return safeCall<List<TopicDto>> {
-            httpClient.get(urlString = TOPICS_SEARCH_ROUTE){
-                header(HttpHeaders.AcceptLanguage, language)
-                parameter(key = TITLE_EN_PARAMETER, value = query)
-                parameter(key = TITLE_AR_PARAMETER, value = query)
-                parameter(key = SUB_TITLE_EN_PARAMETER, value = query)
-                parameter(key = SUB_TITLE_AR_PARAMETER, value = query)
-                parameter(key = TAG_PARAMETER, value = query)
-                parameter(key = LIMIT_PARAMETER, value = limit)
+            retryNetworkRequest {
+                httpClient.get(urlString = TOPICS_SEARCH_ROUTE){
+                    header(HttpHeaders.AcceptLanguage, language)
+                    parameter(key = TITLE_EN_PARAMETER, value = query)
+                    parameter(key = TITLE_AR_PARAMETER, value = query)
+                    parameter(key = SUB_TITLE_EN_PARAMETER, value = query)
+                    parameter(key = SUB_TITLE_AR_PARAMETER, value = query)
+                    parameter(key = TAG_PARAMETER, value = query)
+                    parameter(key = LIMIT_PARAMETER, value = limit)
+                }
             }
         }
     }
@@ -89,10 +96,12 @@ class KtorQuizRemoteDataSource(
 
     override suspend fun submitIssueReport(issueReport: IssueReportDto, token: String): Result<String, ServerDataError> {
         return safeCall<String> {
-            httpClient.post(urlString = ISSUE_REPORT_ROUTE){
-                header(HttpHeaders.AcceptLanguage, language)
-                bearerAuth(token)
-                setBody(issueReport)
+            retryNetworkRequest {
+                httpClient.post(urlString = ISSUE_REPORT_ROUTE){
+                    header(HttpHeaders.AcceptLanguage, language)
+                    bearerAuth(token)
+                    setBody(issueReport)
+                }
             }
         }
     }
