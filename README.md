@@ -49,8 +49,6 @@ The backend for this application is built separately. You can find the complete 
 
 ## 🛠️ Tech Stack & Dependencies
 
-*(This is a template section. Please fill it in with your project's technologies.)*
-
 * **Framework:** [Kotlin, JetPack Compose, Ktor, Koin, Coil, Room]
 * **Authentication:** [JWT]
 * **UI Libraries:** [Material Design, Custom Components]
