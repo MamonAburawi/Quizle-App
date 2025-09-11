@@ -1,13 +1,15 @@
 package com.quizle.data.remote.data_source.user
 
 import android.net.Uri
+import android.util.Log
 import com.quizle.data.local.prefrences.AppPreferences
 
-import com.quizle.data.remote.dto.UserActivityDto
+import com.quizle.data.remote.dto.LogEventDto
 import com.quizle.data.remote.dto.UserDto
 import com.quizle.data.utils.safeCall
 import com.quizle.data.utils.Constant.IMAGE_URL_PARAMETER
 import com.quizle.data.utils.Constant.LOG_USER_ACTIVITY_ROUTE
+import com.quizle.data.utils.Constant.USER_ACTION_PARAMETER
 import com.quizle.data.utils.Constant.USER_UPDATE_ROUTE
 import com.quizle.data.utils.Constant.USER_EMAIL_PARAMETER
 import com.quizle.data.utils.Constant.USER_ID_PARAMETER
@@ -37,6 +39,7 @@ import io.ktor.client.request.post
 import io.ktor.client.request.setBody
 import io.ktor.http.Headers
 import io.ktor.http.HttpHeaders
+
 
 class KtorUserRemoteDataSource(
     private val httpClient: HttpClient,
@@ -96,12 +99,14 @@ class KtorUserRemoteDataSource(
     }
 
 
-    override suspend fun logUserActivity(activity: UserActivityDto): Result<UserActivityDto, ServerDataError> {
-        return safeCall<UserActivityDto> {
+    override suspend fun logEvent(email: String, action: String): Result<LogEventDto, ServerDataError> {
+        return safeCall<LogEventDto> {
             retryNetworkRequest {
                 httpClient.post(urlString = LOG_USER_ACTIVITY_ROUTE){
                     header(HttpHeaders.AcceptLanguage, language)
-                    setBody(activity)
+                    parameter(USER_EMAIL_PARAMETER, email)
+                    parameter(USER_ACTION_PARAMETER, action)
+//                    setBody(activity)
                 }
             }
         }

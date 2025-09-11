@@ -1,6 +1,7 @@
 package com.quizle.presentation.screens.issue_report
 
-import com.quizle.presentation.util.IssueType
+import com.quizle.data.utils.IssueType
+
 
 
 sealed interface IssueReportAction {

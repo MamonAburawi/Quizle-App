@@ -82,7 +82,7 @@ class QuizViewModel(
             }
             is QuizAction.ExitQuizDialogConfirm -> {
                 viewModelScope.launch {
-                    async { userRepository.recordUserEvent(LogEvent.QUIZ_END_EVENT)}.await() // log activity
+                    async { userRepository.logEvent(LogEvent.QUIZ_END_EVENT)}.await() // log activity
                     _state.update { it.copy(isQuizExitDialogOpen = false) }
                     _event.trySend(QuizEvent.NavigateToDashboardScreen)
                 }
@@ -111,7 +111,7 @@ class QuizViewModel(
             _state.update { it.copy(isSavingInProgress = true) }
             async { saveUserAnswers() }.await()
             async { saveResult() }.await()
-            async {userRepository.recordUserEvent(LogEvent.QUIZ_END_EVENT)}.await() // log Activity }
+            async {userRepository.logEvent(LogEvent.QUIZ_END_EVENT)}.await() // log Activity }
             _state.update { it.copy(isSavingInProgress = false) }
         }
     }
@@ -174,7 +174,7 @@ class QuizViewModel(
             async { applyQuizSettings() }.await()
             async { getQuizTopic(topicId) }.await()
             async { getQuizQuestions(topicId) }.await()
-            async { userRepository.recordUserEvent(LogEvent.QUIZ_START_EVENT)}.await() // log activity
+            async { userRepository.logEvent(LogEvent.QUIZ_START_EVENT)}.await() // log activity
             _state.update { it.copy(isLoading = false) }
         }
     }

@@ -75,7 +75,7 @@ class SettingsViewModel(
                 .onSuccess(
                     onMessageSuccess = {
                         _state.update { it.copy(isLoading = false) }
-                        async { userRepository.recordUserEvent(LogEvent.LOGOUT_EVENT)}.await()
+                        async { userRepository.logEvent(LogEvent.LOGOUT_EVENT)}.await()
                         _event.send(SettingsEvent.NavigateToSignUp)
                     }
                 )

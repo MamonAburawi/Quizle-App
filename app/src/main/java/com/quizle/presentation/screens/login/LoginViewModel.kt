@@ -1,5 +1,6 @@
 package com.quizle.presentation.screens.login
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.quizle.data.utils.LogEvent
@@ -78,6 +79,7 @@ class LoginViewModel(
     private fun login() {
         viewModelScope.launch {
             val email = _state.value.email.trim()
+            Log.d("LoginViewModel", "email: $email")
             val password = _state.value.password.trim()
             val emailError = validator.validateEmail(email)
             val passwordError = validator.validatePassword(password)
@@ -95,7 +97,7 @@ class LoginViewModel(
                 userRepository.login(email = email, password = password, tokenExp = tokenExpAfter3Months)
                     .onSuccess(
                         onDataSuccess = { user ->
-                            async { userRepository.recordUserEvent(LogEvent.LOGIN_EVENT)}.await()
+                            async { userRepository.logEvent(LogEvent.LOGIN_EVENT)}.await()
                             _event.trySend(LoginEvent.NavigateToDashboardScreen)
                             _state.value = _state.value.copy(isLoading = false)
                         }

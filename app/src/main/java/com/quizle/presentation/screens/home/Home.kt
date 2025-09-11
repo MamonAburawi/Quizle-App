@@ -49,6 +49,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import coil3.compose.AsyncImage
 import com.quizle.R
+import com.quizle.data.utils.Gender
 import com.quizle.domain.module.AppRelease
 import com.quizle.domain.module.Topic
 import com.quizle.domain.module.User
@@ -66,7 +67,6 @@ import com.quizle.presentation.theme.DarkBackground
 import com.quizle.presentation.theme.GrayText
 import com.quizle.presentation.theme.GreenAccent
 import com.quizle.presentation.theme.LightPurple
-import com.quizle.presentation.util.Gender
 import com.quizle.presentation.util.openUrlInBrowser
 import com.quizle.presentation.util.title
 import kotlinx.coroutines.flow.Flow

@@ -4,13 +4,11 @@ import android.net.Uri
 import com.quizle.data.local.dao.UserDao
 import com.quizle.data.local.prefrences.AppPreferences
 import com.quizle.data.mapper.toUser
-import com.quizle.data.mapper.toUserActivityDto
 import com.quizle.data.mapper.toUserDto
 import com.quizle.data.mapper.toUserEntity
 import com.quizle.data.remote.data_source.user.KtorUserRemoteDataSource
 import com.quizle.domain.module.AppSettings
 import com.quizle.domain.module.User
-import com.quizle.domain.module.UserEvent
 import com.quizle.domain.repository.UserRepository
 import com.quizle.data.utils.ServerDataError
 import com.quizle.domain.utils.Result
@@ -82,7 +80,7 @@ class UserRepositoryImpl(
     }
 
 
-    override suspend fun recordUserEvent(logEvent: String): Result<String, ServerDataError> {
+    override suspend fun logEvent(logEvent: String): Result<String, ServerDataError> {
         return try {
             val userId = appPreferences.getUserId()
             val localUser = localDataSource.getUserById(userId)
@@ -91,14 +89,14 @@ class UserRepositoryImpl(
                 throw Exception("User not found in local storage")
             }
 
-            val logActivity = UserEvent(
-                action = logEvent,
-                createdAt = System.currentTimeMillis(),
-                userName = localUser.userName,
-                userId = userId
-            )
+//            val logActivity = UserEvent(
+//                action = logEvent,
+//                createdAt = System.currentTimeMillis(),
+//                userName = localUser.userName,
+//                userId = userId
+//            )
 
-            val result = remoteDataSource.logUserActivity(logActivity.toUserActivityDto())
+            val result = remoteDataSource.logEvent(action = logEvent, email = localUser.email)
 
             // This is a cleaner way to handle the result
             when (result) {
@@ -115,12 +113,9 @@ class UserRepositoryImpl(
     override suspend fun upsertImageProfile(image: Uri): Result<String, ServerDataError> {
         return try {
             when(val result = remoteDataSource.upsertImageProfile(image)){
-//                is Success->  Success(result.data)
-                //                is SuccessMessage -> Failure(DataError.ConflictDataType)
                 is Success -> Failure(ServerDataError.ConflictServerDataType)
                 is SuccessMessage -> SuccessMessage(message = result.message)
                 is Failure -> Failure(result.error)
-
             }
         }
         catch (ex: Exception){

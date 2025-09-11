@@ -110,7 +110,7 @@ class ProfileViewModel(
                     onMessageSuccess = { message ->
                         _state.update { it.copy(isLoading = false) }
                         _event.send(ProfileEvent.ShowMessage(message = message, type = MessageType.Success))
-                        async { userRepository.recordUserEvent(LogEvent.UPDATE_ACCOUNT_EVENT) }.await()
+                        async { userRepository.logEvent(LogEvent.UPDATE_ACCOUNT_EVENT) }.await()
                         delay(500)
                         _event.send(ProfileEvent.NavigateToHomeScreen)
                     }

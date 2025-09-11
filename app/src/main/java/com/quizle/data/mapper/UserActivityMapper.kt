@@ -1,9 +1,9 @@
 package com.quizle.data.mapper
 
-import com.quizle.data.remote.dto.UserActivityDto
+import com.quizle.data.remote.dto.LogEventDto
 import com.quizle.domain.module.UserEvent
 
-fun UserActivityDto.toUserActivity(): UserEvent{
+fun LogEventDto.toUserActivity(): UserEvent{
     return UserEvent(
         id = id,
         userName = userName,
@@ -14,8 +14,8 @@ fun UserActivityDto.toUserActivity(): UserEvent{
 }
 
 
-fun UserEvent.toUserActivityDto(): UserActivityDto{
-    return UserActivityDto(
+fun UserEvent.toUserActivityDto(): LogEventDto{
+    return LogEventDto(
         id = id,
         userName = userName,
         createdAt = createdAt,

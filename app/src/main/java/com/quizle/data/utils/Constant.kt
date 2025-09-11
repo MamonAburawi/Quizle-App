@@ -42,6 +42,8 @@ object Constant {
     const val LIMIT_PARAMETER = "limit"
     const val IMAGE_URL_PARAMETER = "imageUrl"
 
+    const val USER_ACTION_PARAMETER = "action"
+
 
 
 

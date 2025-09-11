@@ -109,7 +109,7 @@ class SignUpViewModel(
                 userRepository.register(user)
                     .onSuccess(
                         onDataSuccess = {
-                            async { userRepository.recordUserEvent(LogEvent.REGISTER_EVENT) }.await()
+                            async { userRepository.logEvent(LogEvent.REGISTER_EVENT) }.await()
                             _event.trySend(SignUpEvent.NavigateToDashboardScreen)
                             _state.value = _state.value.copy(isLoading = false)
                         }

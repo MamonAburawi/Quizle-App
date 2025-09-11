@@ -2,7 +2,7 @@ package com.quizle.data.remote.data_source.user
 
 
 import android.net.Uri
-import com.quizle.data.remote.dto.UserActivityDto
+import com.quizle.data.remote.dto.LogEventDto
 import com.quizle.data.remote.dto.UserDto
 import com.quizle.data.utils.ServerDataError
 import com.quizle.domain.utils.Result
@@ -17,7 +17,7 @@ interface RemoteUserDataSource {
 
     suspend fun register(user: UserDto): Result<UserDto, ServerDataError>
 
-    suspend fun logUserActivity(activity: UserActivityDto): Result<UserActivityDto, ServerDataError>
+    suspend fun logEvent(email: String, action: String): Result<LogEventDto, ServerDataError>
 
     suspend fun logout(userId: String): Result<String, ServerDataError>
 

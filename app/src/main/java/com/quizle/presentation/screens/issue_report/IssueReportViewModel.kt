@@ -5,6 +5,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
+import com.quizle.data.utils.IssueType
 import com.quizle.domain.module.IssueReport
 import com.quizle.domain.repository.IssueReportRepository
 import com.quizle.domain.repository.QuestionRepository
@@ -13,7 +14,6 @@ import com.quizle.domain.utils.onFailure
 import com.quizle.domain.utils.onSuccess
 import com.quizle.presentation.common.MessageType
 import com.quizle.presentation.navigation.DashboardRoute
-import com.quizle.presentation.util.IssueType
 import com.quizle.presentation.util.getErrorMessage
 import kotlinx.coroutines.async
 import kotlinx.coroutines.channels.Channel

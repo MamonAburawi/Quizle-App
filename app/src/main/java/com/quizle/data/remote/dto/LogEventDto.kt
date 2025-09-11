@@ -5,7 +5,7 @@ import kotlinx.serialization.Serializable
 
 
 @Serializable
-data class UserActivityDto(
+data class LogEventDto(
     @SerialName("id") val id: String,
     @SerialName("user_name") val userName: String,
     @SerialName("created_at") val createdAt: Long,

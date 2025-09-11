@@ -1,8 +1,9 @@
 package com.quizle.presentation.screens.issue_report
 
+import com.quizle.data.utils.IssueType
 import com.quizle.domain.module.Question
 import com.quizle.domain.module.User
-import com.quizle.presentation.util.IssueType
+
 
 
 data class IssueReportState(

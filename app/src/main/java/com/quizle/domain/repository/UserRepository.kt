@@ -23,7 +23,7 @@ interface UserRepository {
 
 //    suspend fun loadUserToken(): User.Token
 
-    suspend fun recordUserEvent(logEvent: String): Result<String, ServerDataError>
+    suspend fun logEvent(logEvent: String): Result<String, ServerDataError>
 
 
     suspend fun upsertImageProfile(image: Uri): Result<String,ServerDataError>

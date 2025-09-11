@@ -29,13 +29,13 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
 import com.quizle.R
+import com.quizle.data.utils.Gender
 import com.quizle.presentation.common.LoadingButton
 import com.quizle.presentation.common.ToastMessageController
 import com.quizle.presentation.theme.Blue
 import com.quizle.presentation.theme.DarkBackground
 import com.quizle.presentation.theme.Gray
 import com.quizle.presentation.theme.SurfaceColor
-import com.quizle.presentation.util.Gender
 import com.quizle.presentation.util.relaunchApp
 import kotlinx.coroutines.flow.Flow
 
