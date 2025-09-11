@@ -36,6 +36,7 @@ A comprehensive learning and quiz application designed for a streamlined and eng
 * **Smart Retry for Network Requests 🔄**: Automatically retries failed network requests a few times with a short delay, ensuring a more reliable experience during temporary network hiccups.
 * **Robust Error Handling 🌐**: Gracefully handles common network issues like offline status, slow connections, or server errors with clear, user-friendly messages instead of crashing.
 * **Custom Toast Messages ✨**: A lightweight and elegant toast message library provides beautiful, context-aware feedback for success ✅, error ❌, info ℹ️, and warning ⚠️ states.
+* **MultiLanugage Support**
 
 ---
 
