@@ -11,22 +11,18 @@ class AppPreferences(
 ) {
 
     companion object{
-        private const val APP_PREFERENCES_FILE_NAME = "Quizle_App_Preferences"
+        private const val APP_PREFERENCES_FILE_NAME = "settings"
 
         private const val USER_ID = "user_Id"
         private const val APP_LANGUAGE = "app_language"
-
         private const val ENABLE_NOTIFICATION_APP = "enable_notification_app"
-
         private const val ENABLE_QUIZ_TIME_IN_MIN = "enable_quiz_time_in_min"
-
         private const val ENABLE_SWITCH_TO_CUSTOM_TIME_IN_MIN = "enable_switch_to_custom_time_in_min"
-
         private const val CUSTOM_QUIZ_TIME_IN_MIN = "enable_custom_quiz_time_in_min"
 
     }
 
-    private val json = Json { prettyPrint = true }
+
     private val sharedPreferences: SharedPreferences =
         context.getSharedPreferences(APP_PREFERENCES_FILE_NAME, Context.MODE_PRIVATE)
 
@@ -45,7 +41,7 @@ class AppPreferences(
         customQuizTimeInMin: Int,
         language: String,
     ) {
-        sharedPreferences.edit().apply {
+        edit.apply {
             putBoolean(ENABLE_NOTIFICATION_APP, isEnableNotificationApp)
             putBoolean(ENABLE_QUIZ_TIME_IN_MIN, isEnableQuizTimeInMin)
             putBoolean(ENABLE_SWITCH_TO_CUSTOM_TIME_IN_MIN,isEnableCustomTimeSwitch)
@@ -73,32 +69,16 @@ class AppPreferences(
     }
 
 
+    fun setAppLanguage(language: String){
+        edit.putString(APP_LANGUAGE, language)
+            .apply()
+    }
 
-//    fun getEnableNotificationApp(): Boolean {
-//        // Default value is false if the key doesn't exist
-//        return sharedPreferences.getBoolean(ENABLE_NOTIFICATION_APP, false)
-//    }
-//
-//    fun getEnableQuizTimeInMin(): Boolean {
-//        // Default value is 0
-//        return sharedPreferences.getBoolean(ENABLE_QUIZ_TIME_IN_MIN, false)
-//    }
-//
-//
-//    fun getEnableCustomTimeSwitch(): Boolean {
-//        // Default value is false
-//        return sharedPreferences.getBoolean(ENABLE_SWITCH_TO_CUSTOM_TIME_IN_MIN, false)
-//    }
-//
-//
-//    fun getCustomQuizTimeInMin(): Int {
-//        return sharedPreferences.getInt(CUSTOM_QUIZ_TIME_IN_MIN, 0)
-//    }
-//
-//
+
     fun getAppLanguage(): String {
         return sharedPreferences.getString(APP_LANGUAGE, null) ?: "en"
     }
+
 
     fun getUserId(): String {
         return sharedPreferences.getString(USER_ID, null) ?: ""

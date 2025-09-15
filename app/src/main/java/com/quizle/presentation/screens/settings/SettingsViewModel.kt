@@ -3,7 +3,6 @@ package com.quizle.presentation.screens.settings
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.quizle.R
 import com.quizle.data.respository.UserRepositoryImpl
 import com.quizle.data.utils.LogEvent
 import com.quizle.domain.utils.onFailure
@@ -112,7 +111,7 @@ class SettingsViewModel(
                             _state.update { it.copy(isLoading = false) }
                             _event.send(SettingsEvent.ShowToast(message, MessageType.Success))
                             delay(500)
-                            _event.send(SettingsEvent.RelaunchApp(selectedLanguage))
+                            _event.send(SettingsEvent.ApplySettings(selectedLanguage))
                         }
                     }
                 )

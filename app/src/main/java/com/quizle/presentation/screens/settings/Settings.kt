@@ -5,6 +5,7 @@ package com.quizle.presentation.screens.settings
 
 
 import android.annotation.SuppressLint
+import android.app.Activity
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -61,8 +62,7 @@ import com.quizle.presentation.navigation.navigateToLogin
 import com.quizle.presentation.theme.DarkBackground
 import com.quizle.presentation.theme.GreenAccent
 import com.quizle.presentation.theme.SurfaceColor
-import com.quizle.presentation.util.relaunchApp
-import com.quizle.presentation.util.setAppLanguage
+import com.quizle.presentation.util.LocaleHelper
 import kotlinx.coroutines.flow.Flow
 
 
@@ -100,12 +100,9 @@ fun SettingsScreen(
               }
 
 
-              is SettingsEvent.RelaunchApp -> {
-                  val langCode = it.language
-                  context.apply {
-                      setAppLanguage(langCode)
-                      relaunchApp()
-                  }
+              is SettingsEvent.ApplySettings -> {
+                  LocaleHelper.setLocale(context, it.language)
+                  (context as? Activity)?.recreate()
               }
           }
       }

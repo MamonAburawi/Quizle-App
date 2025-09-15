@@ -1,6 +1,7 @@
 package com.quizle.presentation
 
 
+import android.content.Context
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -21,16 +22,26 @@ import com.quizle.presentation.common.ToastHost
 import com.quizle.presentation.common.ToastMessageController
 import com.quizle.presentation.navigation.NestedNavGraph
 import com.quizle.presentation.theme.QuizlyTheme
+import com.quizle.presentation.util.LocaleHelper
 import com.quizle.presentation.util.setAppLanguage
 
 
 
 class MainActivity : ComponentActivity() {
 
+    override fun attachBaseContext(newBase: Context?) {
+        if (newBase != null) {
+            val updatedContext = LocaleHelper.updateContext(newBase)
+            super.attachBaseContext(updatedContext)
+        } else {
+            super.attachBaseContext(newBase)
+        }
+    }
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        val sharePref = AppPreferences(this)
-        this.baseContext.setAppLanguage(sharePref.loadSettings().language)
+//        val sharePref = AppPreferences(this)
+//        this.baseContext.setAppLanguage(sharePref.loadSettings().language)
         super.onCreate(savedInstanceState)
 
         enableEdgeToEdge()

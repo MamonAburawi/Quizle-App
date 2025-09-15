@@ -1,6 +1,7 @@
 package com.quizle.data.respository
 
 import android.net.Uri
+import android.util.Log
 import com.quizle.data.local.dao.UserDao
 import com.quizle.data.local.prefrences.AppPreferences
 import com.quizle.data.mapper.toUser
@@ -88,13 +89,6 @@ class UserRepositoryImpl(
             if (localUser == null) {
                 throw Exception("User not found in local storage")
             }
-
-//            val logActivity = UserEvent(
-//                action = logEvent,
-//                createdAt = System.currentTimeMillis(),
-//                userName = localUser.userName,
-//                userId = userId
-//            )
 
             val result = remoteDataSource.logEvent(action = logEvent, email = localUser.email)
 
