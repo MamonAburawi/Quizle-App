@@ -4,6 +4,8 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import androidx.room.Transaction
+import com.quizle.data.local.entity.QuestionWithUserAnswerEntity
 import com.quizle.data.local.entity.QuizResultEntity
 
 @Dao
@@ -39,6 +41,24 @@ interface QuizResultDao {
 
     )
     suspend fun searchQuizResults(query: String?): List<QuizResultEntity>
+
+
+
+    @Transaction
+    @Query("""
+        SELECT 
+             questions.*, userAnswer.selectedOption 
+        FROM 
+            quiz_question AS questions
+        LEFT JOIN 
+            user_answer AS userAnswer ON questions.id = userAnswer.questionId
+        WHERE 
+            questions.topicId = :topicId
+    """)
+    suspend fun getQuestionsWithAnswersByTopicId(topicId: String): List<QuestionWithUserAnswerEntity>
+
+
+
 
 
 }

@@ -30,6 +30,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.quizle.R
 import com.quizle.domain.module.Question
+import com.quizle.domain.module.QuestionWithUserAnswer
 import com.quizle.domain.module.Topic
 import com.quizle.presentation.navigation.navigateToIssueReport
 import com.quizle.domain.module.UserAnswer
@@ -64,6 +65,8 @@ fun ResultScreenContent(
     onReport:(String) -> Unit,
     onReturnToHome: () -> Unit
 ) {
+    val questions = state.questionsWithAnswers.map { it.question }
+    val answers = state.questionsWithAnswers.map { it.selectedOption }
 
     Column(
         modifier = Modifier
@@ -73,7 +76,7 @@ fun ResultScreenContent(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
 
-        if (state.error != null){
+        if (state.error != null && questions.isEmpty() && !state.isLoading && answers.isEmpty()){
             Text(
                 text = state.error,
                 color = Color.Black,
@@ -91,7 +94,6 @@ fun ResultScreenContent(
                 contentPadding = PaddingValues(20.dp)
             ) {
                 item {
-
                     QuizResultCard(
                         createdAt = System.currentTimeMillis(),
                         totalQuestions = state.totalQuestionsCount,
@@ -111,8 +113,8 @@ fun ResultScreenContent(
                         textDecoration = TextDecoration.Underline
                     )
                 }
-                itemsIndexed(items = state.questions){ index, question ->
-                    val selectedOption = state.answers.find { it.questionId == question.id }?.selectedOption
+                itemsIndexed(items = questions){ index, question ->
+                    val selectedOption = answers.find { it == question.correctAnswer }
                     QuestionItem(
                         question = question.questionText,
                         correctAnswer = question.correctAnswer,
@@ -189,10 +191,10 @@ private fun ResultScreenPreview() {
         )
     }
     val answers = listOf(
-        UserAnswer("1", "The Last Supper"),
-        UserAnswer("2", "The Last Supper"),
-        UserAnswer("3", "Vitruvian Man"),
-        UserAnswer("8", "Mona Lisa")
+        UserAnswer("1", "The Last Supper",""),
+        UserAnswer("2", "The Last Supper", ""),
+        UserAnswer("3", "Vitruvian Man", ""),
+        UserAnswer("8", "Mona Lisa", "")
     )
 
     val topic = Topic(
@@ -204,14 +206,23 @@ private fun ResultScreenPreview() {
 
 
     val state = ResultState(
-        scorePercentage = 10,
         totalQuestionsCount = 10,
         correctAnswersCount = 8,
-        questions = questions,
-        answers = answers,
+        questionsWithAnswers = listOf(
+            QuestionWithUserAnswer(
+                question = questions[0],
+                selectedOption = answers[0].selectedOption
+            ),
+            QuestionWithUserAnswer(
+                question = questions[1],
+                selectedOption = answers[1].selectedOption
+            ),
+        ),
+//        questions = questions,
+//        answers = answers,
         topic = topic,
         isLoading = false,
-        error = null
+        error = "this is error"
     )
     ResultScreenContent(
         state = state,

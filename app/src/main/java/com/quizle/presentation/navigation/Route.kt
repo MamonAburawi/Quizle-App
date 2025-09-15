@@ -54,7 +54,7 @@ sealed interface DashboardRoute {
     @Serializable
     data class Quiz(val topicId: String, val quizTimeEnabled: Boolean): DashboardRoute
     @Serializable
-    data object Result: DashboardRoute
+    data class Result(val topicId: String): DashboardRoute
     @Serializable
     data object Notifications : DashboardRoute
     @Serializable
@@ -91,11 +91,14 @@ fun NavController.navigateToQuiz(
     }
 }
 
+
 //fun NavController.navigateToHome(){
 //    navigate(route = NavBottomRoute.Home){
 //
 //    }
 //}
+
+
 
 fun NavController.navigateToProfile(){
     navigate(route = DashboardRoute.Profile){
@@ -103,8 +106,8 @@ fun NavController.navigateToProfile(){
     }
 }
 
-fun NavController.navigateToResult(){
-    navigate(route = DashboardRoute.Result){
+fun NavController.navigateToResult(topicId: String){
+    navigate(route = DashboardRoute.Result(topicId)){
 //        popUpTo(graph.id) {
 //            inclusive = true
 //        }

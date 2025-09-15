@@ -18,6 +18,6 @@ interface UserAnswerDao {
     @Query("SELECT * FROM user_answer WHERE questionId = :questionId")
     suspend fun getUserAnswerById(questionId: String): UserAnswerEntity?
 
-    @Query("SELECT * FROM user_answer")
-    suspend fun getAllUserAnswers(): List<UserAnswerEntity>
+    @Query("SELECT * FROM user_answer WHERE topicId = :topicId")
+    suspend fun getAllUserAnswers(topicId: String): List<UserAnswerEntity>
 }

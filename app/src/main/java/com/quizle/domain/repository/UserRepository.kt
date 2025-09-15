@@ -2,6 +2,7 @@ package com.quizle.domain.repository
 
 
 import android.net.Uri
+import com.quizle.data.remote.dto.LogEventDto
 import com.quizle.domain.module.User
 import com.quizle.data.utils.ServerDataError
 import com.quizle.domain.utils.Result

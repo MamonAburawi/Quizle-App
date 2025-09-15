@@ -54,7 +54,7 @@ fun QuizScreen(
 ) {
 
     BackHandler {}
-    
+
     QuizScreenContent(
         state = state,
         onAction = onAction,
@@ -68,7 +68,7 @@ fun QuizScreen(
             onAction(QuizAction.ExitQuizDialogConfirm)
         }
     )
-    
+
 
     LaunchedEffect(key1 = Unit) {
         event.collect{
@@ -77,7 +77,8 @@ fun QuizScreen(
                     navController.back()
                 }
                 is QuizEvent.NavigateToResultScreen ->{
-                    navController.navigateToResult()
+                    val topicId = it.topicId
+                    navController.navigateToResult(topicId)
                 }
                 is QuizEvent.NavigateToTopicScreen -> {
                     navController.back()

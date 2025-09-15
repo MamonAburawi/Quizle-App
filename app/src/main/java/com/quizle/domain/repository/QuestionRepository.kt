@@ -15,6 +15,6 @@ interface QuestionRepository {
 
     suspend fun saveUserAnswers(userAnswers: List<UserAnswer>): Result<Unit, ServerDataError>
 
-    suspend fun loadUserAnswers(): Result<List<UserAnswer>, ServerDataError>
+    suspend fun loadUserAnswersByTopicId(topicId: String): Result<List<UserAnswer>, ServerDataError>
 
 }

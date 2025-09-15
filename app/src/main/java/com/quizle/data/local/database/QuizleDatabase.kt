@@ -5,6 +5,7 @@ import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import com.quizle.data.local.converter.SettingsConverter
 import com.quizle.data.local.converter.TokenConverter
+import com.quizle.data.local.converter.UserAnswerConverter
 import com.quizle.data.local.converter.UserOptionsListConverter
 import com.quizle.data.local.dao.QuestionDao
 import com.quizle.data.local.dao.QuizResultDao
@@ -18,7 +19,7 @@ import com.quizle.data.local.entity.UserAnswerEntity
 import com.quizle.data.local.entity.UserEntity
 
 
-@Database(entities = [TopicEntity::class, QuestionEntity::class, UserAnswerEntity::class, UserEntity::class, QuizResultEntity::class] , version = 16, exportSchema = false)
+@Database(entities = [TopicEntity::class, QuestionEntity::class, UserAnswerEntity::class, UserEntity::class, QuizResultEntity::class] , version = 17, exportSchema = false)
 @TypeConverters(UserOptionsListConverter::class, TokenConverter::class, SettingsConverter::class)
 abstract class QuizleDatabase : RoomDatabase() {
 

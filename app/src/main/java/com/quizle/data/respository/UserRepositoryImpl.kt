@@ -8,6 +8,7 @@ import com.quizle.data.mapper.toUser
 import com.quizle.data.mapper.toUserDto
 import com.quizle.data.mapper.toUserEntity
 import com.quizle.data.remote.data_source.user.KtorUserRemoteDataSource
+import com.quizle.data.remote.dto.LogEventDto
 import com.quizle.domain.module.AppSettings
 import com.quizle.domain.module.User
 import com.quizle.domain.repository.UserRepository
@@ -89,14 +90,18 @@ class UserRepositoryImpl(
             if (localUser == null) {
                 throw Exception("User not found in local storage")
             }
+            if (localUser.email.isEmpty()) {
+                throw Exception("User email not found in local storage")
+            }
+
 
             val result = remoteDataSource.logEvent(action = logEvent, email = localUser.email)
 
-            // This is a cleaner way to handle the result
+
             when (result) {
-                is SuccessMessage -> Success(result.message)
+                is SuccessMessage -> SuccessMessage(result.message)
                 is Failure -> Failure(result.error)
-                is Success ->  Failure(ServerDataError.ConflictServerDataType)
+                is Success -> Failure(ServerDataError.ConflictServerDataType)
             }
         } catch (ex: Exception) {
             ex.printStackTrace()

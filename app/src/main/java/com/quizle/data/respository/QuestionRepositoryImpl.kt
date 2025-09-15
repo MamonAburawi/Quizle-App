@@ -95,9 +95,9 @@ class QuestionRepositoryImpl(
     }
 
 
-    override suspend fun loadUserAnswers(): Result<List<UserAnswer>, ServerDataError> {
+    override suspend fun loadUserAnswersByTopicId(topicId: String): Result<List<UserAnswer>, ServerDataError> {
         return try {
-            val cachedUserAnswers = userAnswersDao.getAllUserAnswers()
+            val cachedUserAnswers = userAnswersDao.getAllUserAnswers(topicId)
             if (cachedUserAnswers.isNotEmpty()){
                 Result.Success(cachedUserAnswers.toUserAnswers())
             }else {

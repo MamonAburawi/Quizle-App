@@ -1,11 +1,17 @@
 package com.quizle.presentation.screens.result
 
+import android.util.Log
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.navigation.toRoute
 import com.quizle.domain.repository.QuestionRepository
+import com.quizle.domain.repository.QuizResultRepository
 import com.quizle.domain.repository.TopicRepository
 import com.quizle.domain.utils.onFailure
 import com.quizle.domain.utils.onSuccess
+import com.quizle.presentation.navigation.DashboardRoute
+import com.quizle.presentation.util.getErrorMessage
 import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -14,23 +20,43 @@ import kotlinx.coroutines.launch
 
 class ResultViewModel(
     private val questionRepository: QuestionRepository,
-    private val topicRepository: TopicRepository
+    private val topicRepository: TopicRepository,
+    private val stateHandle: SavedStateHandle,
+    private val quizResultRepository: QuizResultRepository
 ): ViewModel(){
+
+    private val topicId = stateHandle.toRoute<DashboardRoute.Result>().topicId
 
     private val _state = MutableStateFlow(ResultState())
     val state = _state.asStateFlow()
 
 
     init {
+        Log.e("ResultViewModel", "init: -> topicId: $topicId")
         setUpResult()
+    }
+
+
+    suspend fun getQuestionsWithAnswers(){
+        quizResultRepository.getQuestionsWithAnswersByTopicId(topicId)
+            .onSuccess (
+                onDataSuccess = { questionsWithAnswers ->
+                    _state.update { it.copy(questionsWithAnswers = questionsWithAnswers) }
+                }
+            )
+            .onFailure { error ->
+                _state.update { it.copy(error = error.getErrorMessage()) }
+                Log.e("ResultViewModel", "getQuestionsWithAnswers: ${error.getErrorMessage()}")
+            }
     }
 
 
     private fun setUpResult(){
         viewModelScope.launch {
             _state.update { it.copy(isLoading = true, loadingMessage = "Initializing result..") }
-            async { getQuizQuestions() }.await()
-            async { getUserAnswers() }.await()
+//            async { getQuizQuestions() }.await()
+//            async { getUserAnswers() }.await()
+            async { getQuestionsWithAnswers() }.await()
             async { getQuizTopic() }.await()
 //            getQuizTopic()
             calculateResults()
@@ -39,57 +65,83 @@ class ResultViewModel(
     }
 
     private suspend fun getQuizTopic() {
-            val topicId = _state.value.questions.first().topicId
+//            val topicId = _state.value.questions.first().topicId
             topicRepository.loadTopicById(topicId = topicId)
                 .onSuccess (
                     onDataSuccess = { topic ->
                         _state.update { it.copy(topic = topic) }
                     }
                 )
-                .onFailure {}
+                .onFailure { error ->
+                    _state.update { it.copy(error = error.getErrorMessage()) }
+                    Log.e("ResultViewModel", "getQuizTopic: ${error.getErrorMessage()}")
+                }
     }
 
-    private fun calculateResults(){
-        val questions = _state.value.questions
-        val answers = _state.value.answers
+    private fun calculateResults() {
+        val questionsWithAnswers = _state.value.questionsWithAnswers
 
-        val correctAnswersCount = answers.count { answer ->
-            val question = questions.find { it.id == answer.questionId }
-            question?.correctAnswer == answer.selectedOption
+        // Directly count where the question's correct answer matches the selected option.
+        val correctAnswersCount = questionsWithAnswers.count {
+            it.question.correctAnswer == it.selectedOption
         }
-        val scorePercentage = correctAnswersCount * 100 / questions.size
+
         _state.update {
             it.copy(
                 correctAnswersCount = correctAnswersCount,
-                totalQuestionsCount = questions.size,
-                scorePercentage = scorePercentage
+                totalQuestionsCount = questionsWithAnswers.size,
             )
         }
     }
 
-    private suspend fun getUserAnswers(){
-        questionRepository.loadUserAnswers()
-            .onSuccess (
-                onDataSuccess = { answers ->
-                    _state.update { it.copy(answers = answers) }
-                }
-            )
-            .onFailure {
-                _state.update { it.copy(error = it.error) }
-            }
-    }
 
-    private suspend fun getQuizQuestions(){
-        questionRepository.loadQuizQuestions()
-            .onSuccess(
-                onDataSuccess = {questions ->
-                    _state.update { it.copy(questions = questions) }
-                }
-            )
-            .onFailure {
-                _state.update { it.copy(error = it.error) }
-            }
-    }
+//    private fun calculateResults(){
+////        val questions = _state.value.questions
+////        val answers = _state.value.answers
+//        val questions = _state.value.questionsWithAnswers.map {it.question}
+//        val answers = _state.value.questionsWithAnswers.map {it.selectedOption}
+////        val correctAnswersCount = answers.count { answer ->
+////            val question = questions.find { it.id == answer.questionId }
+////            question?.correctAnswer == answer.selectedOption
+////        }
+//
+//        val correctAnswersCount = answers.count { answer ->
+//            val question = questions.find { it.correctAnswer == answer }
+//            question?.correctAnswer == answer
+//        }
+//
+//        _state.update {
+//            it.copy(
+//                correctAnswersCount = correctAnswersCount,
+//                totalQuestionsCount = questions.size,
+//            )
+//        }
+//    }
+
+//    private suspend fun getUserAnswers(){
+//        questionRepository.loadUserAnswersByTopicId(topicId)
+//            .onSuccess (
+//                onDataSuccess = { answers ->
+//                    _state.update { it.copy(answers = answers) }
+//                }
+//            )
+//            .onFailure {
+//                _state.update { it.copy(error = it.error) }
+//            }
+//    }
+
+
+//    private suspend fun getQuizQuestions(){
+//        questionRepository.loadQuizQuestions(topicId)
+//            .onSuccess(
+//                onDataSuccess = { questions ->
+//                    _state.update { it.copy(questions = questions) }
+//                }
+//            )
+//            .onFailure {
+//                _state.update { it.copy(error = it.error) }
+//            }
+//    }
 
 
 

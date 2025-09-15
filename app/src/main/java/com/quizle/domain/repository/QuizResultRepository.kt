@@ -1,7 +1,9 @@
 package com.quizle.domain.repository
 
 
+
 import com.quizle.data.utils.LocalDataError
+import com.quizle.domain.module.QuestionWithUserAnswer
 import com.quizle.domain.module.QuizResult
 import com.quizle.domain.utils.Result
 
@@ -18,5 +20,7 @@ interface QuizResultRepository {
     suspend fun deleteAllQuizResults(): Result<Unit, LocalDataError>
 
     suspend fun searchQuizResults(query: String?): Result<List<QuizResult>, LocalDataError>
+
+    suspend fun getQuestionsWithAnswersByTopicId(topicId: String): Result<List<QuestionWithUserAnswer>, LocalDataError>
 
 }

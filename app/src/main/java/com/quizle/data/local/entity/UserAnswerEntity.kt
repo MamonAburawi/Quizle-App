@@ -10,5 +10,6 @@ data class UserAnswerEntity(
     @PrimaryKey(autoGenerate = true)
     val id: Int = 0,
     val questionId: String,
-    val selectedOption: String
+    val selectedOption: String,
+    val topicId: String
 )

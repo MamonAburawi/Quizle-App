@@ -6,14 +6,16 @@ import com.quizle.domain.module.UserAnswer
 fun UserAnswer.toUserAnswerEntity(): UserAnswerEntity {
     return UserAnswerEntity(
         questionId = questionId,
-        selectedOption = selectedOption
+        selectedOption = selectedOption,
+        topicId = topicId
     )
 }
 
 fun UserAnswerEntity.toUserAnswer(): UserAnswer {
     return UserAnswer(
         questionId = questionId,
-        selectedOption = selectedOption
+        selectedOption = selectedOption,
+        topicId = topicId
     )
 }
 
