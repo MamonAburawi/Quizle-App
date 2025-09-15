@@ -9,7 +9,6 @@ import com.quizle.data.utils.LogEvent
 import com.quizle.domain.utils.onFailure
 import com.quizle.domain.utils.onSuccess
 import com.quizle.presentation.common.MessageType
-import com.quizle.presentation.util.StringProvider
 import com.quizle.presentation.util.getErrorMessage
 import kotlinx.coroutines.async
 import kotlinx.coroutines.channels.Channel
@@ -23,7 +22,6 @@ import kotlinx.coroutines.launch
 
 class SettingsViewModel(
     private val userRepository: UserRepositoryImpl,
-    private val stringProvider: StringProvider
 ): ViewModel() {
 
 
@@ -96,7 +94,6 @@ class SettingsViewModel(
 
 
             if (customTimeInMinutes == 0 && isCustomTimeEnabled){
-                _event.send(SettingsEvent.ShowToast(stringProvider.getString(R.string.invalid_custom_time), MessageType.Warning))
                 _state.update { it.copy(isLoading = false) }
                 return@launch
             }

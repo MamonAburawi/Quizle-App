@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.GridItemSpan
+import androidx.compose.foundation.lazy.grid.LazyGridScope
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.shape.CircleShape
@@ -88,9 +89,6 @@ fun HomeScreen(
             appNavController.navigateToProfile()
         },
         onTopicClick = { onAction(HomeAction.TopicItemCardClicked(it))},
-        onResumeQuizClick = { onAction(HomeAction.ResumeButtonClicked)},
-        onTopViewedQuizzesClick = { onAction(HomeAction.MoreTopViewedQuizzesButtonClicked(key = FILTER_TYPE_TOP_VIEWED))} ,
-        onPopularQuizzesClick = { onAction(HomeAction.MorePopularQuizzesButtonClicked(key = FILTER_TYPE_POPULAR)) },
         onRefresh = { onAction(HomeAction.OnRefresh) },
         onNotificationClick = {
             onAction(HomeAction.NotificationButtonClicked)
@@ -114,7 +112,6 @@ fun HomeScreen(
                 is HomeEvent.NavigateToTopicScreen -> {
                     val key = it.key
 
-                   // todo navigate to topic screen
                 }
                 is HomeEvent.ShowToast -> {
                     val type = it.type
@@ -143,10 +140,7 @@ fun HomeScreen(
 private fun HomeContent(
     state: HomeState,
     onProfileClick: () -> Unit,
-    onPopularQuizzesClick: () -> Unit,
-    onTopViewedQuizzesClick: () -> Unit,
     onTopicClick: (String) -> Unit,
-    onResumeQuizClick: () -> Unit,
     onNotificationClick: () -> Unit,
     onRefresh: () -> Unit,
     onUpdateClicked: () -> Unit
@@ -160,7 +154,6 @@ private fun HomeContent(
     val customTimeInMin = user.settings.customQuizTimeInMin
 
 
-
     val pullRefreshState = rememberPullToRefreshState()
 
     PullToRefreshBox(
@@ -171,7 +164,6 @@ private fun HomeContent(
             onRefresh()
         }
     ){
-        val isArabic = state.user.language == "ar"
 
         Column(
             modifier = Modifier
@@ -188,76 +180,37 @@ private fun HomeContent(
                 contentPadding = PaddingValues(12.dp)
 
             ) {
-                item(
-                    span = {
-                        GridItemSpan(maxLineSpan)
-                    }
-                ) {
-                    ProfileSection(
-                        icAvatar = icAvatar,
-                        name = state.user.userName,
-                        imageProfile = state.user.imageProfile,
-                        onProfileClick = onProfileClick,
-                        onNotificationClick = onNotificationClick
-                    )
-                }
 
-                item(
-                    span = {
-                        GridItemSpan(maxLineSpan)
-                    }
-                ) {
-                    StatisticsOverview(
-                        modifier = Modifier.padding(vertical = 20.dp),
-                        totalQuizzes = state.totalQuizzies,
-                        correctAnswers = state.correctAnswers,
-                        accurateRate = state.accurateRate
-                    )
-                }
+                profileSection(
+                    imageProfile = user.imageProfile,
+                    onProfileClick = onProfileClick,
+                    onNotificationClick = onNotificationClick,
+                    icAvatar = icAvatar,
+                    name = user.userName
+                )
 
+                statisticsOverview(
+                    modifier = Modifier.padding(vertical = 20.dp),
+                    totalQuizzes = state.totalQuizzies,
+                    correctAnswers = state.correctAnswers,
+                    accurateRate = state.accurateRate
+                )
 
-                if (state.isNewAppUpdatesAvailable){
-                    item(
-                        span = {
-                            GridItemSpan(maxLineSpan)
-                        }
-                    ) {
-                        NewVersionUpdateCard(
-                            versionName = state.appRelease.versionName,
-                            releaseNotes =  state.appRelease.releaseNoteEn,
-                            onUpdateButtonClicked = onUpdateClicked
-                        )
-                    }
-                }
+                newVersionUpdateCard(
+                    isUpdateAvailable = state.isNewAppUpdatesAvailable,
+                    versionName = state.appRelease.versionName,
+                    releaseNotes = state.appRelease.releaseNoteEn,
+                    onUpdateButtonClicked = onUpdateClicked
+                )
 
-
-                if (isTopicLoading){
-                  items(
-                      count = 9,
-                  ) {
-                      TopicCardShimmerEffect()
-                  }
-                }else {
-                    items(
-                        items = state.topics
-                    ){ topic ->
-
-                        val timeInMin = if(user.settings.switchToCustomTimeInMin) customTimeInMin else topic.quizTimeInMin
-                        PrimaryTopicCard(
-                            imageRes = R.drawable.ic_app_transparent, // Replace with your image resource
-                            topicName = topic.title(),
-                            onTopicClick = {
-                                if (topic.id.isNotEmpty()){
-                                    onTopicClick(topic.id)
-                                }
-                            },
-                            timeInMin = timeInMin,
-                            showQuizTime = showQuizTime
-                        )
-                    }
-                }
-
-
+                topicSection(
+                    isLoading = isTopicLoading,
+                    onTopicClick = onTopicClick,
+                    topics = state.topics,
+                    isCustomTimeEnabled = user.settings.switchToCustomTimeInMin,
+                    customTimeInMin = customTimeInMin,
+                    showQuizTime = showQuizTime,
+                )
 
             }
 
@@ -269,9 +222,136 @@ private fun HomeContent(
 }
 
 
+private fun LazyGridScope.topicSection(
+    isLoading: Boolean,
+    onTopicClick: (String) -> Unit,
+    topics: List<Topic>,
+    shimmerItemCount: Int = 10,
+    isCustomTimeEnabled: Boolean,
+    customTimeInMin: Int,
+    showQuizTime: Boolean,
+){
+    if (isLoading){
+        items(
+            count = shimmerItemCount,
+        ) {
+            TopicCardShimmerEffect()
+        }
+    }else {
+        items(
+            items = topics
+        ){ topic ->
 
-@Composable
-fun ProfileSection(
+            val timeInMin = if(isCustomTimeEnabled) customTimeInMin else topic.quizTimeInMin
+            PrimaryTopicCard(
+                imageRes = R.drawable.ic_app_transparent, // Replace with your image resource
+                topicName = topic.title(),
+                onTopicClick = {
+                    if (topic.id.isNotEmpty()){
+                        onTopicClick(topic.id)
+                    }
+                },
+                timeInMin = timeInMin,
+                showQuizTime = showQuizTime
+            )
+        }
+    }
+}
+
+private fun LazyGridScope.newVersionUpdateCard(
+    isUpdateAvailable: Boolean,
+    versionName: String,
+    releaseNotes: String,
+    onUpdateButtonClicked: () -> Unit,
+){
+    if (isUpdateAvailable){
+        item(
+            span = {
+                GridItemSpan(maxLineSpan)
+            }
+        ) {
+            var isExpanded by remember { mutableStateOf(false) }
+
+            Card(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 10.dp),
+                shape = RoundedCornerShape(16.dp),
+                colors = CardDefaults.cardColors(containerColor = CardBackground), // Example color
+                elevation = CardDefaults.elevatedCardElevation(defaultElevation = 4.dp)
+            ) {
+                Column(
+                    modifier = Modifier
+                        .padding(16.dp)
+                        .fillMaxWidth()
+                ) {
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.SpaceBetween
+                    ) {
+                        AnimatedLoadingDotsText(
+                            text = stringResource(R.string.new_update_available, versionName),
+                            color = Color.White,
+                            fontSize = 18.sp,
+                            fontWeight = FontWeight.Bold
+                        )
+                        Button(
+                            onClick = onUpdateButtonClicked,
+                            colors = ButtonDefaults.buttonColors(
+                                containerColor = GreenAccent
+                            ),
+                            shape = RoundedCornerShape(8.dp),
+                            contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp)
+                        ) {
+                            Text(text = "Update", color = CardBackground, fontWeight = FontWeight.Bold)
+                        }
+                    }
+
+                    Spacer(modifier = Modifier.height(8.dp))
+
+                    // Expand/Collapse Toggle Text
+                    Text(
+                        text = if (isExpanded) stringResource(R.string.show_less) else stringResource(R.string.show_more),
+                        color = Color.White.copy(alpha = 0.7f),
+                        fontSize = 14.sp,
+                        fontWeight = FontWeight.Bold,
+                        modifier = Modifier
+                            .clickable { isExpanded = !isExpanded }
+                            .padding(vertical = 4.dp)
+                    )
+
+                    // Collapsible Content
+                    AnimatedVisibility(
+                        visible = isExpanded,
+                        enter = expandVertically(expandFrom = Alignment.Top),
+                        exit = shrinkVertically(shrinkTowards = Alignment.Top)
+                    ) {
+                        Column(modifier = Modifier.padding(top = 8.dp)) {
+                            HorizontalDivider(thickness = 1.dp, color = Color.White.copy(alpha = 0.3f))
+                            Spacer(modifier = Modifier.height(8.dp))
+                            Text(
+                                text = stringResource(R.string.what_s_new),
+                                color = Color.White,
+                                fontSize = 16.sp,
+                                fontWeight = FontWeight.SemiBold
+                            )
+                            Spacer(modifier = Modifier.height(4.dp))
+                            Text(
+                                text = releaseNotes,
+                                color = Color.White.copy(alpha = 0.8f),
+                                fontSize = 14.sp
+                            )
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+
+private fun LazyGridScope.profileSection(
     modifier: Modifier = Modifier,
     imageProfile: String? = null,
     onProfileClick:() -> Unit,
@@ -279,105 +359,112 @@ fun ProfileSection(
     @DrawableRes icAvatar: Int,
     name: String,
 ) {
-    Row(
-        modifier = modifier.fillMaxWidth(),
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.SpaceBetween
+    item(
+        span = {
+            GridItemSpan(maxLineSpan)
+        }
     ) {
         Row(
+            modifier = modifier.fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.Center
+            horizontalArrangement = Arrangement.SpaceBetween
         ) {
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.Center
+            ) {
+                IconButton(
+                    modifier = Modifier
+                        .size(80.dp),
+                    onClick = onProfileClick
+                ) {
+                    val image = imageProfile ?: icAvatar
+
+                    AsyncImage(
+                        model = image,
+                        contentDescription = "Image Profile",
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .clip(CircleShape),
+                        contentScale = ContentScale.Crop
+                    )
+                }
+                Spacer(modifier = Modifier.width(16.dp))
+                Text(
+                    text = name,
+                    color = Color.White,
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 18.sp
+                )
+            }
+
             IconButton(
                 modifier = Modifier
-                    .size(80.dp),
-                onClick = onProfileClick
+                    .size(50.dp),
+                onClick = onNotificationClick
             ) {
-                val image = if (imageProfile != null) imageProfile else icAvatar
-
-                AsyncImage(
-                    model = image,
-                    contentDescription = "Image Profile",
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .clip(CircleShape),
-                    contentScale = ContentScale.Crop
+                Icon(
+                    imageVector = Icons.Default.Notifications, // Placeholder for user avatar
+                    contentDescription = "Icon notification",
+                    tint = Color.White
                 )
-//                Image(
-//                    painter = painterResource(icAvatar), // Placeholder for user avatar
-//                    contentDescription = name,
-//                    modifier = Modifier
-//                        .fillMaxSize()
-//                        .clip(CircleShape)
-//                        .background(GrayText) // Placeholder background for avatar
-//                )
             }
-            Spacer(modifier = Modifier.width(16.dp))
-            Text(
-                text = name,
-                color = Color.White,
-                fontWeight = FontWeight.Bold,
-                fontSize = 18.sp
-            )
+
+
+
         }
-
-        IconButton(
-            modifier = Modifier
-                .size(50.dp),
-            onClick = onNotificationClick
-        ) {
-            Icon(
-                imageVector = Icons.Default.Notifications, // Placeholder for user avatar
-                contentDescription = "Icon notification",
-                tint = Color.White
-            )
-        }
-
-
-
     }
+
 }
 
-@Composable
-private fun StatisticsOverview(
+
+private fun LazyGridScope.statisticsOverview(
     modifier: Modifier = Modifier,
     totalQuizzes: Int,
     correctAnswers: Int,
     accurateRate: Int
 ) {
-    // Animatable states for each value
-    val animatedTotalQuizzes by animateIntAsState(
-        targetValue = totalQuizzes,
-        animationSpec = tween(durationMillis = 10, easing = LinearOutSlowInEasing)
-    )
-    val animatedCorrectAnswers by animateIntAsState(
-        targetValue = correctAnswers,
-        animationSpec = tween(durationMillis = 10, easing = LinearOutSlowInEasing)
-    )
-
-    val animatedAccurateRateFloat by animateFloatAsState(
-        targetValue = accurateRate.toFloat() / 100f, // Convert Int percentage to Float 0.0-1.0
-        animationSpec = tween(durationMillis = 100, easing = LinearOutSlowInEasing)
-    )
-
-    Row(
-        modifier = modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.SpaceAround,
-        verticalAlignment = Alignment.CenterVertically
+    item(
+        span = {
+            GridItemSpan(maxLineSpan)
+        }
     ) {
-        StatisticItem(
-            label = stringResource(R.string.total_quizzes),
-            value = animatedTotalQuizzes,
+        // Animatable states for each value
+        val animatedTotalQuizzes by animateIntAsState(
+            targetValue = totalQuizzes,
+            animationSpec = tween(durationMillis = 10, easing = LinearOutSlowInEasing)
         )
-        AccurateRateIndicator(
-            progress = animatedAccurateRateFloat // Use the converted animated float value
+        val animatedCorrectAnswers by animateIntAsState(
+            targetValue = correctAnswers,
+            animationSpec = tween(durationMillis = 10, easing = LinearOutSlowInEasing)
         )
-        StatisticItem(
-            label = stringResource(R.string.correct_answers),
-            value = animatedCorrectAnswers,
+
+        val animatedAccurateRateFloat by animateFloatAsState(
+            targetValue = accurateRate.toFloat() / 100f, // Convert Int percentage to Float 0.0-1.0
+            animationSpec = tween(durationMillis = 100, easing = LinearOutSlowInEasing)
         )
+
+        Row(
+            modifier = modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceAround,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            StatisticItem(
+                label = stringResource(R.string.total_quizzes),
+                value = animatedTotalQuizzes,
+            )
+            AccurateRateIndicator(
+                progress = animatedAccurateRateFloat // Use the converted animated float value
+            )
+            StatisticItem(
+                label = stringResource(R.string.correct_answers),
+                value = animatedCorrectAnswers,
+            )
+        }
     }
+
 }
+
 
 
 @Composable
@@ -399,7 +486,7 @@ private fun StatisticItem(label: String, value: Int) {
 
 
 @Composable
-fun AccurateRateIndicator(progress: Float) {
+private fun AccurateRateIndicator(progress: Float) {
     Box(
         modifier = Modifier.size(120.dp),
         contentAlignment = Alignment.Center
@@ -438,91 +525,7 @@ fun AccurateRateIndicator(progress: Float) {
     }
 }
 
-@Composable
-private fun NewVersionUpdateCard(
-    modifier: Modifier = Modifier,
-    versionName: String,
-    releaseNotes: String,
-    onUpdateButtonClicked: () -> Unit,
-) {
-    var isExpanded by remember { mutableStateOf(false) }
 
-    Card(
-        modifier = modifier
-            .fillMaxWidth()
-            .padding(vertical = 10.dp),
-        shape = RoundedCornerShape(16.dp),
-        colors = CardDefaults.cardColors(containerColor = CardBackground), // Example color
-        elevation = CardDefaults.elevatedCardElevation(defaultElevation = 4.dp)
-    ) {
-        Column(
-            modifier = Modifier
-                .padding(16.dp)
-                .fillMaxWidth()
-        ) {
-            // Header Row: Version and Update Button
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceBetween
-            ) {
-                AnimatedLoadingDotsText(
-                    text = stringResource(R.string.new_update_available, versionName),
-                    color = Color.White,
-                    fontSize = 18.sp,
-                    fontWeight = FontWeight.Bold
-                )
-                Button(
-                    onClick = onUpdateButtonClicked,
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = GreenAccent
-                    ),
-                    shape = RoundedCornerShape(8.dp),
-                    contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp)
-                ) {
-                    Text(text = "Update", color = CardBackground, fontWeight = FontWeight.Bold)
-                }
-            }
-
-            Spacer(modifier = Modifier.height(8.dp))
-
-            // Expand/Collapse Toggle Text
-            Text(
-                text = if (isExpanded) stringResource(R.string.show_less) else stringResource(R.string.show_more),
-                color = Color.White.copy(alpha = 0.7f),
-                fontSize = 14.sp,
-                fontWeight = FontWeight.Bold,
-                modifier = Modifier
-                    .clickable { isExpanded = !isExpanded }
-                    .padding(vertical = 4.dp)
-            )
-
-            // Collapsible Content
-            AnimatedVisibility(
-                visible = isExpanded,
-                enter = expandVertically(expandFrom = Alignment.Top),
-                exit = shrinkVertically(shrinkTowards = Alignment.Top)
-            ) {
-                Column(modifier = Modifier.padding(top = 8.dp)) {
-                    HorizontalDivider(thickness = 1.dp, color = Color.White.copy(alpha = 0.3f))
-                    Spacer(modifier = Modifier.height(8.dp))
-                    Text(
-                        text = stringResource(R.string.what_s_new),
-                        color = Color.White,
-                        fontSize = 16.sp,
-                        fontWeight = FontWeight.SemiBold
-                    )
-                    Spacer(modifier = Modifier.height(4.dp))
-                    Text(
-                        text = releaseNotes,
-                        color = Color.White.copy(alpha = 0.8f),
-                        fontSize = 14.sp
-                    )
-                }
-            }
-        }
-    }
-}
 
 
 
@@ -541,8 +544,6 @@ fun HomeScreenPreview() {
             quizTimeInMin = 45
         )
     }
-
-
 
     val user = User(
         gender = Gender.Male.name,
@@ -564,14 +565,10 @@ fun HomeScreenPreview() {
         appRelease = appRelease
     )
 
-
     HomeContent(
         state = state,
         onProfileClick = {},
-        onPopularQuizzesClick = {},
-        onTopViewedQuizzesClick = {},
         onTopicClick = {},
-        onResumeQuizClick = {},
         onRefresh = {},
         onNotificationClick = {},
         onUpdateClicked = {}
@@ -581,12 +578,76 @@ fun HomeScreenPreview() {
 }
 
 
-@Preview
+@Preview(showBackground = true, backgroundColor = 0xFF1E2741 )
 @Composable
-private fun NewVersionUpdateCardPreview(modifier: Modifier = Modifier) {
-    NewVersionUpdateCard(
-        versionName = "1.0.0",
-        releaseNotes = "What's New in this Update:\n" +
+private fun ProfileSectionPreview() {
+    LazyVerticalGrid(
+        columns = GridCells.Fixed(1),
+        contentPadding = PaddingValues(16.dp)
+    ) {
+        profileSection(
+            onProfileClick = {},
+            onNotificationClick = {},
+            icAvatar = R.drawable.ic_male_avatar,
+            name = "Jane Doe"
+        )
+    }
+}
+
+
+@Preview(showBackground = true, backgroundColor = 0xFF1E2741 ) // Use a dark background
+@Composable
+private fun StatisticsOverViewPreview() {
+    LazyVerticalGrid(
+        columns = GridCells.Fixed(1),
+        contentPadding = PaddingValues(16.dp)
+    ) {
+        statisticsOverview(
+            totalQuizzes = 21,
+            correctAnswers = 50,
+            accurateRate = 86
+        )
+    }
+}
+
+
+@Preview(showBackground = true, backgroundColor = 0xFF1E2741 ) // Use a dark background
+@Composable
+private fun TopicSectionPreview() {
+    LazyVerticalGrid(
+        columns = GridCells.Fixed(3),
+        horizontalArrangement = Arrangement.spacedBy(12.dp),
+        verticalArrangement = Arrangement.spacedBy(12.dp),
+        contentPadding = PaddingValues(12.dp)
+    ) {
+        val topics = List(5){
+            Topic(
+                titleEnglish = "Architecture and Design $it",
+            )
+        }
+        topicSection(
+            isLoading = false,
+            onTopicClick = {},
+            topics = topics,
+            isCustomTimeEnabled = false,
+            customTimeInMin = 0,
+            showQuizTime = false
+        )
+    }
+}
+
+
+@Preview(showBackground = true, backgroundColor = 0xFF1E2741 ) // Use a dark background
+@Composable
+private fun NewVersionUpdateCardPreview() {
+    LazyVerticalGrid(
+        columns = GridCells.Fixed(1),
+        contentPadding = PaddingValues(16.dp)
+    ) {
+        newVersionUpdateCard(
+            isUpdateAvailable = true,
+            versionName = "1.0.0",
+            releaseNotes = "What's New in this Update:\n" +
                 "\n" +
                 "[New Feature Name]: A brief, benefit-oriented description of the new feature.\n" +
                 "\n" +
@@ -609,6 +670,10 @@ private fun NewVersionUpdateCardPreview(modifier: Modifier = Modifier) {
                 "We hope you enjoy these updates! If you have any feedback or suggestions, please don't hesitate to reach out.\n" +
                 "\n" +
                 "Happy [App Name]ing!",
-        onUpdateButtonClicked = {}
-    )
+            onUpdateButtonClicked = {}
+        )
+
+    }
 }
+
+

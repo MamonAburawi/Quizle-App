@@ -38,7 +38,6 @@ import com.quizle.presentation.screens.sign_up.SignUpViewModel
 import com.quizle.presentation.screens.splash_screen.SplashViewModel
 import com.quizle.presentation.screens.topic.TopicViewModel
 import com.quizle.presentation.util.AppVersionHelper
-import com.quizle.presentation.util.StringProvider
 import com.quizle.presentation.util.Validator
 import org.koin.core.module.dsl.singleOf
 import org.koin.core.module.dsl.viewModelOf
@@ -90,6 +89,5 @@ val koinModule = module {
     single { AppVersionHelper(context = get()) }
     single { FileReader(context = get()) }
     single <ResourceProvider> { DefaultResourceProvider(context = get()) }
-    single { StringProvider(context = get()) }
 
 }
