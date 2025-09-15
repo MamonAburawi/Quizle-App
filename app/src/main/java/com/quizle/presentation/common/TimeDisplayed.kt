@@ -1,8 +1,11 @@
 package com.quizle.presentation.common
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -13,57 +16,74 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.quizle.R
-
+import com.quizle.presentation.theme.QuizleTheme
 
 @Composable
 fun TimeDisplay(
+    modifier: Modifier = Modifier,
     timeInMinutes: Int,
-    containerColor: Color = Color.Red,
-    contentColor: Color = Color.White
+    // NEW: Defaults are now from the MaterialTheme color scheme
+    containerColor: Color = MaterialTheme.colorScheme.secondaryContainer,
+    contentColor: Color = MaterialTheme.colorScheme.onSecondaryContainer
 ) {
-
-    val timeInSeconds = (timeInMinutes * 60)
-    val totalMinutes = timeInMinutes
-
     val displayString = when {
-        // If time is less than 60 seconds (1 minute)
-        totalMinutes < 1 -> stringResource(R.string.seconds_short, timeInSeconds)
-        // If time is less than 60 minutes
-        totalMinutes <= 60 -> stringResource(R.string.minutes_short, totalMinutes)
-        // If time is 60 minutes or more
+        timeInMinutes < 1 -> stringResource(R.string.seconds_short, timeInMinutes * 60)
+        timeInMinutes < 60 -> stringResource(R.string.minutes_short, timeInMinutes)
         else -> {
-            val hours = totalMinutes / 60
-            val minutes = totalMinutes % 60
-            if (hours > 1 && minutes == 0){
+            val hours = timeInMinutes / 60
+            val minutes = timeInMinutes % 60
+            if (minutes == 0) {
                 stringResource(R.string.hours_short, hours)
-            }else {
+            } else {
                 stringResource(R.string.hours_minutes_short, hours, minutes)
             }
-
         }
     }
 
-    // Your Text composable
     Text(
-        modifier = Modifier
+        modifier = modifier
             .clip(RoundedCornerShape(8.dp))
             .background(containerColor)
-            .padding(horizontal = 6.dp, vertical = 2.dp),
+            .padding(horizontal = 8.dp, vertical = 4.dp),
         text = displayString,
         color = contentColor,
         fontWeight = FontWeight.Medium,
-        fontSize = 10.sp,
-        maxLines = 3,
+        style = MaterialTheme.typography.labelSmall,
+        maxLines = 1,
         overflow = TextOverflow.Ellipsis,
     )
 }
 
 
+// --- PREVIEWS ---
 
-@Preview
+@Preview(name = "Time Display - Light Theme", showBackground = true)
 @Composable
-fun TimeDisplayedPreview() {
-    TimeDisplay(timeInMinutes = 45)
+private fun TimeDisplayLightPreview() {
+    QuizleTheme(darkTheme = false) {
+        Column(
+            modifier = Modifier.padding(16.dp),
+            verticalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            TimeDisplay(timeInMinutes = 45)  // Displays "45 min"
+            TimeDisplay(timeInMinutes = 60)  // Displays "1 h"
+            TimeDisplay(timeInMinutes = 110) // Displays "1 h 50 min"
+        }
+    }
+}
+
+@Preview(name = "Time Display - Dark Theme", showBackground = true)
+@Composable
+private fun TimeDisplayDarkPreview() {
+    QuizleTheme(darkTheme = true) {
+        Column(
+            modifier = Modifier.padding(16.dp),
+            verticalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            TimeDisplay(timeInMinutes = 45)  // Displays "45 min"
+            TimeDisplay(timeInMinutes = 60)  // Displays "1 h"
+            TimeDisplay(timeInMinutes = 110) // Displays "1 h 50 min"
+        }
+    }
 }

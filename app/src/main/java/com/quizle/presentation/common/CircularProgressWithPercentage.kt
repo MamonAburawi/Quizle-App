@@ -20,47 +20,51 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.quizle.presentation.theme.QuizleTheme
 
 @Composable
 fun CircularProgressWithPercentage(
     percentage: Float,
     animationDuration: Int = 1000,
     size: Dp = 100.dp,
-    strokeWidth: Dp = 10.dp
+    strokeWidth: Dp = 10.dp,
+    // NEW: Colors are now parameters with theme-based defaults
+    successColor: Color = MaterialTheme.colorScheme.primary,
+    warningColor: Color = MaterialTheme.colorScheme.secondary,
+    errorColor: Color = MaterialTheme.colorScheme.error,
+    trackColor: Color = MaterialTheme.colorScheme.surfaceVariant
 ) {
-    // Animate the percentage value for a smooth transition.
     val animatedPercentage by animateFloatAsState(
         targetValue = percentage,
-        animationSpec = tween(animationDuration)
+        animationSpec = tween(animationDuration),
+        label = "percentageAnimation"
     )
 
-    // Determine the color based on the percentage value.
+    // The logic now uses the color parameters.
     val progressColor = when {
-        animatedPercentage >= 80f -> Color.Green
-        animatedPercentage > 40f -> Color.Yellow
-        else -> Color.Red
+        animatedPercentage >= 80f -> successColor
+        animatedPercentage > 40f -> warningColor
+        else -> errorColor
     }
 
     Box(
         contentAlignment = Alignment.Center,
         modifier = Modifier.size(size)
     ) {
-        // Use a Canvas to draw the circular progress arc.
         Canvas(modifier = Modifier.fillMaxSize()) {
             val sweepAngle = animatedPercentage * 360f / 100f
-            val backgroundArcColor = Color.LightGray.copy(alpha = 0.3f)
             val stroke = Stroke(width = strokeWidth.toPx(), cap = StrokeCap.Round)
 
-            // Draw the light gray background circle first.
+            // Draw the background track using the new trackColor.
             drawArc(
-                color = backgroundArcColor,
+                color = trackColor,
                 startAngle = -90f,
                 sweepAngle = 360f,
                 useCenter = false,
                 style = stroke
             )
 
-            // Draw the progress arc on top, with the color depending on the percentage.
+            // Draw the progress arc.
             drawArc(
                 color = progressColor,
                 startAngle = -90f,
@@ -70,23 +74,26 @@ fun CircularProgressWithPercentage(
             )
         }
 
-        // Display the percentage text in the center.
         Text(
             text = "${animatedPercentage.toInt()}%",
             fontSize = 24.sp,
             fontWeight = FontWeight.Bold,
-            color = MaterialTheme.colorScheme.onBackground
+            // Changed to onSurface for better semantic correctness
+            color = MaterialTheme.colorScheme.onSurface
         )
     }
 }
 
 
-@Preview
+@Preview(showBackground = true)
 @Composable
-private fun CircularProgressWithPercentagePreview(modifier: Modifier = Modifier) {
-    CircularProgressWithPercentage(
-        percentage = 60f,
-        size = 200.dp,
-        strokeWidth = 20.dp
-    )
+private fun CircularProgressWithPercentagePreview() {
+    // The preview uses the default theme colors without any changes.
+    QuizleTheme {
+        CircularProgressWithPercentage(
+            percentage = 100f, // This will now use the theme's 'secondary' color
+            size = 200.dp,
+            strokeWidth = 20.dp
+        )
+    }
 }

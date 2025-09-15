@@ -2,22 +2,8 @@ package com.quizle.presentation.common
 
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.HorizontalDivider
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.ProgressIndicatorDefaults
-import androidx.compose.material3.Text
+import androidx.compose.foundation.layout.*
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -29,54 +15,56 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.quizle.R
+import com.quizle.presentation.theme.QuizleTheme
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 
 @Composable
 fun QuizResultCard(
+    modifier: Modifier = Modifier,
     createdAt: Long,
     totalQuestions: Int,
     correctAnswersCount: Int,
     topicTitle: String,
     topicSubTitle: String,
-    enableAnimation: Boolean = true
+    enableAnimation: Boolean = true,
+    // NEW: Card and score colors are now parameters with theme-based defaults
+    colors: CardColors = CardDefaults.cardColors(),
+    successColor: Color = MaterialTheme.colorScheme.primary,
+    warningColor: Color = MaterialTheme.colorScheme.secondary,
+    errorColor: Color = MaterialTheme.colorScheme.error
 ) {
     val progress = correctAnswersCount.toFloat() / totalQuestions.toFloat()
+    // NEW: Score color now uses theme-based semantic colors
     val scoreColor = when {
-        progress >= 0.8 -> Color(0xFF4CAF50) // Green
-        progress >= 0.5 -> Color(0xFFFF9800) // Orange
-        else -> Color(0xFFF44336) // Red
+        progress >= 0.8 -> successColor
+        progress >= 0.5 -> warningColor
+        else -> errorColor
     }
 
-    // Animate the progress if enableAnimation is true
     val animatedProgress by animateFloatAsState(
         targetValue = progress,
         animationSpec = if (enableAnimation) tween(durationMillis = 1000) else tween(durationMillis = 0),
         label = "quiz_progress_animation"
     )
 
-    // Format the timestamp
     val dateFormat = SimpleDateFormat("MMM dd 'at' h:mm a", Locale.getDefault())
     val formattedDate = dateFormat.format(Date(createdAt))
 
     Card(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(16.dp),
-        elevation = CardDefaults.cardElevation(defaultElevation = 8.dp),
-        colors = CardDefaults.cardColors(containerColor = Color.White)
+        modifier = modifier.fillMaxWidth(),
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
+        colors = colors
     ) {
         Column(
             modifier = Modifier.padding(16.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            // Quiz Title and Subtitle
             Text(
                 text = topicTitle,
                 style = MaterialTheme.typography.titleLarge,
-                fontWeight = FontWeight.Bold,
-                modifier = Modifier.padding(bottom = 4.dp)
+                fontWeight = FontWeight.Bold
             )
             Text(
                 text = topicSubTitle,
@@ -85,7 +73,6 @@ fun QuizResultCard(
                 modifier = Modifier.padding(bottom = 12.dp)
             )
 
-            // Score Circle with Progress Indicator
             Box(
                 contentAlignment = Alignment.Center,
                 modifier = Modifier.size(120.dp)
@@ -95,7 +82,8 @@ fun QuizResultCard(
                     modifier = Modifier.size(120.dp),
                     color = scoreColor,
                     strokeWidth = 10.dp,
-                    trackColor = ProgressIndicatorDefaults.circularIndeterminateTrackColor,
+                    // Use the standard track color for better theme adherence
+                    trackColor = ProgressIndicatorDefaults.circularTrackColor,
                 )
                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
                     Text(
@@ -107,68 +95,95 @@ fun QuizResultCard(
                     Text(
                         text = "/$totalQuestions",
                         fontSize = 20.sp,
-                        fontWeight = FontWeight.SemiBold,
-                        color = MaterialTheme.colorScheme.onSurface
+                        fontWeight = FontWeight.SemiBold
                     )
                 }
             }
-            // Creation Time
+
             Text(
                 text = stringResource(R.string.completion_date_message, formattedDate),
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
-                modifier = Modifier.padding(vertical = 15.dp)
+                modifier = Modifier.padding(vertical = 16.dp)
             )
 
-            // Separator
-            Spacer(modifier = Modifier.height(16.dp))
-            HorizontalDivider(color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.1f))
-            Spacer(modifier = Modifier.height(16.dp))
+            HorizontalDivider()
 
-            // Details
             Row(
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 16.dp),
                 horizontalArrangement = Arrangement.SpaceAround
             ) {
-                Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                    Text(
-                        text = stringResource(R.string.correct),
-                        style = MaterialTheme.typography.bodySmall,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                    )
-                    Text(
-                        text = "$correctAnswersCount",
-                        style = MaterialTheme.typography.titleMedium,
-                        fontWeight = FontWeight.Bold
-                    )
-                }
-                Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                    Text(
-                        text = stringResource(R.string.total),
-                        style = MaterialTheme.typography.bodySmall,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                    )
-                    Text(
-                        text = "$totalQuestions",
-                        style = MaterialTheme.typography.titleMedium,
-                        fontWeight = FontWeight.Bold
-                    )
-                }
+                ResultDetail(label = stringResource(R.string.correct), value = "$correctAnswersCount")
+                ResultDetail(label = stringResource(R.string.total), value = "$totalQuestions")
             }
         }
     }
 }
 
-
-@Preview
 @Composable
-private fun QuizResultCardPreview() {
-    QuizResultCard(
-        createdAt = 162,
-        totalQuestions = 20,
-        correctAnswersCount = 20,
-        topicTitle = "Quiz Title",
-        topicSubTitle = "Quiz Subtitle",
-        enableAnimation = true
-    )
+private fun ResultDetail(label: String, value: String) {
+    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+        Text(
+            text = label,
+            style = MaterialTheme.typography.bodyMedium,
+            color = MaterialTheme.colorScheme.onSurfaceVariant
+        )
+        Text(
+            text = value,
+            style = MaterialTheme.typography.titleMedium,
+            fontWeight = FontWeight.Bold
+        )
+    }
+}
+
+
+
+@Preview(name = "High Score - Light Theme", showBackground = true)
+@Composable
+private fun HighScoreLightPreview() {
+    QuizleTheme(darkTheme = false) {
+        Box(modifier = Modifier.padding(16.dp)) {
+            QuizResultCard(
+                createdAt = System.currentTimeMillis(),
+                totalQuestions = 20,
+                correctAnswersCount = 18, // High score (>= 80%)
+                topicTitle = "History",
+                topicSubTitle = "Ancient Civilizations"
+            )
+        }
+    }
+}
+
+@Preview(name = "Medium Score - Dark Theme", showBackground = true)
+@Composable
+private fun MediumScoreDarkPreview() {
+    QuizleTheme(darkTheme = true) {
+        Box(modifier = Modifier.padding(16.dp)) {
+            QuizResultCard(
+                createdAt = System.currentTimeMillis(),
+                totalQuestions = 20,
+                correctAnswersCount = 13, // Medium score (>= 50%)
+                topicTitle = "Science",
+                topicSubTitle = "Biology Basics"
+            )
+        }
+    }
+}
+
+@Preview(name = "Low Score - Light Theme", showBackground = true)
+@Composable
+private fun LowScoreLightPreview() {
+    QuizleTheme(darkTheme = false) {
+        Box(modifier = Modifier.padding(16.dp)) {
+            QuizResultCard(
+                createdAt = System.currentTimeMillis(),
+                totalQuestions = 20,
+                correctAnswersCount = 5, // Low score (< 50%)
+                topicTitle = "Mathematics",
+                topicSubTitle = "Algebra I"
+            )
+        }
+    }
 }

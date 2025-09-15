@@ -1,7 +1,9 @@
 package com.quizle.presentation.common
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material3.Icon
@@ -11,17 +13,23 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
+import com.quizle.presentation.theme.QuizleTheme
 
 @Composable
 fun ErrorScreen(
     modifier: Modifier = Modifier,
     error: String,
+    background: Color = MaterialTheme.colorScheme.background,
+    contentColor: Color = MaterialTheme.colorScheme.error,
     onRefresh: () -> Unit
 ) {
     Column(
-        modifier = modifier,
+        modifier = modifier
+            .fillMaxSize()
+            .background(background),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
@@ -29,7 +37,7 @@ fun ErrorScreen(
             text = error,
             fontSize = MaterialTheme.typography.headlineSmall.fontSize,
             textAlign = TextAlign.Center,
-            color = MaterialTheme.colorScheme.error
+            color = contentColor
         )
         IconButton(
             onClick = onRefresh
@@ -41,16 +49,17 @@ fun ErrorScreen(
         }
     }
 
-
 }
 
 
 @Preview(showBackground = true)
 @Composable
-private fun ErrorScreenPreview(modifier: Modifier = Modifier) {
-    ErrorScreen(
-        error = "Something went wrong",
-        onRefresh = {}
-    )
+private fun ErrorScreenPreview() {
+    QuizleTheme {
+        ErrorScreen(
+            error = "Something went wrong",
+            onRefresh = {}
+        )
+    }
 }
 

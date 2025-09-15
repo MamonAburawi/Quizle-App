@@ -1,122 +1,96 @@
 package com.quizle.presentation.common
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.quizle.presentation.theme.QuizleTheme
+
 
 @Composable
-fun PromptDialog(
-    modifier: Modifier = Modifier,
+fun ConfirmationDialog(
     title: String,
     subTitle: String,
     positiveBtnText: String,
     negativeBtnText: String? = null,
-    isOpen: Boolean = false,
-    dialogColor: Color = Color.White,
-    backgroundColor: Color = Color.Transparent.copy(alpha = 0.4f),
-    onPositiveBtnClicked: () -> Unit,
-    onCancel: () -> Unit = {}
+    isOpen: Boolean,
+    onDismissRequest: () -> Unit,
+    onConfirm: () -> Unit,
 ) {
-    if (isOpen){
-        Box(
-            modifier = modifier
-                .fillMaxSize()
-                .background(backgroundColor)
-                .clickable(enabled = false){},
-            contentAlignment = Alignment.Center
-        ){
-
-            Card(
-                modifier = Modifier
-                    .fillMaxWidth(fraction = 0.8f),
-                colors = CardDefaults.cardColors(contentColor = dialogColor),
-                shape = RoundedCornerShape(12.dp)
-            ) {
-                Column(
-                    modifier = Modifier
-                        .padding(20.dp)
-                ) {
-                    Text(
-                        text = title,
-                        fontSize = MaterialTheme.typography.headlineSmall.fontSize,
-                        fontWeight = FontWeight.Bold,
-                        color = Color.Black
-                    )
-                    Spacer(modifier = Modifier.height(20.dp))
-                    Text(
-                        text = subTitle,
-                        fontSize = MaterialTheme.typography.bodyMedium.fontSize,
-                        color = Color.Black
-                    )
-
-                    Spacer(modifier = Modifier.height(60.dp))
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth(),
-                        horizontalArrangement = Arrangement.End
-                    ) {
-                        if (negativeBtnText != null){
-                            Text(
-                                modifier = Modifier
-                                    .clickable { onCancel() },
-                                text = negativeBtnText,
-                                fontSize = MaterialTheme.typography.bodyMedium.fontSize,
-                                fontWeight = FontWeight.Bold,
-                                color = MaterialTheme.colorScheme.secondary
-                            )
-                            Spacer(modifier = Modifier.padding(10.dp))
-                        }
-
-                        Text(
-                            modifier = Modifier
-                                .clickable { onPositiveBtnClicked() },
-                            text = positiveBtnText,
-                            fontSize = MaterialTheme.typography.bodyMedium.fontSize,
-                            fontWeight = FontWeight.Bold,
-                            color = MaterialTheme.colorScheme.secondary
-                        )
-
-
+    if (isOpen) {
+        AlertDialog(
+            onDismissRequest = onDismissRequest,
+            title = {
+                Text(
+                    text = title,
+                    style = MaterialTheme.typography.headlineSmall,
+                    fontWeight = FontWeight.Bold
+                )
+            },
+            text = {
+                Text(
+                    text = subTitle,
+                    style = MaterialTheme.typography.bodyMedium
+                )
+            },
+            confirmButton = {
+                TextButton(onClick = onConfirm) {
+                    Text(positiveBtnText, fontWeight = FontWeight.Bold)
+                }
+            },
+            dismissButton = {
+                if (negativeBtnText != null) {
+                    TextButton(onClick = onDismissRequest) {
+                        Text(negativeBtnText, fontWeight = FontWeight.Bold)
                     }
                 }
-
-            }
-        }
+            },
+            shape = MaterialTheme.shapes.large,
+            containerColor = MaterialTheme.colorScheme.surface,
+            titleContentColor = MaterialTheme.colorScheme.onSurface,
+            textContentColor = MaterialTheme.colorScheme.onSurfaceVariant
+        )
     }
-
 }
 
 
-@Preview(showBackground = true)
+@Preview(name = "Dialog - Light Theme")
 @Composable
-private fun QuizDialogPreview() {
-    PromptDialog(
-        title = "Submit Quiz",
-        subTitle = "Are you sure you want to submit the quiz?",
-        isOpen = true,
-        onCancel = {},
-        onPositiveBtnClicked = {},
-        positiveBtnText = "Submit",
-        negativeBtnText = "Cancel"
-    )
+private fun ConfirmationDialogLightPreview() {
+    QuizleTheme(darkTheme  = false) {
+        // A Box is used to provide a background for the preview
+        Box(modifier = Modifier.padding(16.dp)) {
+            ConfirmationDialog(
+                title = "Submit Quiz",
+                subTitle = "Are you sure you want to submit the quiz?",
+                isOpen = true,
+                onDismissRequest = {},
+                onConfirm = {},
+                positiveBtnText = "Submit",
+                negativeBtnText = "Cancel"
+            )
+        }
+    }
+}
+
+@Preview(name = "Dialog - Dark Theme")
+@Composable
+private fun ConfirmationDialogDarkPreview() {
+    QuizleTheme(darkTheme  = true) {
+        Box(modifier = Modifier.padding(16.dp)) {
+            ConfirmationDialog(
+                title = "Submit Quiz",
+                subTitle = "Are you sure you want to submit the quiz?",
+                isOpen = true,
+                onDismissRequest = {},
+                onConfirm = {},
+                positiveBtnText = "Submit",
+                negativeBtnText = "Cancel"
+            )
+        }
+    }
 }

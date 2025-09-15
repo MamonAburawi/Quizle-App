@@ -7,6 +7,19 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import com.quizle.presentation.theme.QuizleTheme
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.selection.selectable
+import androidx.compose.material3.RadioButtonColors
+import androidx.compose.material3.RadioButtonDefaults
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 
 
 @Composable
@@ -14,22 +27,71 @@ fun RadioItem(
     modifier: Modifier = Modifier,
     isSelected: Boolean,
     onSelectedItem: () -> Unit,
-    option: String
+    option: String,
+    colors: RadioButtonColors = RadioButtonDefaults.colors()
 ) {
+
     Row(
-        modifier = modifier,
+        modifier = modifier
+            .selectable(
+                selected = isSelected,
+                onClick = onSelectedItem,
+                role = Role.RadioButton
+            )
+            .padding(vertical = 8.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
         RadioButton(
             selected = isSelected,
-            onClick = { onSelectedItem()}
+            onClick = null,
+            colors = colors
         )
 
         Text(
+            modifier = Modifier.padding(start = 8.dp),
             text = option,
-            fontSize = MaterialTheme.typography.titleSmall.fontSize,
-            color = MaterialTheme.colorScheme.secondary
-
+            style = MaterialTheme.typography.bodyLarge,
+            // NEW: Color is no longer hardcoded, it uses the theme's default onSurface color
         )
+    }
+}
+
+// --- PREVIEWS ---
+
+@Preview(name = "Radio Group - Light Theme", showBackground = true)
+@Composable
+private fun RadioItemLightPreview() {
+    QuizleTheme(darkTheme  = false) {
+        var selectedOption by remember { mutableStateOf("Option 2") }
+        val options = listOf("Option 1", "Option 2", "Option 3")
+
+        Column(modifier = Modifier.padding(16.dp)) {
+            options.forEach { option ->
+                RadioItem(
+                    isSelected = (selectedOption == option),
+                    onSelectedItem = { selectedOption = option },
+                    option = option
+                )
+            }
+        }
+    }
+}
+
+@Preview(name = "Radio Group - Dark Theme", showBackground = true)
+@Composable
+private fun RadioItemDarkPreview() {
+    QuizleTheme(darkTheme = true) {
+        var selectedOption by remember { mutableStateOf("Option 2") }
+        val options = listOf("Option 1", "Option 2", "Option 3")
+
+        Column(modifier = Modifier.padding(16.dp)) {
+            options.forEach { option ->
+                RadioItem(
+                    isSelected = (selectedOption == option),
+                    onSelectedItem = { selectedOption = option },
+                    option = option
+                )
+            }
+        }
     }
 }

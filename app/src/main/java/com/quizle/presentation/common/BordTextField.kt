@@ -11,7 +11,9 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.quizle.presentation.theme.QuizleTheme
 
 
 @Composable
@@ -55,4 +57,33 @@ fun BordTextField(
         }
     }
 
+}
+
+
+@Preview(name = "BordTextField Light Mode", showBackground = true)
+@Composable
+fun BordTextFieldLightPreview() {
+    QuizleTheme(darkTheme = false) {
+        BordTextField(
+            value = "",
+            onValueChange = {},
+            label = "Email",
+            keyboardType = KeyboardType.Email,
+            error = "Invalid Email"
+        )
+    }
+}
+
+@Preview(name = "BordTextField Dark Mode", showBackground = true)
+@Composable
+fun BordTextFieldDarkPreview() {
+    QuizleTheme(darkTheme = true) {
+        BordTextField(
+            value = "",
+            onValueChange = {},
+            label = "Email",
+            keyboardType = KeyboardType.Email,
+            error = "Invalid Email"
+        )
+    }
 }

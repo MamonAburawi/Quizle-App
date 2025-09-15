@@ -17,17 +17,19 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.TextUnit
+import com.quizle.presentation.theme.QuizleTheme
+
 
 
 @Composable
 fun PrimaryAppBar(
     title: String,
-    onBack:() -> Unit,
-    contentColor: Color = Color.Black,
-    containerColor :Color = Color.White,
+    onBack: () -> Unit,
+    // NEW: Defaults are now from the MaterialTheme color scheme
+    containerColor: Color = MaterialTheme.colorScheme.surface,
+    contentColor: Color = MaterialTheme.colorScheme.onSurface,
     fontSize: TextUnit = MaterialTheme.typography.titleLarge.fontSize
 ) {
-
     TopAppBar(
         windowInsets = WindowInsets(0),
         colors = TopAppBarDefaults.topAppBarColors(
@@ -38,14 +40,12 @@ fun PrimaryAppBar(
         title = {
             Text(
                 text = title,
-                fontSize = fontSize,
-                color = contentColor
+                fontSize = fontSize
+                // No need to specify color here, it's inherited from titleContentColor
             )
         },
         navigationIcon = {
-            IconButton(
-                onClick = onBack
-            ) {
+            IconButton(onClick = onBack) {
                 Icon(
                     imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                     contentDescription = "Back Icon"
@@ -56,11 +56,30 @@ fun PrimaryAppBar(
 }
 
 
-@Preview
+
+
+@Preview(name = "Primary App Bar - Light Theme", showBackground = true)
 @Composable
-private fun PrimaryAppBarPreview() {
-    PrimaryAppBar(
-        title = "Report an issue",
-        onBack = {}
-    )
+private fun PrimaryAppBarLightPreview() {
+    QuizleTheme(darkTheme = false) {
+        PrimaryAppBar(
+            title = "Settings",
+            onBack = {}
+        )
+    }
+}
+
+
+
+@Preview(name = "Primary App Bar - Dark", showBackground = true)
+@Composable
+private fun PrimaryAppBarDarkPreview() {
+    QuizleTheme(darkTheme = true) {
+        PrimaryAppBar(
+            title = "Profile",
+            onBack = {},
+            containerColor = MaterialTheme.colorScheme.primary,
+            contentColor = MaterialTheme.colorScheme.onPrimary
+        )
+    }
 }

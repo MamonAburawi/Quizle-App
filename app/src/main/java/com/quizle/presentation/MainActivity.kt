@@ -17,14 +17,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.compose.rememberNavController
-import com.quizle.data.local.prefrences.AppPreferences
 import com.quizle.presentation.common.ToastHost
 import com.quizle.presentation.common.ToastMessageController
 import com.quizle.presentation.navigation.NestedNavGraph
-import com.quizle.presentation.theme.QuizlyTheme
+import com.quizle.presentation.theme.QuizleTheme
 import com.quizle.presentation.util.LocaleHelper
-import com.quizle.presentation.util.setAppLanguage
-
 
 
 class MainActivity : ComponentActivity() {
@@ -67,7 +64,7 @@ fun AppRoot() {
         ToastMessageController(snackBarHostState, coroutineScope)
     }
 
-    QuizlyTheme {
+    QuizleTheme {
 //        Scaffold{ innerPadding ->
             Box(
                 modifier = Modifier
@@ -92,7 +89,7 @@ fun AppRoot() {
 @Preview(showBackground = true)
 @Composable
 fun GreetingPreview() {
-    QuizlyTheme {
+    QuizleTheme {
         AppRoot()
     }
 }

@@ -22,6 +22,8 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.quizle.R
+import com.quizle.presentation.theme.QuizleTheme
+
 
 @Composable
 fun BordPasswordTextField(
@@ -35,49 +37,81 @@ fun BordPasswordTextField(
     val ic = if (passwordVisible) R.drawable.ic_visible else R.drawable.ic_invisible
 
     Column(
-        modifier = modifier
-            .fillMaxWidth()
+        modifier = modifier.fillMaxWidth()
     ) {
         OutlinedTextField(
-            modifier = Modifier
-                .fillMaxWidth(),
+            modifier = Modifier.fillMaxWidth(),
             value = value,
-            onValueChange = {
-                onValueChange(it)
-            },
+            onValueChange = { onValueChange(it) },
             isError = !error.isNullOrEmpty(),
             label = { Text(label) },
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
-            // Apply visual transformation based on passwordVisible state
             visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
             trailingIcon = {
-                // Create an IconButton for the toggle icon
                 val description = if (passwordVisible) "Hide password" else "Show password"
-
                 IconButton(onClick = { passwordVisible = !passwordVisible }) {
-                    Icon(painter =  painterResource(ic), contentDescription = description)
+                    Icon(painter = painterResource(ic), contentDescription = description)
                 }
             }
         )
 
-        if (!error.isNullOrEmpty()){
+        if (!error.isNullOrEmpty()) {
             Text(
-                modifier = Modifier.padding(10.dp),
+                modifier = Modifier.padding(start = 16.dp, top = 4.dp),
                 text = error,
-                fontSize = MaterialTheme.typography.bodyMedium.fontSize,
+                style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.error
             )
-
         }
     }
 }
 
-@Preview(showBackground = true)
+
+
+@Preview(name = "Password Field - Light Theme", showBackground = true)
 @Composable
-private fun PasswordOutLineTextField() {
-    BordPasswordTextField(
-        value = "5645646",
-        onValueChange = {},
-        error = null
-    )
+private fun PasswordOutlineTextFieldLightPreview() {
+    QuizleTheme(darkTheme  = false) {
+        BordPasswordTextField(
+            value = "123456",
+            onValueChange = {},
+            error = null
+        )
+    }
+}
+
+@Preview(name = "Password Field - Dark Theme", showBackground = true)
+@Composable
+private fun PasswordOutlineTextFieldDarkPreview() {
+    QuizleTheme(darkTheme  = true) {
+        BordPasswordTextField(
+            value = "123456",
+            onValueChange = {},
+            error = null
+        )
+    }
+}
+
+@Preview(name = "Password Field with Error - Light Theme", showBackground = true)
+@Composable
+private fun PasswordOutlineTextFieldErrorLightPreview() {
+    QuizleTheme(darkTheme  = false) {
+        BordPasswordTextField(
+            value = "123",
+            onValueChange = {},
+            error = "Password is too short"
+        )
+    }
+}
+
+@Preview(name = "Password Field with Error - Dark Theme", showBackground = true)
+@Composable
+private fun PasswordOutlineTextFieldErrorDarkPreview() {
+    QuizleTheme(darkTheme  = true) {
+        BordPasswordTextField(
+            value = "123",
+            onValueChange = {},
+            error = "Password is too short"
+        )
+    }
 }
