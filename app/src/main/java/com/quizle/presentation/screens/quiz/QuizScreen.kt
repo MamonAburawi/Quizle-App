@@ -140,7 +140,9 @@ private fun QuizScreenContent(
     ) { paddingValues ->
 
         Column(
-            modifier = Modifier.fillMaxSize(),
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(paddingValues),
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
@@ -151,8 +153,6 @@ private fun QuizScreenContent(
                 initMessage = "Hang tight, your quiz is loading.",
                 background = DarkBackground
             )
-
-
 
             if (state.error != null){
                 Text(
@@ -166,8 +166,7 @@ private fun QuizScreenContent(
             if (!state.isLoading && state.questions.isNotEmpty()){
                 QuizElements(
                     modifier = Modifier
-                        .fillMaxSize()
-                        .padding(paddingValues),
+                        .fillMaxSize(),
                     state = state,
                     onTimerFinish = onTimerFinish,
                     onOptionClicked = {onOptionClicked(it)},

@@ -102,6 +102,7 @@
     <string name="no_topic_found">No topic found</string>
     <string name="no_user_answer_found">No user answer found</string>
     <string name="no_user_found">No user found</string>
+    <string name="general">General</string>
 
 
 </resources>

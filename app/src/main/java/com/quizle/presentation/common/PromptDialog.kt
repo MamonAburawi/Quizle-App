@@ -109,9 +109,7 @@ fun PromptDialog(
 
 @Preview(showBackground = true)
 @Composable
-private fun QuizDialogPreview(
-    modifier: Modifier = Modifier
-) {
+private fun QuizDialogPreview() {
     PromptDialog(
         title = "Submit Quiz",
         subTitle = "Are you sure you want to submit the quiz?",
