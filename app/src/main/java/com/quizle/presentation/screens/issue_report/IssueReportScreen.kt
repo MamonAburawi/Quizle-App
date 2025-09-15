@@ -184,7 +184,7 @@ private fun IssueReportContent(
                      LoadingScreen(
                          modifier = Modifier
                              .fillMaxSize(),
-                         message = state.loadingMessage
+                         initMessage = state.loadingMessage
                      )
                  }
 

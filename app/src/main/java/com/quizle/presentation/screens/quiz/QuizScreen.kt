@@ -31,6 +31,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.quizle.domain.module.Question
 import com.quizle.domain.module.Topic
+import com.quizle.presentation.common.LoadingScreen
 import com.quizle.presentation.common.PrimaryAppBar
 import com.quizle.presentation.common.PromptDialog
 import com.quizle.presentation.common.ToastMessageController
@@ -145,13 +146,13 @@ private fun QuizScreenContent(
         ) {
 
 
+            LoadingScreen(
+                isLoading = state.isLoading,
+                initMessage = "Hang tight, your quiz is loading.",
+                background = DarkBackground
+            )
 
-            if (state.isLoading){
-                CircularProgressIndicator(
-                    modifier = Modifier.size(25.dp),
-                    color = Color.White
-                )
-            }
+
 
             if (state.error != null){
                 Text(
@@ -506,7 +507,6 @@ fun QuestionSection(
                 )
             }
         }
-//        Spacer(modifier = Modifier.weight(1f))
         if (showNextButton) {
             Box(
                 modifier = Modifier
@@ -589,4 +589,5 @@ fun QuizScreenPreview() {
         onOptionClicked = {},
         onNextQuestion = {}
     )
+
 }

@@ -19,7 +19,6 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class ResultViewModel(
-    private val questionRepository: QuestionRepository,
     private val topicRepository: TopicRepository,
     private val stateHandle: SavedStateHandle,
     private val quizResultRepository: QuizResultRepository
@@ -54,18 +53,14 @@ class ResultViewModel(
     private fun setUpResult(){
         viewModelScope.launch {
             _state.update { it.copy(isLoading = true, loadingMessage = "Initializing result..") }
-//            async { getQuizQuestions() }.await()
-//            async { getUserAnswers() }.await()
             async { getQuestionsWithAnswers() }.await()
             async { getQuizTopic() }.await()
-//            getQuizTopic()
             calculateResults()
             _state.update { it.copy(isLoading = false, loadingMessage = "") }
         }
     }
 
     private suspend fun getQuizTopic() {
-//            val topicId = _state.value.questions.first().topicId
             topicRepository.loadTopicById(topicId = topicId)
                 .onSuccess (
                     onDataSuccess = { topic ->
@@ -74,7 +69,6 @@ class ResultViewModel(
                 )
                 .onFailure { error ->
                     _state.update { it.copy(error = error.getErrorMessage()) }
-                    Log.e("ResultViewModel", "getQuizTopic: ${error.getErrorMessage()}")
                 }
     }
 

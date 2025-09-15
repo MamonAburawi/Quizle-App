@@ -19,7 +19,7 @@ import com.quizle.data.local.entity.UserAnswerEntity
 import com.quizle.data.local.entity.UserEntity
 
 
-@Database(entities = [TopicEntity::class, QuestionEntity::class, UserAnswerEntity::class, UserEntity::class, QuizResultEntity::class] , version = 17, exportSchema = false)
+@Database(entities = [TopicEntity::class, QuestionEntity::class, UserAnswerEntity::class, UserEntity::class, QuizResultEntity::class] , version = 19, exportSchema = false)
 @TypeConverters(UserOptionsListConverter::class, TokenConverter::class, SettingsConverter::class)
 abstract class QuizleDatabase : RoomDatabase() {
 

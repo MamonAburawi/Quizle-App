@@ -5,10 +5,13 @@ import com.quizle.data.mapper.entityQuizTopics
 import com.quizle.data.mapper.entityToQuizTopics
 import com.quizle.data.mapper.toQuizTopic
 import com.quizle.data.mapper.toQuizTopics
+import com.quizle.data.mapper.toTopicWithQuestions
 import com.quizle.data.remote.data_source.quiz.RemoteQuizDataSource
+import com.quizle.data.utils.LocalDataError
 import com.quizle.domain.module.Topic
 import com.quizle.domain.repository.TopicRepository
 import com.quizle.data.utils.ServerDataError
+import com.quizle.domain.module.TopicWithQuestions
 import com.quizle.domain.utils.Result
 import com.quizle.domain.utils.Result.*
 
@@ -23,7 +26,7 @@ class TopicRepositoryImpl(
              when(val result = remoteSource.getQuizTopics()){
                 is Result.Success -> {
                     val topicDto = result.data
-                    localSource.clearAllQuizTopic()
+//                    localSource.clearAllQuizTopic()
                     localSource.insertQuizTopics(topicDto.entityQuizTopics())
                     Success(topicDto.toQuizTopics())
                 }
@@ -100,6 +103,22 @@ class TopicRepositoryImpl(
         }
     }
 
+
+//    // data will be fetched from local source only
+//    override suspend fun getTopicWithQuestions(topicId: String): Result<TopicWithQuestions, LocalDataError> {
+//        return try {
+//            val topicWithQuestions = localSource.getTopicWithQuestions(topicId)
+//            if (topicWithQuestions != null) {
+//                Success(topicWithQuestions.toTopicWithQuestions())
+//            } else {
+//                Failure(LocalDataError.NoTopicFound)
+//            }
+//        } catch (ex: Exception) {
+//            ex.printStackTrace()
+//            Failure(LocalDataError.Unknown)
+//        }
+//    }
+//
 
 
 

@@ -186,12 +186,10 @@ class QuizViewModel(
 
     private suspend fun getQuizQuestions(topicId: String) {
         val startTimeOut = System.currentTimeMillis()
-//        Log.i("QuizViewModel", " start timeout: $startTimeOut")
         questionRepository.loadQuizQuestions(topicId)
             .onSuccess(
                 onDataSuccess = { questions ->
                     val endTimeOut = System.currentTimeMillis()
-//                    Log.i("QuizViewModel", "end timeout: ${endTimeOut}")
                     Log.i("QuizViewModel", "duration request: ${(endTimeOut - startTimeOut).milliseconds}")
                     _state.update { it.copy(questions = questions) }
                 }
@@ -206,9 +204,6 @@ class QuizViewModel(
             }
     }
 
-
-
-    // handle error
 
     private suspend fun getQuizTopic(topicId: String){
         topicRepository.loadTopicById(topicId)

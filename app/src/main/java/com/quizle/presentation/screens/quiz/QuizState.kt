@@ -17,7 +17,6 @@ data class QuizState(
     val questions: List<Question> = emptyList(),
     val answers: List<UserAnswer> = emptyList(),
     val currentQuestionIndex: Int = 0,
-//    val isQuizSubmitDialogOpen: Boolean = false,
     val isQuizExitDialogOpen: Boolean = false,
     val isTimeUpDialogOpen: Boolean = false,
     val selectedOptionsMap: SnapshotStateMap<String, Int> = mutableStateMapOf(), // questionId -> selectedIndex

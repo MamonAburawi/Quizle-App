@@ -55,7 +55,6 @@ val koinModule = module {
     single { get<QuizleDatabase>().getQuizResultDao()}
 
 
-
     singleOf(::QuestionRepositoryImpl).bind<QuestionRepository>()
     singleOf(::TopicRepositoryImpl).bind<TopicRepository>()
     singleOf(::KtorQuizRemoteDataSource).bind<RemoteQuizDataSource>()
