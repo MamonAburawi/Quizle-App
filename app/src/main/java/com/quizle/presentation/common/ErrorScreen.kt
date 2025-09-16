@@ -17,13 +17,14 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import com.quizle.presentation.theme.QuizleTheme
+import com.quizle.presentation.theme.extendedColors
 
 @Composable
 fun ErrorScreen(
     modifier: Modifier = Modifier,
     error: String,
-    background: Color = MaterialTheme.colorScheme.background,
-    contentColor: Color = MaterialTheme.colorScheme.error,
+    background: Color = MaterialTheme.extendedColors.backgroundColor,
+    contentColor: Color = MaterialTheme.extendedColors.error,
     onRefresh: () -> Unit
 ) {
     Column(

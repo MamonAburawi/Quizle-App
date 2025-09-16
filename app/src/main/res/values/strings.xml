@@ -103,6 +103,17 @@
     <string name="no_user_answer_found">No user answer found</string>
     <string name="no_user_found">No user found</string>
     <string name="general">General</string>
+    <string name="hang_tight_your_quiz_is_loading">Hang tight, your quiz is loading.</string>
+    <string name="exist_dialog_info">Are you sure you want to exit? Your progress will be lost.</string>
+    <string name="exit_quiz">Exit Quiz</string>
+    <string name="exit">Exit</string>
+    <string name="cancel">Cancel</string>
+    <string name="time_s_up">Time\'s Up!</string>
+    <string name="time_s_up_info">The time limit has been reached. Let\'s see your results.</string>
+    <string name="see_result">See result</string>
+    <string name="explanation">Explanation: %1$s</string>
+    <string name="quiz_time_toggle_description">When enabled, the quiz will have a countdown timer.</string>
+    <string name="quiz">Quiz</string>
 
 
 </resources>

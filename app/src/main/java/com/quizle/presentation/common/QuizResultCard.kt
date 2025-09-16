@@ -16,6 +16,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.quizle.R
 import com.quizle.presentation.theme.QuizleTheme
+import com.quizle.presentation.theme.error
+import com.quizle.presentation.theme.extendedColors
+import com.quizle.presentation.theme.success
+import com.quizle.presentation.theme.warning
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -30,10 +34,13 @@ fun QuizResultCard(
     topicSubTitle: String,
     enableAnimation: Boolean = true,
     // NEW: Card and score colors are now parameters with theme-based defaults
-    colors: CardColors = CardDefaults.cardColors(),
-    successColor: Color = MaterialTheme.colorScheme.primary,
-    warningColor: Color = MaterialTheme.colorScheme.secondary,
-    errorColor: Color = MaterialTheme.colorScheme.error
+    colors: CardColors = CardDefaults.cardColors(
+        containerColor = MaterialTheme.extendedColors.surfaceColor,
+        contentColor = MaterialTheme.extendedColors.onSurfaceColor
+    ),
+    successColor: Color = Color.success,
+    warningColor: Color = Color.warning,
+    errorColor: Color = Color.error
 ) {
     val progress = correctAnswersCount.toFloat() / totalQuestions.toFloat()
     // NEW: Score color now uses theme-based semantic colors
@@ -69,7 +76,7 @@ fun QuizResultCard(
             Text(
                 text = topicSubTitle,
                 style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                color = MaterialTheme.extendedColors.onSurfaceColor,
                 modifier = Modifier.padding(bottom = 12.dp)
             )
 
@@ -103,7 +110,7 @@ fun QuizResultCard(
             Text(
                 text = stringResource(R.string.completion_date_message, formattedDate),
                 style = MaterialTheme.typography.bodySmall,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                color = MaterialTheme.extendedColors.onSurfaceColor,
                 modifier = Modifier.padding(vertical = 16.dp)
             )
 
@@ -128,11 +135,12 @@ private fun ResultDetail(label: String, value: String) {
         Text(
             text = label,
             style = MaterialTheme.typography.bodyMedium,
-            color = MaterialTheme.colorScheme.onSurfaceVariant
+            color = MaterialTheme.extendedColors.onSurfaceColor,
         )
         Text(
             text = value,
             style = MaterialTheme.typography.titleMedium,
+            color = MaterialTheme.extendedColors.onSurfaceColor,
             fontWeight = FontWeight.Bold
         )
     }

@@ -26,6 +26,7 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.quizle.presentation.theme.QuizleTheme
+import com.quizle.presentation.theme.extendedColors
 
 @Composable
 fun TopicCardShimmerEffect(
@@ -33,9 +34,9 @@ fun TopicCardShimmerEffect(
 ) {
     // NEW: Shimmer colors are now derived from the current theme.
     val shimmerColorShades = listOf(
-        MaterialTheme.colorScheme.surfaceVariant,
-        MaterialTheme.colorScheme.surface,
-        MaterialTheme.colorScheme.surfaceVariant
+        MaterialTheme.extendedColors.onSurfaceColor.copy(0.6f),
+        MaterialTheme.extendedColors.surfaceColor,
+        MaterialTheme.extendedColors.onSurfaceColor.copy(0.6f),
     )
 
     Card(

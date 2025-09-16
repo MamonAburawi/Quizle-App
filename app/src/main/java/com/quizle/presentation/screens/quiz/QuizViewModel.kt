@@ -109,14 +109,15 @@ class QuizViewModel(
 
     private fun saveQuizData(){
         viewModelScope.launch {
-//            _state.update { it.copy(isSavingInProgress = true) }
+            _state.update { it.copy(isSavingInProgress = true) }
 //            async {userRepository.logEvent(LogEvent.QUIZ_END_EVENT)}.await()
             async { saveUserAnswers() }.await()
             async { saveResult() }.await()
-//            _state.update { it.copy(isSavingInProgress = false) }
-
+            _state.update { it.copy(isSavingInProgress = false) }
             _event.send(QuizEvent.ShowToast(message = "Success! Your quiz results have been saved.", type = MessageType.Success))
             _event.send(QuizEvent.NavigateToResultScreen(topicId))
+
+
         }
     }
 
@@ -164,7 +165,7 @@ class QuizViewModel(
             quizResultRepository.saveQuizResult(quizResult)
                 .onSuccess {
 //                    _event.send(QuizEvent.ShowToast(message = "Success! Your quiz results have been saved.", type = MessageType.Success))
-//                    _event.send(QuizEvent.NavigateToResultScreen)
+//                    _event.send(QuizEvent.NavigateToResultScreen(topicId))
 
                 }
                 .onFailure { error ->

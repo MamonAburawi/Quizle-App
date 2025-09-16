@@ -13,12 +13,13 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import com.quizle.presentation.theme.QuizleTheme
+import com.quizle.presentation.theme.extendedColors
 
 @Composable
 fun EmptyScreen(
     modifier: Modifier = Modifier,
-    background: Color = MaterialTheme.colorScheme.background,
-    contentColor: Color = MaterialTheme.colorScheme.onBackground,
+    background: Color = MaterialTheme.extendedColors.backgroundColor,
+    contentColor: Color = MaterialTheme.extendedColors.onBackgroundColor,
     message: String
 ) {
     Column(

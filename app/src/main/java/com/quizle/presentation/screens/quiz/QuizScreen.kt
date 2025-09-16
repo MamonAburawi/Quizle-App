@@ -1,6 +1,5 @@
 package com.quizle.presentation.screens.quiz
 
-
 import android.annotation.SuppressLint
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.animateColorAsState
@@ -8,13 +7,13 @@ import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Canvas
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.snapshots.SnapshotStateMap
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
@@ -22,32 +21,39 @@ import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
-import androidx.navigation.compose.rememberNavController
+import com.quizle.R
 import com.quizle.domain.module.Question
 import com.quizle.domain.module.Topic
+import com.quizle.domain.module.UserAnswer
+import com.quizle.presentation.common.ConfirmationDialog
 import com.quizle.presentation.common.LoadingScreen
 import com.quizle.presentation.common.PrimaryAppBar
-import com.quizle.presentation.common.PromptDialog
 import com.quizle.presentation.common.ToastMessageController
 import com.quizle.presentation.navigation.back
 import com.quizle.presentation.navigation.navigateToResult
-import com.quizle.presentation.theme.*
+import com.quizle.presentation.theme.QuizleTheme
+import com.quizle.presentation.theme.error
+import com.quizle.presentation.theme.extendedColors
+import com.quizle.presentation.theme.success
+import com.quizle.presentation.theme.warning
 import com.quizle.presentation.util.title
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
+import kotlin.Boolean
 
 
 @Composable
 fun QuizScreen(
     state: QuizState = QuizState(),
-    navController: NavHostController = rememberNavController(),
+    navController: NavHostController,
     onAction: (QuizAction) -> Unit = {},
     event: Flow<QuizEvent> = emptyFlow(),
     onRefresh: () -> Unit = {},
@@ -63,11 +69,7 @@ fun QuizScreen(
         onCloseClicked = { onAction(QuizAction.ExitQuizButtonClick) },
         onTimerFinish = { onAction(QuizAction.OnTimerFinish) },
         onOptionClicked = { onAction(QuizAction.SelectOption(it)) },
-        onNextQuestion = { onAction(QuizAction.NextQuestionButtonClick)
-        },
-        forceBack = {
-            onAction(QuizAction.ExitQuizDialogConfirm)
-        }
+        onNextQuestion = { onAction(QuizAction.NextQuestionButtonClick) }
     )
 
 
@@ -103,42 +105,27 @@ fun QuizScreen(
 
 
 }
-
 @Composable
 private fun QuizScreenContent(
     state: QuizState,
     onRefresh: () -> Unit,
-    onCloseClicked: () -> Unit = {},
-    forceBack:() -> Unit = {},
+    onCloseClicked: () -> Unit,
     onTimerFinish: () -> Unit,
     onOptionClicked: (Int) -> Unit,
     onNextQuestion: () -> Unit,
     onAction: (QuizAction) -> Unit
 ) {
-
     Scaffold(
         modifier = Modifier
             .fillMaxSize()
-            .background(PrimaryColor)
             .statusBarsPadding(),
         topBar = {
-
-
             PrimaryAppBar(
                 title = state.topic.title(),
-                containerColor = PrimaryColor,
-                contentColor = Color.White,
-                onBack = {
-                    if (state.questions.isEmpty() && state.error != null){
-                        forceBack()
-                    }else {
-                        onCloseClicked()
-                    }
-                }
+                onBack = onCloseClicked
             )
         }
     ) { paddingValues ->
-
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -146,151 +133,93 @@ private fun QuizScreenContent(
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-
-
-            LoadingScreen(
-                isLoading = state.isLoading,
-                initMessage = "Hang tight, your quiz is loading.",
-                background = DarkBackground
-            )
-
-            if (state.error != null){
+            if (state.isLoading) {
+                // NEW: No background needed, it uses its own theme-aware default
+                LoadingScreen(isLoading = true, initMessage = stringResource(R.string.hang_tight_your_quiz_is_loading))
+            } else if (state.error != null) {
                 Text(
                     text = state.error,
-                    fontWeight = FontWeight.SemiBold,
-                    color = Color.White,
-                    fontSize = MaterialTheme.typography.bodyLarge.fontSize
+                    style = MaterialTheme.typography.bodyLarge,
+                    color = MaterialTheme.extendedColors.error // NEW: Themed error color
                 )
-            }
-
-            if (!state.isLoading && state.questions.isNotEmpty()){
+            } else if (state.questions.isNotEmpty()) {
                 QuizElements(
-                    modifier = Modifier
-                        .fillMaxSize(),
                     state = state,
                     onTimerFinish = onTimerFinish,
-                    onOptionClicked = {onOptionClicked(it)},
+                    onOptionClicked = onOptionClicked,
                     onNextQuestion = onNextQuestion
-
                 )
-
             }
-
         }
 
-
-
-
-        PromptDialog(
-            modifier = Modifier
-                .fillMaxSize(),
-            title = "Exit Quiz",
-            subTitle = "Are you sure you want to exit? you won't be able to continue from where you left off.",
+        // ConfirmationDialogs are already theme-aware from our previous refactor
+        ConfirmationDialog(
+            title = stringResource(R.string.exit_quiz),
+            subTitle = stringResource(R.string.exist_dialog_info),
             isOpen = state.isQuizExitDialogOpen,
-            onCancel = {
-                onAction(QuizAction.ExitQuizDialogDismiss)
-            },
-            onPositiveBtnClicked = {
-                onAction(QuizAction.ExitQuizDialogConfirm)
-            },
-            positiveBtnText = "Exit",
-            negativeBtnText = "Cancel",
+            onConfirm = { onAction(QuizAction.ExitQuizDialogConfirm) },
+            onDismissRequest = { onAction(QuizAction.ExitQuizDialogDismiss) },
+            positiveBtnText = stringResource(R.string.exit),
+            negativeBtnText = stringResource(R.string.cancel),
         )
-
-
-        PromptDialog(
-            modifier = Modifier
-                .fillMaxSize(),
-            title = "Time's Up!",
-            subTitle = "The time limit has been reached. See your results or try again.",
+        ConfirmationDialog(
+            onDismissRequest = {},
+            title = stringResource(R.string.time_s_up),
+            subTitle = stringResource(R.string.time_s_up_info),
             isOpen = state.isTimeUpDialogOpen,
-            onPositiveBtnClicked = {
-                onAction(QuizAction.TimesUpDialogSeeResultClick)
-            },
-            positiveBtnText = "See result",
+            onConfirm = { onAction(QuizAction.TimesUpDialogSeeResultClick) },
+            positiveBtnText = stringResource(R.string.see_result),
         )
-
-
-
     }
-
 }
 
 @Composable
-fun QuizElements(
+private fun QuizElements(
     modifier: Modifier = Modifier,
     state: QuizState,
     onTimerFinish: () -> Unit,
     onOptionClicked: (Int) -> Unit,
     onNextQuestion: () -> Unit
-
 ) {
-    val currentIndex = state.currentQuestionIndex
-    val currentQuestion = state.questions[currentIndex]
-
-
     Column(
-        modifier = modifier
-            .fillMaxSize()
-            .background(PrimaryColor),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
+        modifier = modifier.fillMaxSize(),
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
-
-        Spacer(modifier = Modifier.padding(vertical = 15.dp))
-
+        Spacer(modifier = Modifier.height(24.dp))
         ProgressTracker(
-            modifier = Modifier,
             currentQuestionIndex = state.currentQuestionIndex,
             questionsCount = state.questions.size,
         )
+        Spacer(modifier = Modifier.height(24.dp))
 
-        Spacer(modifier = Modifier.padding(vertical = 15.dp))
-
-        if (state.quizTimeEnabled){
-            val topicTimeInMin = state.topic.quizTimeInMin
-            val customTimeInMin = state.customTimeInMin
-            val timeInMin = if (state.switchToCustomTime) customTimeInMin else topicTimeInMin
+        if (state.quizTimeEnabled) {
+            val timeInMin = if (state.switchToCustomTime) state.customTimeInMin else state.topic.quizTimeInMin
             timeInMin?.let {
                 AnimatedQuizTimer(
-                    modifier = Modifier,
                     timeInMin = it,
-                    fontSize = 25.sp,
-                    timerSize = 120,
                     onTimerFinish = onTimerFinish
                 )
             }
         }
-
-
-
-
-        Spacer(modifier = Modifier.height(25.dp))
+        Spacer(modifier = Modifier.height(24.dp))
 
         QuestionSection(
-            modifier = Modifier,
-            textQuestion = currentQuestion.questionText,
-            options = currentQuestion.allOptions,
-            correctAnswer = currentQuestion.correctAnswer,
-            currentQuestionIndex = currentIndex,
-            onOptionClicked = {
-                onOptionClicked(it)
-            },
-            onNextQuestionClicked = {
-                onNextQuestion()
-            }
+            currentQuestion = state.questions[state.currentQuestionIndex],
+            currentQuestionIndex = state.currentQuestionIndex,
+            onOptionClicked = onOptionClicked,
+            onNextQuestionClicked = onNextQuestion
         )
-
     }
 }
+
 
 @SuppressLint("DefaultLocale")
 @Composable
 private fun AnimatedQuizTimer(
     modifier: Modifier = Modifier,
     timeInMin: Int,
-    timerSize: Int = 120,
-    fontSize: TextUnit = 36.sp,
+    timerSize: Int = 130,
+    fontSize: TextUnit = 24.sp,
     onTimerFinish: () -> Unit
 ) {
 // Total time in seconds
@@ -331,9 +260,9 @@ private fun AnimatedQuizTimer(
     // Animate the color of the arc based on the time left
     val timerColor by animateColorAsState(
         targetValue = when {
-            timeLeft > totalTimeInSecond * 0.5f -> Green // Green for first half
-            timeLeft > totalTimeInSecond * 0.2f -> Yellow // Yellow for the middle
-            else -> Red // Red for the last part
+            timeLeft > totalTimeInSecond * 0.5f -> Color.success // Green for first half
+            timeLeft > totalTimeInSecond * 0.2f -> Color.warning // Yellow for the middle
+            else -> Color.error // Red for the last part
         },
         animationSpec = tween(durationMillis = 1000),
         label = "timerColorAnimation"
@@ -377,216 +306,211 @@ private fun AnimatedQuizTimer(
     }
 }
 
-
-
-
 @Composable
-private fun ProgressTracker(
-    modifier: Modifier = Modifier,
-    currentQuestionIndex: Int,
-    questionsCount : Int
-) {
-    Column(
-        modifier = modifier,
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        val currentProgress = (currentQuestionIndex + 1).toFloat() / questionsCount.toFloat()
+private fun ProgressTracker(currentQuestionIndex: Int, questionsCount: Int) {
+    val progress = (currentQuestionIndex + 1).toFloat() / questionsCount.toFloat()
+    Column(horizontalAlignment = Alignment.CenterHorizontally) {
         LinearProgressIndicator(
-            progress = { currentProgress },
+            progress = { progress },
             modifier = Modifier
                 .fillMaxWidth()
-                .height(6.dp)
+                .height(8.dp)
                 .padding(horizontal = 16.dp),
-            color = Color.Green,
-            trackColor = Color.LightGray
+            color = MaterialTheme.extendedColors.primaryColor,
+            trackColor = MaterialTheme.extendedColors.textPrimaryColor.copy(alpha = 0.8f)
         )
-
         Text(
-            text = "${currentQuestionIndex + 1} / ${questionsCount}",
+            text = "${currentQuestionIndex + 1} / $questionsCount",
             modifier = Modifier.padding(top = 8.dp),
-            color = Color.White,
-            fontWeight = FontWeight.SemiBold,
-            fontSize = MaterialTheme.typography.titleMedium.fontSize
+            // NEW: Themed color
+            color = MaterialTheme.extendedColors.onBackgroundColor,
+            style = MaterialTheme.typography.bodyMedium,
+            fontWeight = FontWeight.SemiBold
         )
     }
 }
+
 @Composable
 fun QuizOptionButton(
     text: String,
     onClick: () -> Unit,
     isSelected: Boolean,
     isCorrect: Boolean,
-    isAnswered: Boolean
+    isAnswered: Boolean,
+    correctContainerColor: Color = Color(0xFFDCEFD6), // A light green
+    onCorrectContainerColor: Color = Color(0xFF1B5E20), // A dark green
 ) {
-    // Animate the button's background color
-    val buttonColor by animateColorAsState(
+    // Determine container and content colors based on state
+    val containerColor by animateColorAsState(
         targetValue = when {
-            // If answered and this option is correct, show green
-            isAnswered && isCorrect -> Green
-            // If answered and this is the selected wrong option, show red
-            isAnswered && isSelected && !isCorrect -> Red
-            // Otherwise, use the default surface color
-            else -> colorSurface
+            isAnswered && isCorrect -> correctContainerColor
+            isAnswered && isSelected && !isCorrect -> MaterialTheme.extendedColors.error
+            else -> MaterialTheme.extendedColors.surfaceColor
         },
-        animationSpec = tween(durationMillis = 300),
-        label = "buttonColorAnimation"
+        label = ""
+    )
+    val contentColor by animateColorAsState(
+        targetValue = when {
+            isAnswered && isCorrect -> onCorrectContainerColor
+            isAnswered && isSelected && !isCorrect -> MaterialTheme.extendedColors.onBackgroundColor
+            else -> MaterialTheme.extendedColors.onSurfaceColor
+        },
+        label = ""
     )
 
     Button(
         onClick = onClick,
-        modifier = Modifier
-            .fillMaxWidth()
-        ,
+        modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(12.dp),
         colors = ButtonDefaults.buttonColors(
-            containerColor = buttonColor,
-            contentColor = Color.White
+            containerColor = containerColor,
+            contentColor = contentColor,
+            disabledContainerColor = containerColor,
+            disabledContentColor = contentColor
         ),
-        elevation = ButtonDefaults.elevatedButtonElevation(0.dp)
+        enabled = !isAnswered // Disable button after an answer is given
     ) {
         Text(
             modifier = Modifier.padding(vertical = 10.dp),
             text = text,
-            fontSize = 18.sp,
+            style = MaterialTheme.typography.bodyLarge,
             fontWeight = FontWeight.SemiBold
         )
     }
 }
 
-
 @Composable
 fun QuestionSection(
-    modifier: Modifier = Modifier,
-    textQuestion: String,
-    options: List<String>,
+    currentQuestion: Question,
     currentQuestionIndex: Int,
-    correctAnswer: String,
     onOptionClicked: (Int) -> Unit,
     onNextQuestionClicked: () -> Unit
 ) {
     var selectedOptionIndex by remember { mutableStateOf<Int?>(null) }
-    var showNextButton by remember { mutableStateOf(false) }
+    // Reset selection when question changes
+    LaunchedEffect(currentQuestion) { selectedOptionIndex = null }
 
-    val actualQuestionNum = currentQuestionIndex + 1
-
-    Column(
-        modifier = modifier.fillMaxSize()
+    LazyColumn(
+        modifier = Modifier.fillMaxSize(),
+        verticalArrangement = Arrangement.spacedBy(16.dp),
+        contentPadding = PaddingValues(16.dp)
     ) {
-        LazyColumn(
-            modifier = Modifier
-                .fillMaxWidth()
-                .weight(0.8f),
-            verticalArrangement = Arrangement.spacedBy(16.dp),
-            contentPadding = PaddingValues(16.dp)
-        ) {
-            item {
-                Text(
-                    modifier = Modifier.padding(bottom = 10.dp),
-                    text = "$actualQuestionNum- $textQuestion",
-                    color = Color.White,
-                    fontSize = 22.sp,
-                    fontWeight = FontWeight.Medium,
-                )
-            }
-
-            itemsIndexed(options) { index, option ->
-                QuizOptionButton(
-                    text = option,
-                    onClick = {
-                        if (selectedOptionIndex == null) {
-                            selectedOptionIndex = index
-                            showNextButton = true
-                            onOptionClicked(index)
-                        }
-                    },
-                    isSelected = selectedOptionIndex == index,
-                    isCorrect = option == correctAnswer,
-                    isAnswered = selectedOptionIndex != null
-                )
-            }
+        item {
+            Text(
+                text = "${currentQuestionIndex + 1}. ${currentQuestion.questionText}",
+                // NEW: Themed color
+                color = MaterialTheme.extendedColors.onBackgroundColor,
+                style = MaterialTheme.typography.headlineSmall,
+                fontWeight = FontWeight.Medium,
+            )
         }
-        if (showNextButton) {
-            Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(16.dp)
-                    .weight(0.2f),
-                contentAlignment = Alignment.BottomCenter
-            ) {
+        itemsIndexed(currentQuestion.allOptions) { index, option ->
+            QuizOptionButton(
+                text = option,
+                onClick = {
+                    if (selectedOptionIndex == null) {
+                        selectedOptionIndex = index
+                        onOptionClicked(index)
+                    }
+                },
+                isSelected = selectedOptionIndex == index,
+                isCorrect = option == currentQuestion.correctAnswer,
+                isAnswered = selectedOptionIndex != null
+            )
+        }
+        if (selectedOptionIndex != null) {
+            item {
+                // NEW: Themed next button
                 Button(
-                    onClick = {
-                        onNextQuestionClicked()
-                        // Reset state for the next question
-                        selectedOptionIndex = null
-                        showNextButton = false
-                    },
+                    onClick = onNextQuestionClicked,
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(56.dp),
-                    shape = RoundedCornerShape(12.dp),
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = colorSurface,
-                        contentColor = Color.White
-                    )
+                        .height(56.dp)
                 ) {
                     Text(
                         text = "Next Question",
-                        fontSize = 18.sp,
+                        style = MaterialTheme.typography.bodyLarge,
                         fontWeight = FontWeight.SemiBold
                     )
                 }
             }
         }
-
-
     }
 }
 
 
 
-@Preview(showBackground = true)
+@Preview(name = "Quiz Screen - Light Theme", showBackground = true)
 @Composable
-fun QuizScreenPreview() {
-    val questions = List(size = 40){ index ->
-        Question(
-            id = "${index + 1}" ,
-            questionText = "Which famous painting by Leonardo da Vinci is known for its enigmatic smile?",
-            correctAnswer = "Mona Lisa",
-            allOptions = listOf("The Last Supper", "Vitru Man","Salvator Mundi","Mona Lisa"),
-            explanation = "The Mona Lisa is a half-length portrait painting by Italian artist Leonardo da Vinci. Considered an archetypal masterpiece of the Italian Renaissance, it has been described as 'the best known, the most visited, the most written about, the most sung about, the most parodied work of art in the world.'",
-            topicId = "101",
-            masterOwnerId = "101"
+private fun QuizScreenLightPreview() {
+    QuizleTheme(darkTheme = false) {
+        val questions = List(size = 40){ index ->
+            Question(
+                id = "${index + 1}" ,
+                questionText = "Which famous painting by Leonardo da Vinci is known for its enigmatic smile?",
+                correctAnswer = "Mona Lisa",
+                allOptions = listOf("The Last Supper", "Vitru Man","Salvator Mundi","Mona Lisa"),
+                explanation = "The Mona Lisa is a half-length portrait painting by Italian artist Leonardo da Vinci. Considered an archetypal masterpiece of the Italian Renaissance, it has been described as 'the best known, the most visited, the most written about, the most sung about, the most parodied work of art in the world.'",
+                topicId = "101",
+                masterOwnerId = "101"
+            )
+        }
+        val topic = Topic(
+            id = "101",
+            titleEnglish = "Technical Support",
+            subtitleEnglish = "Ideas & Suggestions",
+            topicColor = "#FF5733",
+            quizTimeInMin = 120
         )
+        val state = QuizState(
+            questions = questions,
+            currentQuestionIndex = 15,
+            topic = topic,
+            answers = emptyList(),
+            isLoading = false,
+            error = null,
+            customTimeInMin = 10,
+            switchToCustomTime = false,
+            quizTimeEnabled = true
+        )
+        QuizScreenContent(state, {}, {}, {}, {}, {}, {})
     }
-    val topic = Topic(
-        id = "101",
-        titleEnglish = "Technical Support",
-        subtitleEnglish = "Ideas & Suggestions",
-        topicColor = "#FF5733",
-        quizTimeInMin = 120
-    )
-
-    val state = QuizState(
-        questions = questions,
-        currentQuestionIndex = 15,
-        topic = topic,
-        answers = emptyList(),
-        isLoading = false,
-        error = null,
-        customTimeInMin = 10,
-        switchToCustomTime = false,
-        quizTimeEnabled = true
-    )
-
-    QuizScreenContent(
-        state = state,
-        onRefresh = {},
-        onAction = {},
-        onCloseClicked = {},
-        onTimerFinish = {},
-        onOptionClicked = {},
-        onNextQuestion = {}
-    )
-
 }
+
+@Preview(name = "Quiz Screen - Dark Theme", showBackground = true)
+@Composable
+private fun QuizScreenDarkPreview() {
+    QuizleTheme(darkTheme = true) {
+        val questions = List(size = 40){ index ->
+            Question(
+                id = "${index + 1}" ,
+                questionText = "Which famous painting by Leonardo da Vinci is known for its enigmatic smile?",
+                correctAnswer = "Mona Lisa",
+                allOptions = listOf("The Last Supper", "Vitru Man","Salvator Mundi","Mona Lisa"),
+                explanation = "The Mona Lisa is a half-length portrait painting by Italian artist Leonardo da Vinci. Considered an archetypal masterpiece of the Italian Renaissance, it has been described as 'the best known, the most visited, the most written about, the most sung about, the most parodied work of art in the world.'",
+                topicId = "101",
+                masterOwnerId = "101"
+            )
+        }
+        val topic = Topic(
+            id = "101",
+            titleEnglish = "Technical Support",
+            subtitleEnglish = "Ideas & Suggestions",
+            topicColor = "#FF5733",
+            quizTimeInMin = 120
+        )
+        val state = QuizState(
+            questions = questions,
+            currentQuestionIndex = 15,
+            topic = topic,
+            answers = emptyList(),
+            isLoading = false,
+            error = null,
+            customTimeInMin = 10,
+            switchToCustomTime = false,
+            quizTimeEnabled = true
+        )
+        QuizScreenContent(state, {}, {}, {}, {}, {}, {})
+    }
+}
+

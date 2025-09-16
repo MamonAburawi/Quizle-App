@@ -21,7 +21,8 @@ import com.quizle.presentation.theme.error
 import com.quizle.presentation.theme.info
 import com.quizle.presentation.theme.success
 import com.quizle.presentation.theme.warning
-
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
 
 
 // NEW: MessageType no longer contains hardcoded colors.
@@ -129,7 +130,67 @@ fun ToastHost(
 }
 
 
-// --- PREVIEWS ---
+@Composable
+fun rememberToastMessageController(
+    modifier: Modifier = Modifier,
+    snackBarHostState: SnackbarHostState = remember { SnackbarHostState() },
+    coroutineScope: CoroutineScope = rememberCoroutineScope(),
+    alignment: Alignment.Vertical = Alignment.Top
+): ToastMessageController {
+    val controller = remember {
+        ToastMessageController(snackBarHostState, coroutineScope)
+    }
+
+    Box(
+        modifier = modifier
+            .fillMaxSize()
+    ) {
+        ToastHost(
+            alignment = alignment,
+            snackBarHostState = snackBarHostState
+        )
+    }
+    return controller
+}
+
+
+class ToastMessageController(
+    private val snackBarHostState: SnackbarHostState,
+    private val coroutineScope: CoroutineScope
+) {
+
+    fun showToast(
+        message: String,
+        type: MessageType = MessageType.Info,
+        duration: SnackbarDuration = SnackbarDuration.Short,
+        actionLabel: String? = null,
+        withDismissAction: Boolean = false,
+        onAction: (() -> Unit)? = null
+    ) {
+        coroutineScope.launch {
+            val customVisuals = CustomSnackBarVisuals(
+                message = message,
+                type = type,
+                actionLabel = actionLabel,
+                withDismissAction = withDismissAction,
+                duration = duration
+            )
+
+            val result = snackBarHostState.showSnackbar(customVisuals)
+
+            when (result) {
+                SnackbarResult.ActionPerformed -> {
+                    onAction?.invoke()
+                }
+                SnackbarResult.Dismissed -> {
+
+                }
+            }
+        }
+    }
+}
+
+
 
 @Preview(name = "Toasts - Light Theme", showBackground = true)
 @Composable

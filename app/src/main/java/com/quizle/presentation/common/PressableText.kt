@@ -15,13 +15,14 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.TextUnit
 import com.quizle.presentation.theme.QuizleTheme
+import com.quizle.presentation.theme.extendedColors
 
 
 @Composable
 fun PressableText(
     text: String,
     modifier: Modifier = Modifier,
-    defaultColor: Color = MaterialTheme.colorScheme.primary,
+    defaultColor: Color = MaterialTheme.extendedColors.primaryColor,
     pressedColor: Color = defaultColor.copy(alpha = 0.7f),
     fontSize: TextUnit = MaterialTheme.typography.bodyMedium.fontSize,
     fontWeight: FontWeight = FontWeight.Normal,

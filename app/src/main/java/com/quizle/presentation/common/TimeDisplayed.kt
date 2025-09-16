@@ -18,14 +18,15 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.quizle.R
 import com.quizle.presentation.theme.QuizleTheme
+import com.quizle.presentation.theme.extendedColors
 
 @Composable
 fun TimeDisplay(
     modifier: Modifier = Modifier,
     timeInMinutes: Int,
     // NEW: Defaults are now from the MaterialTheme color scheme
-    containerColor: Color = MaterialTheme.colorScheme.secondaryContainer,
-    contentColor: Color = MaterialTheme.colorScheme.onSecondaryContainer
+    containerColor: Color = MaterialTheme.extendedColors.error,
+    contentColor: Color = MaterialTheme.extendedColors.onSurfaceColor
 ) {
     val displayString = when {
         timeInMinutes < 1 -> stringResource(R.string.seconds_short, timeInMinutes * 60)

@@ -35,6 +35,7 @@ import com.quizle.presentation.common.AnimatedLoadingDotsText
 import com.quizle.presentation.common.ToastMessageController
 import com.quizle.presentation.navigation.navigateToDashboard
 import com.quizle.presentation.navigation.navigateToLogin
+import com.quizle.presentation.theme.extendedColors
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
@@ -103,7 +104,8 @@ private fun SplashScreenContent(
            )
            Spacer(modifier = Modifier.height(50.dp))
            AnimatedLoadingDotsText(
-               text = stringResource(R.string.loading_please_wait)
+               text = stringResource(R.string.loading_please_wait),
+               color = MaterialTheme.extendedColors.primaryColor,
            )
        }
     }

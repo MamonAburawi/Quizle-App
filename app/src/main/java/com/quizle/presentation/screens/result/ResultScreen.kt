@@ -2,21 +2,13 @@ package com.quizle.presentation.screens.result
 
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.HorizontalDivider
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.CheckCircle
+import androidx.compose.material.icons.filled.Close
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -32,11 +24,12 @@ import com.quizle.R
 import com.quizle.domain.module.Question
 import com.quizle.domain.module.QuestionWithUserAnswer
 import com.quizle.domain.module.Topic
-import com.quizle.presentation.navigation.navigateToIssueReport
-import com.quizle.domain.module.UserAnswer
+import com.quizle.presentation.common.LoadingScreen
 import com.quizle.presentation.common.QuizResultCard
 import com.quizle.presentation.navigation.navigateToDashboard
-import com.quizle.presentation.theme.SurfaceColor
+import com.quizle.presentation.navigation.navigateToIssueReport
+import com.quizle.presentation.theme.QuizleTheme
+import com.quizle.presentation.theme.extendedColors
 import com.quizle.presentation.util.subTitle
 import com.quizle.presentation.util.title
 
@@ -56,178 +49,204 @@ fun ResultScreen(
             navController.navigateToDashboard()
         }
     )
-
 }
+
 
 @Composable
 fun ResultScreenContent(
     state: ResultState,
-    onReport:(String) -> Unit,
+    onReport: (String) -> Unit,
     onReturnToHome: () -> Unit
 ) {
-    val questions = state.questionsWithAnswers.map { it.question }
-    val answers = state.questionsWithAnswers.map { it.selectedOption }
-
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(Color.White),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-
-        if (state.error != null && questions.isEmpty() && !state.isLoading && answers.isEmpty()){
-            Text(
-                text = state.error,
-                color = Color.Black,
-                fontSize = MaterialTheme.typography.titleMedium.fontSize
-            )
-        }
-        if (state.isLoading){
-            CircularProgressIndicator()
-        }
-        if (!state.isLoading) {
-            LazyColumn(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .weight(0.9f),
-                contentPadding = PaddingValues(20.dp)
-            ) {
-                item {
-                    QuizResultCard(
-                        createdAt = System.currentTimeMillis(),
-                        totalQuestions = state.totalQuestionsCount,
-                        correctAnswersCount = state.correctAnswersCount,
-                        topicTitle = state.topic.title(),
-                        topicSubTitle = state.topic.subTitle(),
-                    )
-
-                }
-                item {
-                    Text(
-                        modifier = Modifier.padding(top = 50.dp, bottom = 10.dp),
-                        text = stringResource(R.string.quiz_question),
-                        fontSize = MaterialTheme.typography.titleLarge.fontSize,
-                        textAlign = TextAlign.Start,
-                        fontWeight = FontWeight.Bold,
-                        textDecoration = TextDecoration.Underline
-                    )
-                }
-                itemsIndexed(items = questions){ index, question ->
-                    val selectedOption = answers.find { it == question.correctAnswer }
-                    QuestionItem(
-                        question = question.questionText,
-                        correctAnswer = question.correctAnswer,
-                        options = question.allOptions,
-                        selectedOption = selectedOption,
-                        questionIndex = index,
-                        explanation = question.explanation,
-                        onReport = {
-                            val questionId = question.id
-                            onReport(questionId)
+    // NEW: No hardcoded background, Scaffold provides it
+    Scaffold { paddingValues ->
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(paddingValues)
+                .background(MaterialTheme.extendedColors.backgroundColor),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            when {
+                state.isLoading -> LoadingScreen(isLoading = true)
+                state.error != null -> Text(
+                    text = state.error,
+                    color = MaterialTheme.extendedColors.error, // NEW: Themed color
+                    style = MaterialTheme.typography.titleMedium
+                )
+                else -> {
+                    LazyColumn(
+                        modifier = Modifier.weight(1f),
+                        contentPadding = PaddingValues(16.dp)
+                    ) {
+                        item {
+                            QuizResultCard(
+                                createdAt = System.currentTimeMillis(),
+                                totalQuestions = state.totalQuestionsCount,
+                                correctAnswersCount = state.correctAnswersCount,
+                                topicTitle = state.topic.title(),
+                                topicSubTitle = state.topic.subTitle(),
+                            )
                         }
-                    )
-                    HorizontalDivider(
-                        modifier = Modifier.padding(vertical = 8.dp)
-                    )
-                }
-                item {
-                    Text(
+                        item {
+                            Text(
+                                modifier = Modifier.padding(top = 32.dp, bottom = 16.dp),
+                                text = stringResource(R.string.quiz_question),
+                                style = MaterialTheme.typography.titleLarge,
+                                fontWeight = FontWeight.Bold,
+                                textDecoration = TextDecoration.Underline
+                            )
+                        }
+                        itemsIndexed(items = state.questionsWithAnswers, key = { _, item -> item.question.id }) { index, item ->
+                            QuestionItem(
+                                question = item.question,
+                                selectedOption = item.selectedOption,
+                                questionIndex = index,
+                                onReport = { onReport(item.question.id) },
+                                explanation = item.question.explanation
+                            )
+                            HorizontalDivider(modifier = Modifier.padding(vertical = 16.dp))
+                        }
+                    }
+                    // NEW: Themed button
+                    Button(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(top = 20.dp),
-                        text = stringResource(R.string.finish),
-                        fontSize = MaterialTheme.typography.titleLarge.fontSize,
-                        textAlign = TextAlign.Center,
-                        fontWeight = FontWeight.Bold,
-                        textDecoration = TextDecoration.Underline
-                    )
-                }
-
-            }
-
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.Center
-            ) {
-                Button(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 50.dp, vertical = 10.dp),
-                    onClick = { onReturnToHome() },
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = SurfaceColor
-                    )
-                ) {
-                    Text(stringResource(R.string.return_home))
+                            .padding(16.dp),
+                        onClick = onReturnToHome,
+                        colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.extendedColors.primaryColor)
+                    ) {
+                        Text(stringResource(R.string.return_home))
+                    }
                 }
             }
-
         }
-
     }
+}
 
 
+@Composable
+fun QuestionItem(
+    question: Question,
+    selectedOption: String?,
+    questionIndex: Int,
+    explanation: String,
+    onReport: () -> Unit
+) {
+    Column(
+        modifier = Modifier.fillMaxWidth(),
+        verticalArrangement = Arrangement.spacedBy(12.dp)
+    ) {
+        Text(
+            text = "${questionIndex + 1}. ${question.questionText}",
+            style = MaterialTheme.typography.titleMedium,
+            fontWeight = FontWeight.Bold
+        )
+        question.allOptions.forEach { option ->
+            val isThisTheSelectedOption = option == selectedOption
+            val isThisTheCorrectOption = option == question.correctAnswer
+
+            val textColor = when {
+                isThisTheCorrectOption -> Color(0xFF1B5E20) // Dark Green for Correct
+                isThisTheSelectedOption && !isThisTheCorrectOption -> MaterialTheme.extendedColors.error
+                else -> MaterialTheme.extendedColors.onSurfaceColor
+            }
+            val icon = when {
+                isThisTheCorrectOption -> Icons.Default.CheckCircle
+                isThisTheSelectedOption && !isThisTheCorrectOption -> Icons.Default.Close
+                else -> null
+            }
+
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                if (icon != null) {
+                    Icon(imageVector = icon, contentDescription = null, tint = textColor, modifier = Modifier.size(20.dp))
+                    Spacer(modifier = Modifier.width(8.dp))
+                }
+                Text(text = option, color = textColor.copy(alpha = 0.8f), style = MaterialTheme.typography.bodyLarge)
+            }
+        }
+        Text(
+            modifier = Modifier.padding(top = 10.dp),
+            text = stringResource(R.string.explanation, explanation),
+            style = MaterialTheme.typography.bodyMedium,
+            color = MaterialTheme.extendedColors.onSurfaceColor
+        )
+        TextButton(onClick = onReport, modifier = Modifier.align(Alignment.End)) {
+            Text(
+                text = stringResource(R.string.report_an_issue),
+                color = MaterialTheme.extendedColors.onSurfaceColor
+            )
+        }
+    }
 }
 
 
 
-
-@Preview(showBackground = true)
+@Preview(name = "Result Screen - Light Theme", showBackground = true)
 @Composable
-private fun ResultScreenPreview() {
-
-    val questions = List(size = 10){ index ->
-        Question(
-            id = "${index + 1}" ,
-            questionText = "Which famous painting by Leonardo da Vinci is known for its enigmatic smile?",
-            correctAnswer = "Mona Lisa",
-            allOptions = listOf("The Last Supper", "Vitruvian Man", "Salvator Mundi", "Mona Lisa"),
-            explanation = "The Mona Lisa is a half-length portrait painting by Italian artist Leonardo da Vinci. '",
-            topicId = "",
-            masterOwnerId = ""
+private fun ResultScreenLightPreview() {
+    QuizleTheme(darkTheme = false) {
+        val questions = List(size = 5){ index ->
+            Question(
+                id = "${index + 1}" ,
+                questionText = "Which famous painting by Leonardo da Vinci is known for its enigmatic smile?",
+                correctAnswer = "Mona Lisa",
+                allOptions = listOf("The Last Supper", "Vitru Man","Salvator Mundi","Mona Lisa"),
+                explanation = "The Mona Lisa is a half-length portrait painting by Italian artist Leonardo da Vinci. Considered an archetypal masterpiece of the Italian Renaissance, it has been described as 'the best known, the most visited, the most written about, the most sung about, the most parodied work of art in the world.'",
+                topicId = "101",
+                masterOwnerId = "101"
+            )
+        }
+        val state = ResultState(
+            totalQuestionsCount = 10,
+            correctAnswersCount = 8,
+            questionsWithAnswers = listOf(
+                QuestionWithUserAnswer(
+                    question = questions[1]
+                    , selectedOption = "Paris"
+                ),
+                QuestionWithUserAnswer(
+                    question = questions[1],
+                    selectedOption = "Earth"
+                )
+            ),
+            topic = Topic(titleEnglish = "General Knowledge", subtitleEnglish = "A mix of topics")
         )
+        ResultScreenContent(state, {}, {})
     }
-    val answers = listOf(
-        UserAnswer("1", "The Last Supper",""),
-        UserAnswer("2", "The Last Supper", ""),
-        UserAnswer("3", "Vitruvian Man", ""),
-        UserAnswer("8", "Mona Lisa", "")
-    )
+}
 
-    val topic = Topic(
-        titleEnglish = "Fine Arts",
-        subtitleEnglish = "A world of creativity and beauty",
-        titleArabic = "الفنون الجميلة",
-        subtitleArabic = "عالم من الإبداع والجمال\"",
-    )
-
-
-    val state = ResultState(
-        totalQuestionsCount = 10,
-        correctAnswersCount = 8,
-        questionsWithAnswers = listOf(
-            QuestionWithUserAnswer(
-                question = questions[0],
-                selectedOption = answers[0].selectedOption
+@Preview(name = "Result Screen - Dark Theme", showBackground = true)
+@Composable
+private fun ResultScreenDarkPreview() {
+    QuizleTheme(darkTheme = true) {
+        val questions = List(size = 5){ index ->
+            Question(
+                id = "${index + 1}" ,
+                questionText = "Which famous painting by Leonardo da Vinci is known for its enigmatic smile?",
+                correctAnswer = "Mona Lisa",
+                allOptions = listOf("The Last Supper", "Vitru Man","Salvator Mundi","Mona Lisa"),
+                explanation = "The Mona Lisa is a half-length portrait painting by Italian artist Leonardo da Vinci. Considered an archetypal masterpiece of the Italian Renaissance, it has been described as 'the best known, the most visited, the most written about, the most sung about, the most parodied work of art in the world.'",
+                topicId = "101",
+                masterOwnerId = "101"
+            )
+        }
+        val state = ResultState(
+            totalQuestionsCount = 10,
+            correctAnswersCount = 8,
+            questionsWithAnswers = listOf(
+                QuestionWithUserAnswer(
+                    question = questions[1]
+                    , selectedOption = "Paris"
+                ),
+                QuestionWithUserAnswer(
+                    question = questions[1],
+                    selectedOption = "Earth"
+                )
             ),
-            QuestionWithUserAnswer(
-                question = questions[1],
-                selectedOption = answers[1].selectedOption
-            ),
-        ),
-//        questions = questions,
-//        answers = answers,
-        topic = topic,
-        isLoading = false,
-        error = "this is error"
-    )
-    ResultScreenContent(
-        state = state,
-        onReport = {},
-        onReturnToHome = { }
-    )
-
+            topic = Topic(titleEnglish = "General Knowledge", subtitleEnglish = "A mix of topics")
+        )
+        ResultScreenContent(state, {}, {})
+    }
 }

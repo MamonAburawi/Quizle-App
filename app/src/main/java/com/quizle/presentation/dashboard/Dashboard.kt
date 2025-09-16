@@ -5,11 +5,11 @@ package com.quizle.presentation.dashboard
 import androidx.activity.compose.BackHandler
 import androidx.activity.compose.LocalActivity
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.List
 import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.List
 import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Settings
@@ -19,7 +19,6 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -33,19 +32,8 @@ import com.quizle.presentation.common.rememberToastMessageController
 import com.quizle.presentation.navigation.BottomNavGraph
 import com.quizle.presentation.navigation.NavBottom
 import com.quizle.presentation.navigation.NavBottomRoute
-import com.quizle.presentation.navigation.navigateToNotifications
-import com.quizle.presentation.theme.CardBackground
-import com.quizle.presentation.theme.DarkBackground
-import com.quizle.presentation.theme.GrayText
-import com.quizle.presentation.theme.GreenAccent
+import com.quizle.presentation.theme.extendedColors
 
-/**
- * Represents a single item in the bottom navigation bar.
- */
-
-/**
- * The main Dashboard composable, orchestrating the UI for the dashboard screen.
- */
 @Composable
 fun Dashboard(
     state: DashboardState,
@@ -97,7 +85,7 @@ fun Dashboard(
         }
 
 
-    
+
 }
 
 @Composable
@@ -170,7 +158,7 @@ fun DashboardAppBar(
     onNotificationClick: () -> Unit
 ) {
     TopAppBar(
-        colors = TopAppBarDefaults.topAppBarColors(containerColor = DarkBackground),
+        colors = TopAppBarDefaults.topAppBarColors(containerColor = MaterialTheme.colorScheme.background),
         windowInsets = WindowInsets(0.dp),
         title = {
             Text(
@@ -202,7 +190,7 @@ fun DashboardBottomBar(
     onItemSelected: (NavBottom) -> Unit
 ) {
     BottomAppBar(
-        containerColor = CardBackground,
+        containerColor = MaterialTheme.extendedColors.backgroundColor,
         tonalElevation = 0.dp
     ) {
         Row(
@@ -221,30 +209,32 @@ fun DashboardBottomBar(
     }
 }
 
-/**
- * Composable for an individual item in the bottom navigation bar.
- */
 @Composable
 private fun BottomNavItem(
     item: NavBottom,
     isSelected: Boolean,
     onClick: () -> Unit
 ) {
+    val contentColor = if (isSelected) Color.White else Color.White.copy(alpha = 0.4f)
     Column(
         modifier = Modifier
-            .clickable(onClick = onClick)
+            .clickable(
+                interactionSource = remember { MutableInteractionSource() },
+                indication = null,
+                onClick = onClick
+            )
             .padding(vertical = 8.dp, horizontal = 4.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Icon(
             imageVector = item.icon,
             contentDescription = stringResource(item.label),
-            tint = if (isSelected) GreenAccent else GrayText,
+            tint = contentColor,
             modifier = Modifier.size(24.dp)
         )
         Text(
             text = stringResource(item.label),
-            color = if (isSelected) GreenAccent else GrayText,
+            color = contentColor,
             fontSize = 12.sp
         )
     }
@@ -253,7 +243,6 @@ private fun BottomNavItem(
 @Preview(showBackground = true)
 @Composable
 fun DashBoardPreview() {
-
     DashBoardContent(
         toastMessageController = rememberToastMessageController(),
         appNavController = rememberNavController(),

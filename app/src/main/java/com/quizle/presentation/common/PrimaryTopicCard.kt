@@ -23,6 +23,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.quizle.R
 import com.quizle.presentation.theme.QuizleTheme
+import com.quizle.presentation.theme.extendedColors
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -33,9 +34,8 @@ fun PrimaryTopicCard(
     topicName: String,
     timeInMin: Int? = null,
     showQuizTime: Boolean,
-    // NEW: Card colors are now a parameter with a theme-based default
     colors: CardColors = CardDefaults.cardColors(
-        containerColor = MaterialTheme.colorScheme.surfaceVariant
+        containerColor = MaterialTheme.extendedColors.surfaceColor
     )
 ) {
     val scale = remember { Animatable(1f) }
@@ -85,10 +85,10 @@ fun PrimaryTopicCard(
                         .padding(horizontal = 4.dp),
                     text = topicName,
                     // NEW: Text color is now theme-aware
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    color = MaterialTheme.extendedColors.onSurfaceColor,
                     fontWeight = FontWeight.Medium,
                     style = MaterialTheme.typography.bodyMedium,
-                    maxLines = 2, // Adjusted for better text fitting
+                    maxLines = 2,
                     overflow = TextOverflow.Ellipsis,
                     textAlign = TextAlign.Center,
                 )
@@ -107,23 +107,6 @@ fun PrimaryTopicCard(
             }
         }
     }
-}
-
-
-@Composable
-private fun TimeDisplay(timeInMinutes: Int) {
-    Text(
-        text = "$timeInMinutes min",
-        style = MaterialTheme.typography.labelSmall,
-        color = MaterialTheme.colorScheme.onSecondaryContainer,
-        modifier = Modifier
-            .background(
-                MaterialTheme.colorScheme.secondaryContainer,
-                RoundedCornerShape(4.dp
-                )
-            )
-            .padding(horizontal = 4.dp, vertical = 2.dp)
-    )
 }
 
 

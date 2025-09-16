@@ -4,6 +4,7 @@ package com.quizle.presentation.navigation
 
 import androidx.annotation.StringRes
 import androidx.compose.foundation.background
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
@@ -15,14 +16,13 @@ import com.quizle.presentation.common.ToastMessageController
 import com.quizle.presentation.screens.favorite.FavoriteScreen
 import com.quizle.presentation.screens.history.HistoryScreen
 import com.quizle.presentation.screens.history.HistoryViewModel
-
 import com.quizle.presentation.screens.home.HomeScreen
 import com.quizle.presentation.screens.home.HomeViewModel
 import com.quizle.presentation.screens.settings.SettingsScreen
 import com.quizle.presentation.screens.settings.SettingsViewModel
 import com.quizle.presentation.screens.topic.TopicScreen
 import com.quizle.presentation.screens.topic.TopicViewModel
-import com.quizle.presentation.theme.DarkBackground
+import com.quizle.presentation.theme.extendedColors
 import com.quizle.presentation.util.ScaleTransitionDirection
 import com.quizle.presentation.util.scaleIntoContainer
 import com.quizle.presentation.util.scaleOutOfContainer
@@ -47,7 +47,7 @@ fun BottomNavGraph(
 ){
     NavHost(
         modifier = Modifier
-            .background(DarkBackground),
+            .background(MaterialTheme.extendedColors.backgroundColor),
         navController = bottomNavController,
         startDestination = startDestination,
     ){

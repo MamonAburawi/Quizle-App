@@ -9,6 +9,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.darkColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -19,7 +20,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.quizle.R
-import com.quizle.presentation.theme.CustomGreen
+import com.quizle.presentation.theme.QuizleTheme
+import com.quizle.presentation.theme.success
 import com.quizle.presentation.util.getChatFromIndex
 
 
@@ -66,7 +68,7 @@ fun QuestionItem(
         options.forEachIndexed { index, option ->
             val color = if (selectedOption != null) {
                 when (option) {
-                    correctAnswer -> CustomGreen
+                    correctAnswer -> Color.success
                     selectedOption -> MaterialTheme.colorScheme.error
                     else -> Color.DarkGray // Or any other color for non-selected, non-correct options
                 }
@@ -105,18 +107,20 @@ fun QuestionItem(
 
 @Preview(showBackground = true)
 @Composable
-private fun QuestionItemNotAnsweredPreview(
-    modifier: Modifier = Modifier
+private fun QuestionItemNotAnsweredLightPreview(
 ) {
-    QuestionItem(
-        question = "What is the capital of France?",
-        correctAnswer = "Paris",
-        options = listOf("Paris", "London", "Berlin", "Madrid"),
-        selectedOption = null,
-        questionIndex = 0,
-        explanation = "Paris is the capital of France.",
-        onReport = {}
-    )
+    QuizleTheme(darkTheme = false) {
+        QuestionItem(
+            question = "What is the capital of France?",
+            correctAnswer = "Paris",
+            options = listOf("Paris", "London", "Berlin", "Madrid"),
+            selectedOption = null,
+            questionIndex = 0,
+            explanation = "Paris is the capital of France.",
+            onReport = {}
+        )
+    }
+
 }
 
 
@@ -125,24 +129,25 @@ private fun QuestionItemNotAnsweredPreview(
 
 @Preview(showBackground = true)
 @Composable
-private fun QuestionItemCorrectPreview(
-    modifier: Modifier = Modifier
+private fun QuestionItemCorrectDarkPreview(
 ) {
-    QuestionItem(
-        question = "What is the capital of France?",
-        correctAnswer = "Paris",
-        options = listOf("Paris", "London", "Berlin", "Madrid"),
-        selectedOption = "Paris",
-        questionIndex = 0,
-        explanation = "Paris is the capital of France.",
-        onReport = {}
-    )
+    QuizleTheme(darkTheme = true) {
+        QuestionItem(
+            question = "What is the capital of France?",
+            correctAnswer = "Paris",
+            options = listOf("Paris", "London", "Berlin", "Madrid"),
+            selectedOption = "Paris",
+            questionIndex = 0,
+            explanation = "Paris is the capital of France.",
+            onReport = {}
+        )
+    }
+
 }
 
 @Preview(showBackground = true)
 @Composable
 private fun QuestionItemInCorrectPreview(
-    modifier: Modifier = Modifier
 ) {
     QuestionItem(
         question = "What is the capital of France?",

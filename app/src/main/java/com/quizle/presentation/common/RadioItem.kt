@@ -1,5 +1,6 @@
 package com.quizle.presentation.common
 
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Row
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.RadioButton
@@ -9,6 +10,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import com.quizle.presentation.theme.QuizleTheme
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.selection.selectable
 import androidx.compose.material3.RadioButtonColors
@@ -17,9 +19,12 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.quizle.presentation.theme.extendedColors
+import com.quizle.presentation.theme.unSelected
 
 
 @Composable
@@ -28,12 +33,21 @@ fun RadioItem(
     isSelected: Boolean,
     onSelectedItem: () -> Unit,
     option: String,
-    colors: RadioButtonColors = RadioButtonDefaults.colors()
+    selectedColor: Color = MaterialTheme.extendedColors.onSurfaceColor,
+    unSelectedColor: Color = Color.unSelected,
+
+
 ) {
+    val colors = RadioButtonDefaults.colors(
+        selectedColor = selectedColor,
+        unselectedColor = unSelectedColor,
+    )
 
     Row(
         modifier = modifier
             .selectable(
+                interactionSource = remember { MutableInteractionSource() },
+                indication = null,
                 selected = isSelected,
                 onClick = onSelectedItem,
                 role = Role.RadioButton
@@ -56,7 +70,6 @@ fun RadioItem(
     }
 }
 
-// --- PREVIEWS ---
 
 @Preview(name = "Radio Group - Light Theme", showBackground = true)
 @Composable
@@ -68,6 +81,7 @@ private fun RadioItemLightPreview() {
         Column(modifier = Modifier.padding(16.dp)) {
             options.forEach { option ->
                 RadioItem(
+                    selectedColor = MaterialTheme.extendedColors.primaryColor,
                     isSelected = (selectedOption == option),
                     onSelectedItem = { selectedOption = option },
                     option = option
@@ -87,6 +101,7 @@ private fun RadioItemDarkPreview() {
         Column(modifier = Modifier.padding(16.dp)) {
             options.forEach { option ->
                 RadioItem(
+                    selectedColor = MaterialTheme.extendedColors.primaryColor,
                     isSelected = (selectedOption == option),
                     onSelectedItem = { selectedOption = option },
                     option = option

@@ -14,6 +14,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.quizle.presentation.theme.QuizleTheme
+import com.quizle.presentation.theme.extendedColors
 
 
 @Composable
@@ -43,7 +44,11 @@ fun BordTextField(
                 }
             },
             keyboardOptions = KeyboardOptions(keyboardType = keyboardType),
-            colors = OutlinedTextFieldDefaults.colors(),
+            colors = OutlinedTextFieldDefaults.colors(
+                focusedTextColor = MaterialTheme.extendedColors.primaryColor,
+                unfocusedTextColor = MaterialTheme.extendedColors.primaryColor,
+
+            ),
             isError = error != null
         )
 

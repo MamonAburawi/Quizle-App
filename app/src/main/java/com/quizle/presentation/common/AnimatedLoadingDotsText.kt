@@ -13,13 +13,14 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.TextUnit
+import com.quizle.presentation.theme.extendedColors
 import kotlinx.coroutines.delay
 
 @Composable
 fun AnimatedLoadingDotsText(
     modifier: Modifier = Modifier,
     text: String,
-    color: Color = Color.Black,
+    color: Color = MaterialTheme.extendedColors.onBackgroundColor,
     fontWeight: FontWeight = FontWeight.Normal,
     fontSize: TextUnit = MaterialTheme.typography.titleLarge.fontSize
 ) {

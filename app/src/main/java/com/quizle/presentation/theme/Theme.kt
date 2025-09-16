@@ -6,139 +6,124 @@ import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.dynamicDarkColorScheme
 import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.Immutable
+import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.graphics.Color
+import com.quizle.presentation.theme.Color.SemanticRed
 import androidx.compose.ui.platform.LocalContext
+import com.quizle.presentation.theme.Color.BackGroundDark
+import com.quizle.presentation.theme.Color.BackGroundLight
+import com.quizle.presentation.theme.Color.PrimaryDark
+import com.quizle.presentation.theme.Color.PrimaryLight
+import com.quizle.presentation.theme.Color.SecondaryDark
+import com.quizle.presentation.theme.Color.SecondaryLight
+import com.quizle.presentation.theme.Color.SurfaceDark
+import com.quizle.presentation.theme.Color.SurfaceLight
+import com.quizle.presentation.theme.Color.TextPrimaryDark
+import com.quizle.presentation.theme.Color.TextPrimaryLight
+import com.quizle.presentation.theme.Color.TextSecondaryDark
+import com.quizle.presentation.theme.Color.TextSecondaryLight
+import androidx.compose.material3.lightColorScheme
+import androidx.compose.runtime.CompositionLocalProvider
 
-
-// Define the two palettes
-val lightScheme = darkColorScheme(
-    primary = PurplePrimary,
-    primaryContainer = PurpleVariant,
-    secondary = DarkSecondaryAccent,
-    background = DarkBackground,
-    surface = DarkSurface,
-    error = SemanticRed,
-    onPrimary = Color.White,
-    onSecondary = DarkBackground,
-    onBackground = DarkOnBackground,
-    onSurface = DarkOnSurface,
-    onError = Color.White
+@Immutable
+data class ExtendedColorScheme(
+    val textPrimaryColor: Color,
+    val textSecondaryColor: Color,
+    val backgroundColor: Color,
+    val surfaceColor: Color,
+    val onSurfaceColor: Color,
+    val onBackgroundColor: Color,
+    val primaryColor: Color,
+    val secondaryColor: Color,
+    val error: Color
 )
 
-val darkScheme = darkColorScheme(
-    primary = PurplePrimary,
-    primaryContainer = PurpleVariant,
-    secondary = LightSecondaryAccent,
-    background = LightBackground,
-    surface = LightSurface,
-    error = SemanticRed,
-    onPrimary = Color.White,
-    onSecondary = Color.White,
-    onBackground = LightOnBackground,
-    onSurface = LightOnSurface,
-    onError = Color.White
+
+// Light Palette
+val lightExtendedColors = ExtendedColorScheme(
+    textPrimaryColor = TextPrimaryLight,
+    textSecondaryColor = TextSecondaryLight,
+    backgroundColor = BackGroundLight,
+    surfaceColor = SurfaceLight,
+    primaryColor = PrimaryLight,
+    secondaryColor = SecondaryLight,
+    onSurfaceColor = TextPrimaryLight,
+    onBackgroundColor = TextPrimaryLight,
+    error = SemanticRed
 )
 
-//
-//private val lightScheme = lightColorScheme(
-//    primary = primaryLight,
-//    onPrimary = onPrimaryLight,
-//    primaryContainer = primaryContainerLight,
-//    onPrimaryContainer = onPrimaryContainerLight,
-//    secondary = secondaryLight,
-//    onSecondary = onSecondaryLight,
-//    secondaryContainer = secondaryContainerLight,
-//    onSecondaryContainer = onSecondaryContainerLight,
-//    tertiary = tertiaryLight,
-//    onTertiary = onTertiaryLight,
-//    tertiaryContainer = tertiaryContainerLight,
-//    onTertiaryContainer = onTertiaryContainerLight,
-//    error = errorLight,
-//    onError = onErrorLight,
-//    errorContainer = errorContainerLight,
-//    onErrorContainer = onErrorContainerLight,
-//    background = backgroundLight,
-//    onBackground = onBackgroundLight,
-//    surface = surfaceLight,
-//    onSurface = onSurfaceLight,
-//    surfaceVariant = surfaceVariantLight,
-//    onSurfaceVariant = onSurfaceVariantLight,
-//    outline = outlineLight,
-//    outlineVariant = outlineVariantLight,
-//    scrim = scrimLight,
-//    inverseSurface = inverseSurfaceLight,
-//    inverseOnSurface = inverseOnSurfaceLight,
-//    inversePrimary = inversePrimaryLight,
-//    surfaceDim = surfaceDimLight,
-//    surfaceBright = surfaceBrightLight,
-//    surfaceContainerLowest = surfaceContainerLowestLight,
-//    surfaceContainerLow = surfaceContainerLowLight,
-//    surfaceContainer = surfaceContainerLight,
-//    surfaceContainerHigh = surfaceContainerHighLight,
-//    surfaceContainerHighest = surfaceContainerHighestLight,
-//)
-//
-//private val darkScheme = darkColorScheme(
-//    primary = primaryDark,
-//    onPrimary = onPrimaryDark,
-//    primaryContainer = primaryContainerDark,
-//    onPrimaryContainer = onPrimaryContainerDark,
-//    secondary = secondaryDark,
-//    onSecondary = onSecondaryDark,
-//    secondaryContainer = secondaryContainerDark,
-//    onSecondaryContainer = onSecondaryContainerDark,
-//    tertiary = tertiaryDark,
-//    onTertiary = onTertiaryDark,
-//    tertiaryContainer = tertiaryContainerDark,
-//    onTertiaryContainer = onTertiaryContainerDark,
-//    error = errorDark,
-//    onError = onErrorDark,
-//    errorContainer = errorContainerDark,
-//    onErrorContainer = onErrorContainerDark,
-//    background = backgroundDark,
-//    onBackground = onBackgroundDark,
-//    surface = surfaceDark,
-//    onSurface = onSurfaceDark,
-//    surfaceVariant = surfaceVariantDark,
-//    onSurfaceVariant = onSurfaceVariantDark,
-//    outline = outlineDark,
-//    outlineVariant = outlineVariantDark,
-//    scrim = scrimDark,
-//    inverseSurface = inverseSurfaceDark,
-//    inverseOnSurface = inverseOnSurfaceDark,
-//    inversePrimary = inversePrimaryDark,
-//    surfaceDim = surfaceDimDark,
-//    surfaceBright = surfaceBrightDark,
-//    surfaceContainerLowest = surfaceContainerLowestDark,
-//    surfaceContainerLow = surfaceContainerLowDark,
-//    surfaceContainer = surfaceContainerDark,
-//    surfaceContainerHigh = surfaceContainerHighDark,
-//    surfaceContainerHighest = surfaceContainerHighestDark,
-//)
-//
+// Dark Palette
+val darkExtendedColors = ExtendedColorScheme(
+    textPrimaryColor = TextPrimaryDark,
+    textSecondaryColor = TextSecondaryDark,
+    backgroundColor = BackGroundDark,
+    surfaceColor = SurfaceDark,
+    primaryColor = PrimaryDark,
+    secondaryColor = SecondaryDark,
+    onSurfaceColor = TextPrimaryDark,
+    onBackgroundColor = TextPrimaryDark,
+    error = SemanticRed
+)
+
+
+
+private val LightColorScheme = lightColorScheme(
+    primary = PrimaryLight,
+    secondary = SecondaryLight,
+    background = BackGroundLight,
+    surface = SurfaceLight,
+    onPrimary = TextPrimaryDark,
+    onSecondary = TextPrimaryDark,
+    onBackground = TextPrimaryLight,
+    onSurface = TextPrimaryLight,
+)
+
+private val DarkColorScheme = darkColorScheme(
+    primary = PrimaryDark,
+    secondary = SecondaryDark,
+    background = BackGroundDark,
+    surface = SurfaceDark,
+    onPrimary = TextPrimaryDark,
+    onSecondary = TextPrimaryDark,
+    onBackground = TextPrimaryDark,
+    onSurface = TextPrimaryDark
+)
+
+
+private val LocalExtendedColors = staticCompositionLocalOf { lightExtendedColors }
+
+val MaterialTheme.extendedColors: ExtendedColorScheme
+    @Composable
+    get() = LocalExtendedColors.current
 
 
 @Composable
 fun QuizleTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
-    // Dynamic color is available on Android 12+
-    dynamicColor: Boolean = false, // change this to true if you want to support dynamic color
-    content: @Composable() () -> Unit
+    dynamicColor: Boolean = false,
+    content: @Composable () -> Unit
 ) {
-  val colorScheme = when {
-      dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
-          val context = LocalContext.current
-          if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
-      }
-      
-      darkTheme -> darkScheme
-      else -> lightScheme
-  }
 
-  MaterialTheme(
-    colorScheme = colorScheme,
-    typography = AppTypography,
-    content = content
-  )
+
+    val colorScheme = when {
+        dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
+            val context = LocalContext.current
+            if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
+        }
+        darkTheme -> DarkColorScheme
+        else -> LightColorScheme
+    }
+
+    // Step B: Select your CUSTOM ExtendedColorScheme
+    val extendedColors = if (darkTheme) darkExtendedColors else lightExtendedColors
+
+    // Step C: Provide the custom colors and apply the standard theme
+    CompositionLocalProvider(LocalExtendedColors provides extendedColors) {
+        MaterialTheme(
+            colorScheme = colorScheme,
+            typography = AppTypography, // Your typography
+            content = content
+        )
+    }
 }
-

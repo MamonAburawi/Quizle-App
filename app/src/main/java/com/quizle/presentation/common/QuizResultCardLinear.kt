@@ -23,6 +23,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.quizle.R
 import com.quizle.presentation.theme.QuizleTheme
+import com.quizle.presentation.theme.error
+import com.quizle.presentation.theme.extendedColors
+import com.quizle.presentation.theme.success
+import com.quizle.presentation.theme.warning
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -38,11 +42,12 @@ fun QuizResultCardLinear(
     topicSubTitle: String,
     onDeleteClick: () -> Unit,
     onTryAgainClick: () -> Unit,
-    // NEW: Colors are now parameters with theme-based defaults
-    colors: CardColors = CardDefaults.cardColors(),
-    successColor: Color = MaterialTheme.colorScheme.primary,
-    warningColor: Color = MaterialTheme.colorScheme.secondary,
-    errorColor: Color = MaterialTheme.colorScheme.error
+    colors: CardColors = CardDefaults.cardColors(
+        containerColor = MaterialTheme.extendedColors.surfaceColor,
+    ),
+    successColor: Color = Color.success,
+    warningColor: Color = Color.warning,
+    errorColor: Color = Color.error
 ) {
     var isExpanded by remember { mutableStateOf(false) }
 
@@ -73,12 +78,13 @@ fun QuizResultCardLinear(
                     Text(
                         text = topicTitle,
                         style = MaterialTheme.typography.titleMedium,
+                        color = MaterialTheme.extendedColors.onSurfaceColor,
                         fontWeight = FontWeight.Bold
                     )
                     Text(
                         text = topicSubTitle,
                         style = MaterialTheme.typography.bodySmall,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                        color = MaterialTheme.extendedColors.onSurfaceColor.copy(alpha = 0.8f)
                     )
                 }
                 Row(
@@ -100,7 +106,7 @@ fun QuizResultCardLinear(
                 }
             }
 
-            Spacer(modifier = Modifier.height(12.dp))
+            Spacer(modifier = Modifier.height(16.dp))
 
             LinearProgressIndicator(
                 progress = { progress },
@@ -116,7 +122,7 @@ fun QuizResultCardLinear(
             Text(
                 text = stringResource(R.string.completion_date_message, formattedDate),
                 style = MaterialTheme.typography.bodySmall,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
+                color = MaterialTheme.extendedColors.onSurfaceColor
             )
 
             AnimatedVisibility(
@@ -131,22 +137,25 @@ fun QuizResultCardLinear(
                     horizontalArrangement = Arrangement.spacedBy(16.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    // NEW: Themed OutlinedButton for the delete action
+
                     OutlinedButton(
                         onClick = onDeleteClick,
                         modifier = Modifier.weight(1f),
-                        colors = ButtonDefaults.outlinedButtonColors(contentColor = MaterialTheme.colorScheme.error),
-                        border = BorderStroke(1.dp, MaterialTheme.colorScheme.error)
+                        colors = ButtonDefaults.outlinedButtonColors(contentColor = MaterialTheme.extendedColors.error),
+                        border = BorderStroke(1.dp, MaterialTheme.extendedColors.error)
                     ) {
                         Icon(imageVector = Icons.Default.Delete, contentDescription = "Delete Quiz")
                         Spacer(modifier = Modifier.width(8.dp))
                         Text(stringResource(R.string.delete))
                     }
-
-                    // NEW: Themed Button for the primary action
+                    Spacer(modifier = Modifier.height(5.dp))
                     Button(
                         onClick = onTryAgainClick,
-                        modifier = Modifier.weight(1f)
+                        modifier = Modifier.weight(1f),
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = MaterialTheme.extendedColors.primaryColor,
+                            contentColor = MaterialTheme.extendedColors.textPrimaryColor
+                        )
                     ) {
                         Icon(imageVector = Icons.Default.Refresh, contentDescription = "Try Again")
                         Spacer(modifier = Modifier.width(8.dp))

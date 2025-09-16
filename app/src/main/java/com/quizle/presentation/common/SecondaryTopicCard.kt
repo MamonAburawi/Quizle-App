@@ -18,6 +18,7 @@ import androidx.compose.ui.unit.dp
 import androidx.core.graphics.toColorInt
 import com.quizle.R
 import com.quizle.presentation.theme.QuizleTheme
+import com.quizle.presentation.theme.extendedColors
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -34,7 +35,7 @@ fun SecondaryTopicCard(
     onFavorite: (Boolean) -> Unit = {},
     isAvailable: Boolean = true,
     isFavorite: Boolean = false,
-    onContainerColor: Color = Color.White // Color for content on top of the hex color
+    onContainerColor: Color = MaterialTheme.extendedColors.onSurfaceColor
 ) {
     Card(
         modifier = modifier.fillMaxWidth(),
@@ -44,10 +45,9 @@ fun SecondaryTopicCard(
         onClick = onCardClick
     ) {
         Column(modifier = Modifier.fillMaxWidth()) {
-            // Top section with dynamic background
             Row(
                 modifier = Modifier
-                    .padding(vertical = 8.dp, horizontal = 16.dp)
+                    .padding(vertical = 6.dp, horizontal = 16.dp)
                     .fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically
             ) {
@@ -61,18 +61,17 @@ fun SecondaryTopicCard(
                         overflow = TextOverflow.Ellipsis
                     )
                 }
-                // Assuming AnimatedLikeStar is designed to work on a dynamic background
+
                 AnimatedLikeStar(
                     initialLikedState = isFavorite,
                     onLikeStateChanged = { onFavorite(!isFavorite) }
                 )
             }
 
-            // Bottom section, now theme-aware
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .background(MaterialTheme.colorScheme.surface) // NEW: Theme-aware background
+                    .background(MaterialTheme.extendedColors.surfaceColor)
                     .padding(16.dp)
             ) {
                 Row(
@@ -84,7 +83,7 @@ fun SecondaryTopicCard(
                         modifier = Modifier.weight(1f, fill = false),
                         text = subtitle,
                         style = MaterialTheme.typography.titleMedium,
-                        color = MaterialTheme.colorScheme.onSurface, // NEW: Theme-aware text
+                        color = MaterialTheme.extendedColors.onSurfaceColor, // NEW: Theme-aware text
                         fontWeight = FontWeight.Bold,
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis
@@ -94,12 +93,11 @@ fun SecondaryTopicCard(
                         Text(
                             modifier = Modifier
                                 .clip(MaterialTheme.shapes.small)
-                                // NEW: Themed "Soon" tag
-                                .background(MaterialTheme.colorScheme.errorContainer)
+                                .background(MaterialTheme.extendedColors.error)
                                 .padding(horizontal = 8.dp, vertical = 4.dp),
                             text = "Soon",
                             style = MaterialTheme.typography.labelMedium,
-                            color = MaterialTheme.colorScheme.onErrorContainer,
+                            color = MaterialTheme.extendedColors.onSurfaceColor,
                             fontWeight = FontWeight.Medium
                         )
                     }
@@ -139,7 +137,7 @@ private fun IconWithText(
     text: String,
     fontSize: TextUnit = MaterialTheme.typography.bodyMedium.fontSize,
     icSize: Dp = 16.dp,
-    contentColor: Color = MaterialTheme.colorScheme.onSurfaceVariant
+    contentColor: Color = MaterialTheme.colorScheme.onSurface
 ) {
     Row(
         modifier = modifier,
@@ -167,9 +165,10 @@ private fun IconWithText(
 fun AnimatedLikeStar(initialLikedState: Boolean, onLikeStateChanged: (Boolean) -> Unit) {
     IconToggleButton(checked = initialLikedState, onCheckedChange = onLikeStateChanged) {
         Icon(
+            modifier = Modifier.size(20.dp),
             painter = if (initialLikedState) painterResource(R.drawable.ic_bookmark_save) else painterResource(R.drawable.ic_bookmark_unsave),
             contentDescription = "Favorite",
-            tint = Color.White
+            tint = Color.Yellow
         )
     }
 }

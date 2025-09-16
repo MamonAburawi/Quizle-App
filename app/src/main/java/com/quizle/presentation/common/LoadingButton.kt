@@ -12,6 +12,10 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
@@ -19,6 +23,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.graphics.Color
+import com.quizle.presentation.theme.extendedColors
 
 
 @Composable
@@ -26,14 +31,19 @@ fun LoadingButton(
     modifier: Modifier = Modifier,
     onClick: ()-> Unit,
     text: String,
-    loadingColor: Color = MaterialTheme.colorScheme.primary,
-    color: Color = MaterialTheme.colorScheme.primary,
+    loadingColor: Color = MaterialTheme.extendedColors.primaryColor,
+    bgColor: Color = MaterialTheme.extendedColors.primaryColor,
     fontSize: TextUnit = MaterialTheme.typography.bodyLarge.fontSize,
     fontWeight: FontWeight = FontWeight.Normal,
     isLoading: Boolean = false,
-    textColor: Color = Color.White
+    contentColor: Color = MaterialTheme.extendedColors.textPrimaryColor
 ) {
-    val buttonColor = if (isLoading) loadingColor else color
+    var buttonColor by mutableStateOf(bgColor)
+
+    LaunchedEffect(isLoading) {
+         buttonColor = if (isLoading) loadingColor else bgColor
+    }
+
     Button(
         modifier = modifier
             .fillMaxWidth()
@@ -53,7 +63,7 @@ fun LoadingButton(
         ) {
             if (isLoading){
                 CircularProgressIndicator(
-                    color = Color.White,
+                    color = contentColor,
                     modifier = Modifier.size(30.dp)
                 )
             }else {
@@ -61,7 +71,7 @@ fun LoadingButton(
                     text = text,
                     fontSize = fontSize,
                     fontWeight = fontWeight,
-                    color = textColor
+                    color = contentColor
                 )
             }
         }

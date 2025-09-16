@@ -8,6 +8,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -23,6 +24,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.quizle.R
 import com.quizle.presentation.theme.QuizleTheme
+import com.quizle.presentation.theme.extendedColors
 
 
 @Composable
@@ -45,6 +47,10 @@ fun BordPasswordTextField(
             onValueChange = { onValueChange(it) },
             isError = !error.isNullOrEmpty(),
             label = { Text(label) },
+            colors = OutlinedTextFieldDefaults.colors(
+                focusedTextColor = MaterialTheme.extendedColors.primaryColor,
+                unfocusedTextColor = MaterialTheme.extendedColors.primaryColor,
+            ),
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
             visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
             trailingIcon = {
@@ -60,7 +66,7 @@ fun BordPasswordTextField(
                 modifier = Modifier.padding(start = 16.dp, top = 4.dp),
                 text = error,
                 style = MaterialTheme.typography.bodySmall,
-                color = MaterialTheme.colorScheme.error
+                color = MaterialTheme.extendedColors.error
             )
         }
     }

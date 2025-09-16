@@ -18,7 +18,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.TextUnit
 import com.quizle.presentation.theme.QuizleTheme
-
+import com.quizle.presentation.theme.extendedColors
 
 
 @Composable
@@ -26,8 +26,8 @@ fun PrimaryAppBar(
     title: String,
     onBack: () -> Unit,
     // NEW: Defaults are now from the MaterialTheme color scheme
-    containerColor: Color = MaterialTheme.colorScheme.surface,
-    contentColor: Color = MaterialTheme.colorScheme.onSurface,
+    containerColor: Color = MaterialTheme.extendedColors.surfaceColor,
+    contentColor: Color = MaterialTheme.extendedColors.onSurfaceColor,
     fontSize: TextUnit = MaterialTheme.typography.titleLarge.fontSize
 ) {
     TopAppBar(
@@ -77,9 +77,7 @@ private fun PrimaryAppBarDarkPreview() {
     QuizleTheme(darkTheme = true) {
         PrimaryAppBar(
             title = "Profile",
-            onBack = {},
-            containerColor = MaterialTheme.colorScheme.primary,
-            contentColor = MaterialTheme.colorScheme.onPrimary
+            onBack = {}
         )
     }
 }

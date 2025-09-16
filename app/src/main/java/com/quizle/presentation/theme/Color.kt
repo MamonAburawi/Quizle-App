@@ -1,6 +1,24 @@
 package com.quizle.presentation.theme
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
+import com.quizle.presentation.theme.Color.BackGroundDark
+import com.quizle.presentation.theme.Color.BackGroundLight
+import com.quizle.presentation.theme.Color.PrimaryDark
+import com.quizle.presentation.theme.Color.PrimaryLight
+import com.quizle.presentation.theme.Color.SecondaryDark
+import com.quizle.presentation.theme.Color.SecondaryLight
+import com.quizle.presentation.theme.Color.SemanticBlue
+import com.quizle.presentation.theme.Color.SemanticGreen
+import com.quizle.presentation.theme.Color.SemanticOrange
+import com.quizle.presentation.theme.Color.SemanticRed
+import com.quizle.presentation.theme.Color.SurfaceDark
+import com.quizle.presentation.theme.Color.SurfaceLight
+import com.quizle.presentation.theme.Color.TextPrimaryDark
+import com.quizle.presentation.theme.Color.TextPrimaryLight
+import com.quizle.presentation.theme.Color.TextSecondaryDark
+import com.quizle.presentation.theme.Color.TextSecondaryLight
+import com.quizle.presentation.theme.Color.unSelectedTabColor
 
 //val primaryLight = Color(0xFF6D5E0F)
 //val onPrimaryLight = Color(0xFFFFFFFF)
@@ -77,35 +95,89 @@ import androidx.compose.ui.graphics.Color
 //val surfaceContainerHighestDark = Color(0xFF38352B)
 
 
-// Brand Colors (used in both themes)
-val PurplePrimary = Color(0xFF6F42C1)
-val PurpleVariant = Color(0xFF4C2A8A)
-
-// Dark Theme specific colors
-val DarkBackground = Color(0xFF1E2741)
-val DarkSurface = Color(0xFF28324E)
-val DarkOnBackground = Color.White
-val DarkOnSurface = Color.White
-val DarkSecondaryAccent = Color(0xFF00FFC0) // Bright Green
-
-// Light Theme specific colors
-val LightBackground = Color(0xFFFFFFFF)
-val LightSurface = Color(0xFFFFFFFF)
-val LightOnBackground = Color(0xFF1A1A1A)
-val LightOnSurface = Color(0xFF1A1A1A)
-val LightSecondaryAccent = Color(0xFF00897B) // Muted Teal for better contrast
-
-// Semantic Colors
-val SemanticRed = Color(0xFFF44336)
-val SemanticGreen = Color(0xFF4CAF50)
-val SemanticOrange = Color(0xFFFFA726)
-
-val SemanticBlue = Color(0xFF2196F3)
+//// Brand Colors (used in both themes)
+//val PurplePrimary = Color(0xFF6F42C1)
+//val PurpleVariant = Color(0xFF4C2A8A)
+//
+//// Dark Theme specific colors
+//val DarkBackground = Color(0xFF1E2741)
+//val DarkSurface = Color(0xFF28324E)
+//val DarkOnBackground = Color.White
+//val DarkOnSurface = Color.White
+//val DarkSecondaryAccent = Color(0xFF00FFC0) // Bright Green
+//val DarkOnSurfaceVariant = Color(0xFF1A1A0F)
+//
+//// Light Theme specific colors
+//val LightBackground = Color(0xFFFFFFFF)
+//val LightSurface = Color(0xFFFFFFFF)
+//val LightOnBackground = Color(0xFF1A1A1A)
+//val LightOnSurface = Color(0xFF1A1A1A)
+//val LightSecondaryAccent = Color(0xFF00897B) // Muted Teal for better contrast
+//val LightOnSurfaceVariant = Color(0xFF133332)
 
 
 
+object Color{
 
-// Theme-aware extension properties for custom semantic colors
+    /** Light Theme Color **/
+    val TextPrimaryLight = Color(0xFFFFFFFF)
+    val TextSecondaryLight = Color(0x772C2828)
+    val BackGroundLight = Color(0xFF1E2741)
+    val SurfaceLight = Color(0xFF28324E)
+    val PrimaryLight = Color(0xE4071D38)
+    val SecondaryLight = Color(0xFF00897B)
+
+
+    /** Dark Theme Color **/
+    val TextPrimaryDark = Color(0xFFFFFFFF)
+    val TextSecondaryDark = Color(0x772C2828)
+    val BackGroundDark = Color(0xFF1E2741)
+    val SurfaceDark = Color(0xFF28324E)
+    val PrimaryDark = Color(0xE4071D38)
+    val SecondaryDark = Color(0xFF00897B)
+
+
+    /** both light and dark theme **/
+    val SemanticRed = Color(0xFFF44336)
+    val SemanticGreen = Color(0xFF4CAF50)
+    val SemanticOrange = Color(0xFFFFA726)
+    val SemanticBlue = Color(0xFF2196F3)
+
+    val unSelectedTabColor = Color(0xFFA0A0A0)
+
+    val CorrectAnswerColor = Color(0xFF1B5E20)
+
+}
+
+
+
+
+val Color.Companion.textPrimaryColor: Color
+    @Composable
+    get() = if (isSystemInDarkTheme()) TextPrimaryDark else TextPrimaryLight
+
+val Color.Companion.textSecondaryColor: Color
+    @Composable
+    get() = if (isSystemInDarkTheme()) TextSecondaryDark else TextSecondaryLight
+
+val Color.Companion.backgroundColor: Color
+    @Composable
+    get() = if (isSystemInDarkTheme()) BackGroundDark else BackGroundLight
+
+val Color.Companion.surfaceColor: Color
+    @Composable
+    get() = if (isSystemInDarkTheme()) SurfaceDark else SurfaceLight
+
+val Color.Companion.primaryColor: Color
+    @Composable
+    get() = if (isSystemInDarkTheme()) PrimaryDark else PrimaryLight
+
+val Color.Companion.secondaryColor: Color
+    @Composable
+    get() = if (isSystemInDarkTheme()) SecondaryDark else SecondaryLight
+
+
+
 val Color.Companion.success: Color
     @Composable
     get() = SemanticGreen
@@ -121,6 +193,10 @@ val Color.Companion.error: Color
 val Color.Companion.info: Color
     @Composable
     get() = SemanticBlue
+
+val Color.Companion.unSelected: Color
+    @Composable
+    get() = unSelectedTabColor
 
 
 

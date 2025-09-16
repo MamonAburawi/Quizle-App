@@ -37,6 +37,7 @@ import com.quizle.presentation.common.LoadingButton
 import com.quizle.presentation.common.ToastMessageController
 import com.quizle.presentation.navigation.navigateToLogin
 import com.quizle.presentation.theme.QuizleTheme
+import com.quizle.presentation.theme.extendedColors
 import com.quizle.presentation.util.LocaleHelper
 import kotlinx.coroutines.flow.Flow
 
@@ -94,29 +95,29 @@ fun SettingsContent(
     val langRes = if (state.selectedLanguage == "en") R.string.english else R.string.arabic
     val isDarkTheme = isSystemInDarkTheme()
 
-    // The background is now theme-aware
     val backgroundBrush = if (isDarkTheme) {
         Brush.verticalGradient(
             colors = listOf(
-                MaterialTheme.colorScheme.surface,
-                MaterialTheme.colorScheme.background
+                MaterialTheme.extendedColors.surfaceColor,
+                MaterialTheme.extendedColors.backgroundColor
             )
         )
     } else {
-        Brush.verticalGradient(colors = listOf(MaterialTheme.colorScheme.background, MaterialTheme.colorScheme.background))
+        Brush.verticalGradient(colors = listOf(MaterialTheme.extendedColors.backgroundColor, MaterialTheme.extendedColors.backgroundColor))
     }
 
     Column(
         modifier = Modifier
             .fillMaxSize()
             .background(backgroundBrush)
+            .padding(bottom = 16.dp)
     ) {
         TopAppBar(
             windowInsets = WindowInsets(0.dp),
             title = { Text(stringResource(R.string.settings), fontWeight = FontWeight.Bold) },
             colors = TopAppBarDefaults.topAppBarColors(
                 containerColor = Color.Transparent,
-                titleContentColor = MaterialTheme.colorScheme.onSurface
+                titleContentColor = MaterialTheme.extendedColors.onSurfaceColor
             )
         )
 
@@ -128,25 +129,25 @@ fun SettingsContent(
         ) {
             Spacer(modifier = Modifier.height(16.dp))
 
-            SectionTitle(title = stringResource(R.string.settings))
+            SectionTitle(title = stringResource(R.string.quiz))
 
             Column(
                 modifier = Modifier
                     .clip(RoundedCornerShape(12.dp))
-                    .background(MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.3f))
+                    .background(MaterialTheme.extendedColors.surfaceColor)
             ) {
                 SettingItem(
                     title = stringResource(R.string.enable_quiz_time),
-                    description = ""
+                    description = stringResource(R.string.quiz_time_toggle_description)
                 ) {
                     Switch(
                         checked = state.isQuizTimeEnabled,
                         onCheckedChange = { onQuizTimeEnabled() },
                         colors = SwitchDefaults.colors(
-                            checkedThumbColor = MaterialTheme.colorScheme.onPrimary,
-                            checkedTrackColor = MaterialTheme.colorScheme.primary,
+                            checkedThumbColor = MaterialTheme.extendedColors.textPrimaryColor,
+                            checkedTrackColor = MaterialTheme.extendedColors.primaryColor,
                             uncheckedThumbColor = MaterialTheme.colorScheme.outline,
-                            uncheckedTrackColor = MaterialTheme.colorScheme.surfaceVariant
+                            uncheckedTrackColor = MaterialTheme.extendedColors.onSurfaceColor
                         )
                     )
                 }
@@ -158,10 +159,10 @@ fun SettingsContent(
                         checked = state.isEnableCustomTimeSwitch,
                         onCheckedChange = { onCustomTimeEnabled() },
                         colors = SwitchDefaults.colors(
-                            checkedThumbColor = MaterialTheme.colorScheme.onPrimary,
-                            checkedTrackColor = MaterialTheme.colorScheme.primary,
+                            checkedThumbColor = MaterialTheme.extendedColors.textPrimaryColor,
+                            checkedTrackColor = MaterialTheme.extendedColors.primaryColor,
                             uncheckedThumbColor = MaterialTheme.colorScheme.outline,
-                            uncheckedTrackColor = MaterialTheme.colorScheme.surfaceVariant
+                            uncheckedTrackColor = MaterialTheme.extendedColors.onSurfaceColor
                         )
                     )
                 }
@@ -178,16 +179,29 @@ fun SettingsContent(
                         },
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(horizontal = 16.dp, vertical = 8.dp),
-                        label = { Text(stringResource(R.string.enable_quiz_time)) },
-                        suffix = { Text(stringResource(R.string.min)) },
+                            .clip(RoundedCornerShape(12.dp))
+                            .padding(horizontal = 16.dp, vertical = 10.dp),
+                        label = { Text(
+                            text = stringResource(R.string.enable_quiz_time),
+//                            color = MaterialTheme.extendedColors.onSurfaceColor.copy(alpha = 0.8f)
+                        ) },
+                        suffix = {
+                            Text(
+                                text = stringResource(R.string.min),
+                                color = MaterialTheme.extendedColors.onSurfaceColor.copy(alpha = 0.8f)
+                            )
+                                 },
                         singleLine = true,
                         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                         colors = TextFieldDefaults.colors(
-                            cursorColor = MaterialTheme.colorScheme.primary,
-                            focusedIndicatorColor = MaterialTheme.colorScheme.primary,
+                            cursorColor = MaterialTheme.extendedColors.primaryColor,
+                            focusedIndicatorColor = MaterialTheme.extendedColors.primaryColor,
                             unfocusedIndicatorColor = MaterialTheme.colorScheme.outline,
-                            unfocusedContainerColor = Color.Transparent
+                            unfocusedContainerColor = Color.Transparent,
+                            unfocusedLabelColor = MaterialTheme.extendedColors.onSurfaceColor.copy(alpha = 0.8f),
+                            focusedLabelColor = MaterialTheme.extendedColors.onSurfaceColor.copy(alpha = 0.8f),
+                            focusedTextColor = MaterialTheme.extendedColors.primaryColor,
+                            unfocusedTextColor = MaterialTheme.extendedColors.onSurfaceColor.copy(alpha = 0.8f)
                         )
                     )
                 }
@@ -200,7 +214,7 @@ fun SettingsContent(
             Column(
                 modifier = Modifier
                     .clip(RoundedCornerShape(12.dp))
-                    .background(MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.3f))
+                    .background(MaterialTheme.extendedColors.surfaceColor)
             ) {
                 SettingItem(title = stringResource(R.string.language)) {
                     Box {
@@ -208,12 +222,12 @@ fun SettingsContent(
                             Modifier.clickable { isLanguageMenuExpanded = true },
                             verticalAlignment = Alignment.CenterVertically
                         ) {
-                            Text(text = stringResource(langRes), color = MaterialTheme.colorScheme.onSurfaceVariant)
+                            Text(text = stringResource(langRes), color = MaterialTheme.extendedColors.onSurfaceColor)
                             Spacer(modifier = Modifier.width(4.dp))
                             Icon(
                                 Icons.AutoMirrored.Filled.ArrowForward,
                                 contentDescription = "Select Language",
-                                tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                                tint = MaterialTheme.colorScheme.onSurface,
                                 modifier = Modifier.size(14.dp)
                             )
                         }
@@ -246,9 +260,9 @@ fun SettingsContent(
                 isLoading = state.isLoading,
                 text = stringResource(R.string.save_changes),
                 onClick = onSaveClicked,
-                modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp),
-                color = MaterialTheme.colorScheme.primary,
-                textColor = MaterialTheme.colorScheme.onPrimary,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 8.dp),
                 fontWeight = FontWeight.Bold
             )
 
@@ -256,8 +270,8 @@ fun SettingsContent(
                 onClick = onLogoutClicked,
                 modifier = Modifier.fillMaxWidth(),
                 shape = RoundedCornerShape(12.dp),
-                colors = ButtonDefaults.outlinedButtonColors(contentColor = MaterialTheme.colorScheme.error),
-                border = BorderStroke(1.dp, MaterialTheme.colorScheme.error)
+                colors = ButtonDefaults.outlinedButtonColors(contentColor = MaterialTheme.extendedColors.error),
+                border = BorderStroke(1.dp, MaterialTheme.extendedColors.error)
             ) {
                 Text(text = stringResource(R.string.logout), fontWeight = FontWeight.Bold)
             }
@@ -271,7 +285,7 @@ fun SectionTitle(title: String) {
     Text(
         text = title,
         style = MaterialTheme.typography.titleSmall,
-        color = MaterialTheme.colorScheme.onSurfaceVariant,
+        color = MaterialTheme.colorScheme.onSurface,
         fontWeight = FontWeight.Bold,
         modifier = Modifier.padding(bottom = 8.dp, start = 4.dp)
     )
@@ -293,14 +307,14 @@ fun SettingItem(
         Column(modifier = Modifier.weight(1f)) {
             Text(
                 text = title,
-                color = MaterialTheme.colorScheme.onSurface,
+                color = MaterialTheme.extendedColors.onSurfaceColor,
                 fontWeight = FontWeight.Medium,
                 fontSize = 16.sp
             )
             if (description != null) {
                 Text(
                     text = description,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    color = MaterialTheme.extendedColors.onSurfaceColor,
                     fontSize = 12.sp
                 )
             }

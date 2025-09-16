@@ -9,6 +9,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.quizle.presentation.theme.QuizleTheme
+import com.quizle.presentation.theme.extendedColors
 
 
 @Composable
@@ -39,20 +40,28 @@ fun ConfirmationDialog(
             },
             confirmButton = {
                 TextButton(onClick = onConfirm) {
-                    Text(positiveBtnText, fontWeight = FontWeight.Bold)
+                    Text(
+                        text = positiveBtnText,
+                        fontWeight = FontWeight.Bold,
+                        color = MaterialTheme.extendedColors.onSurfaceColor
+                    )
                 }
             },
             dismissButton = {
                 if (negativeBtnText != null) {
                     TextButton(onClick = onDismissRequest) {
-                        Text(negativeBtnText, fontWeight = FontWeight.Bold)
+                        Text(
+                            text = negativeBtnText,
+                            fontWeight = FontWeight.Bold,
+                            color = MaterialTheme.extendedColors.onSurfaceColor
+                        )
                     }
                 }
             },
             shape = MaterialTheme.shapes.large,
-            containerColor = MaterialTheme.colorScheme.surface,
-            titleContentColor = MaterialTheme.colorScheme.onSurface,
-            textContentColor = MaterialTheme.colorScheme.onSurfaceVariant
+            containerColor = MaterialTheme.extendedColors.surfaceColor,
+            titleContentColor = MaterialTheme.extendedColors.onSurfaceColor,
+            textContentColor = MaterialTheme.extendedColors.onSurfaceColor.copy(alpha = 0.6f)
         )
     }
 }

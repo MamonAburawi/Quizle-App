@@ -29,7 +29,9 @@ fun QuestionCard(
     question: String,
     options: List<String>,
     explanation: String,
-    colors: CardColors = CardDefaults.cardColors() // Defaults to theme surface color
+    colors: CardColors = CardDefaults.cardColors(
+        containerColor = MaterialTheme.colorScheme.surface
+    )
 ) {
     var expanded by remember { mutableStateOf(false) }
 
@@ -87,7 +89,7 @@ fun QuestionCard(
                             modifier = Modifier.padding(top = 8.dp),
                             text = "${index.getChatFromIndex()} $option",
                             // NEW: Using a theme-aware color
-                            color = MaterialTheme.colorScheme.onSurface,
+                            color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.8f),
                             style = MaterialTheme.typography.bodyLarge
                         )
                     }
@@ -106,7 +108,6 @@ fun QuestionCard(
 }
 
 
-// --- PREVIEWS ---
 
 @Preview(name = "Question Card - Light Theme")
 @Composable

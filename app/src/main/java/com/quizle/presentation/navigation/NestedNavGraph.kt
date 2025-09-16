@@ -1,6 +1,7 @@
 package com.quizle.presentation.navigation
 
 import androidx.compose.foundation.background
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
@@ -10,7 +11,7 @@ import androidx.navigation.compose.composable
 import com.quizle.presentation.common.ToastMessageController
 import com.quizle.presentation.dashboard.Dashboard
 import com.quizle.presentation.dashboard.DashboardViewModel
-import com.quizle.presentation.theme.DarkBackground
+import com.quizle.presentation.theme.extendedColors
 import org.koin.androidx.compose.koinViewModel
 
 
@@ -23,7 +24,7 @@ fun NestedNavGraph(
 ) {
     NavHost(
         modifier = modifier
-            .background(DarkBackground),
+            .background(MaterialTheme.extendedColors.backgroundColor),
         navController = navController,
         startDestination = GraphRoute.Auth
     ) {

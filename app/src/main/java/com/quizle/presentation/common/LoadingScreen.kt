@@ -44,6 +44,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.quizle.presentation.theme.QuizleTheme
+import com.quizle.presentation.theme.extendedColors
 
 
 @Composable
@@ -51,9 +52,8 @@ fun LoadingScreen(
     modifier: Modifier = Modifier,
     isLoading: Boolean = false,
     initMessage: String = "",
-    background: Color = MaterialTheme.colorScheme.background,
-    // The content color now defaults to the theme's onBackground color
-    contentColor: Color = MaterialTheme.colorScheme.onBackground
+    background: Color = MaterialTheme.extendedColors.backgroundColor,
+    contentColor: Color = MaterialTheme.extendedColors.onBackgroundColor
 ) {
     AnimatedVisibility(
         visible = isLoading
@@ -105,60 +105,3 @@ fun LoadingScreenDarkPreview() {
         )
     }
 }
-
-//import androidx.compose.ui.tooling.preview.Preview
-//import androidx.compose.ui.unit.dp
-//import com.quizle.presentation.theme.QuizleTheme
-//
-//@Composable
-//fun LoadingScreen(
-//    modifier: Modifier = Modifier,
-//    background: Color = MaterialTheme.colorScheme.background,
-//    isLoading: Boolean = false,
-//    initMessage: String = "",
-//    contentColor: Color = Color.White
-//) {
-//    AnimatedVisibility(
-//        visible = isLoading
-//    ){
-//        Column(
-//            modifier = modifier.fillMaxSize()
-//                .background(background),
-//            horizontalAlignment = Alignment.CenterHorizontally,
-//            verticalArrangement = Arrangement.Center
-//        ) {
-//            CircularProgressIndicator(
-//                modifier = Modifier.size(25.dp),
-//                color = contentColor
-//            )
-//            Spacer(modifier = Modifier.height(5.dp))
-//            Text(
-//                modifier = Modifier
-//                    .fillMaxWidth(0.8f)
-//                    .padding(top =5.dp),
-//                text = initMessage,
-//                color = contentColor,
-//                fontSize = MaterialTheme.typography.headlineSmall.fontSize,
-//                textAlign = TextAlign.Center
-//            )
-//
-//        }
-//    }
-//
-//
-//
-//}
-//
-//
-//@Preview(showBackground = true)
-//@Composable
-//fun ErrorContentPreview() {
-//    QuizleTheme {
-//        LoadingScreen(
-//            initMessage = "Questions initializing, Please wait...",
-//            isLoading = true,
-//            contentColor = Color.Black
-//        )
-//    }
-//}
-//
