@@ -15,7 +15,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -64,7 +63,7 @@ fun ResultScreenContent(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(paddingValues)
-                .background(MaterialTheme.extendedColors.backgroundColor),
+                .background(MaterialTheme.extendedColors.background),
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
@@ -115,7 +114,7 @@ fun ResultScreenContent(
                             .fillMaxWidth()
                             .padding(16.dp),
                         onClick = onReturnToHome,
-                        colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.extendedColors.primaryColor)
+                        colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.extendedColors.primary)
                     ) {
                         Text(stringResource(R.string.return_home))
                     }
@@ -150,7 +149,7 @@ fun QuestionItem(
             val textColor = when {
                 isThisTheCorrectOption -> Color(0xFF1B5E20) // Dark Green for Correct
                 isThisTheSelectedOption && !isThisTheCorrectOption -> MaterialTheme.extendedColors.error
-                else -> MaterialTheme.extendedColors.onSurfaceColor
+                else -> MaterialTheme.extendedColors.onSurface
             }
             val icon = when {
                 isThisTheCorrectOption -> Icons.Default.CheckCircle
@@ -170,12 +169,12 @@ fun QuestionItem(
             modifier = Modifier.padding(top = 10.dp),
             text = stringResource(R.string.explanation, explanation),
             style = MaterialTheme.typography.bodyMedium,
-            color = MaterialTheme.extendedColors.onSurfaceColor
+            color = MaterialTheme.extendedColors.onSurface
         )
         TextButton(onClick = onReport, modifier = Modifier.align(Alignment.End)) {
             Text(
                 text = stringResource(R.string.report_an_issue),
-                color = MaterialTheme.extendedColors.onSurfaceColor
+                color = MaterialTheme.extendedColors.onSurface
             )
         }
     }

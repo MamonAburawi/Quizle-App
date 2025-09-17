@@ -20,7 +20,7 @@ import kotlinx.coroutines.delay
 fun AnimatedLoadingDotsText(
     modifier: Modifier = Modifier,
     text: String,
-    color: Color = MaterialTheme.extendedColors.onBackgroundColor,
+    color: Color = MaterialTheme.extendedColors.onBackground,
     fontWeight: FontWeight = FontWeight.Normal,
     fontSize: TextUnit = MaterialTheme.typography.titleLarge.fontSize
 ) {

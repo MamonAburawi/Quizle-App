@@ -23,7 +23,7 @@ import com.quizle.presentation.theme.extendedColors
 fun ErrorScreen(
     modifier: Modifier = Modifier,
     error: String,
-    background: Color = MaterialTheme.extendedColors.backgroundColor,
+    background: Color = MaterialTheme.extendedColors.background,
     contentColor: Color = MaterialTheme.extendedColors.error,
     onRefresh: () -> Unit
 ) {

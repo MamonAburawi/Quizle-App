@@ -13,7 +13,6 @@ import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
-import androidx.compose.runtime.snapshots.SnapshotStateMap
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
@@ -31,7 +30,6 @@ import androidx.navigation.NavHostController
 import com.quizle.R
 import com.quizle.domain.module.Question
 import com.quizle.domain.module.Topic
-import com.quizle.domain.module.UserAnswer
 import com.quizle.presentation.common.ConfirmationDialog
 import com.quizle.presentation.common.LoadingScreen
 import com.quizle.presentation.common.PrimaryAppBar
@@ -316,14 +314,14 @@ private fun ProgressTracker(currentQuestionIndex: Int, questionsCount: Int) {
                 .fillMaxWidth()
                 .height(8.dp)
                 .padding(horizontal = 16.dp),
-            color = MaterialTheme.extendedColors.primaryColor,
-            trackColor = MaterialTheme.extendedColors.textPrimaryColor.copy(alpha = 0.8f)
+            color = MaterialTheme.extendedColors.primary,
+            trackColor = MaterialTheme.extendedColors.textPrimary.copy(alpha = 0.8f)
         )
         Text(
             text = "${currentQuestionIndex + 1} / $questionsCount",
             modifier = Modifier.padding(top = 8.dp),
             // NEW: Themed color
-            color = MaterialTheme.extendedColors.onBackgroundColor,
+            color = MaterialTheme.extendedColors.onBackground,
             style = MaterialTheme.typography.bodyMedium,
             fontWeight = FontWeight.SemiBold
         )
@@ -345,15 +343,15 @@ fun QuizOptionButton(
         targetValue = when {
             isAnswered && isCorrect -> correctContainerColor
             isAnswered && isSelected && !isCorrect -> MaterialTheme.extendedColors.error
-            else -> MaterialTheme.extendedColors.surfaceColor
+            else -> MaterialTheme.extendedColors.surface
         },
         label = ""
     )
     val contentColor by animateColorAsState(
         targetValue = when {
             isAnswered && isCorrect -> onCorrectContainerColor
-            isAnswered && isSelected && !isCorrect -> MaterialTheme.extendedColors.onBackgroundColor
-            else -> MaterialTheme.extendedColors.onSurfaceColor
+            isAnswered && isSelected && !isCorrect -> MaterialTheme.extendedColors.onBackground
+            else -> MaterialTheme.extendedColors.onSurface
         },
         label = ""
     )
@@ -399,7 +397,7 @@ fun QuestionSection(
             Text(
                 text = "${currentQuestionIndex + 1}. ${currentQuestion.questionText}",
                 // NEW: Themed color
-                color = MaterialTheme.extendedColors.onBackgroundColor,
+                color = MaterialTheme.extendedColors.onBackground,
                 style = MaterialTheme.typography.headlineSmall,
                 fontWeight = FontWeight.Medium,
             )

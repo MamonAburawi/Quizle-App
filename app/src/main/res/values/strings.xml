@@ -30,7 +30,7 @@
     <string name="error_unauthorized">Unauthorized.</string>
     <string name="error_unknown">An unknown error occurred. Please try again.</string>
     <string name="error_data_conflict">Data conflict. Please review server information and try again.</string>
-    <string name="no_question_found">No question found</string>
+
 
 
 
@@ -114,6 +114,9 @@
     <string name="explanation">Explanation: %1$s</string>
     <string name="quiz_time_toggle_description">When enabled, the quiz will have a countdown timer.</string>
     <string name="quiz">Quiz</string>
+    <string name="welcome_back">Welcome Back</string>
+    <string name="no_question_found">No question found</string>
+    <string name="register_new_info">Register New Account</string>
 
 
 </resources>

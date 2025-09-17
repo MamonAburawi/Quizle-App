@@ -20,17 +20,16 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
 import com.quizle.R
 import com.quizle.data.utils.Gender
 import com.quizle.domain.module.User
-import com.quizle.presentation.common.LoadingButton
+import com.quizle.presentation.common.PrimaryButton
+import com.quizle.presentation.common.TextFieldBox
 import com.quizle.presentation.common.ToastMessageController
 import com.quizle.presentation.theme.QuizleTheme
 import com.quizle.presentation.theme.extendedColors
@@ -100,7 +99,7 @@ fun ProfileContent(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(MaterialTheme.extendedColors.backgroundColor)
+            .background(MaterialTheme.extendedColors.background)
             .padding(15.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
@@ -110,7 +109,7 @@ fun ProfileContent(
             style = MaterialTheme.typography.headlineMedium,
             fontWeight = FontWeight.Bold,
             // NEW: Theme-aware color
-            color = MaterialTheme.extendedColors.onBackgroundColor
+            color = MaterialTheme.extendedColors.onBackground
         )
         Spacer(modifier = Modifier.height(40.dp))
 
@@ -122,24 +121,30 @@ fun ProfileContent(
         )
         Spacer(modifier = Modifier.height(40.dp))
 
-        OutlinedTextField(
+        TextFieldBox(
             value = state.user.userName,
             onValueChange = onFullNameChanged,
-            modifier = Modifier.fillMaxWidth(),
-            label = { Text(text = stringResource(R.string.full_name)) },
-            leadingIcon = {
-                Icon(
-                    imageVector = Icons.Default.Person,
-                    contentDescription = "Full Name Icon"
-                )
-            },
-            singleLine = true,
-            colors = OutlinedTextFieldDefaults.colors(
-//                focusedBorderColor = MaterialTheme.extendedColors.secondaryColor,
-//                unfocusedBorderColor = MaterialTheme.extendedColors.secondaryColor,
-//                cursorColor = MaterialTheme.extendedColors.secondaryColor
-            )
+            hint = stringResource(R.string.full_name),
+            error = state.fullNameError
         )
+//        OutlinedTextField(
+//            value = state.user.userName,
+//            onValueChange = onFullNameChanged,
+//            modifier = Modifier.fillMaxWidth(),
+//            label = { Text(text = stringResource(R.string.full_name)) },
+//            leadingIcon = {
+//                Icon(
+//                    imageVector = Icons.Default.Person,
+//                    contentDescription = "Full Name Icon"
+//                )
+//            },
+//            singleLine = true,
+//            colors = OutlinedTextFieldDefaults.colors(
+////                focusedBorderColor = MaterialTheme.extendedColors.secondaryColor,
+////                unfocusedBorderColor = MaterialTheme.extendedColors.secondaryColor,
+////                cursorColor = MaterialTheme.extendedColors.secondaryColor
+//            )
+//        )
         Spacer(modifier = Modifier.height(30.dp))
 
         GenderSwitch(
@@ -149,15 +154,15 @@ fun ProfileContent(
         Spacer(modifier = Modifier.weight(1f))
 
         // NEW: Themed LoadingButton
-        LoadingButton(
+        PrimaryButton(
             onClick = onSaveButtonClicked,
             modifier = Modifier
                 .fillMaxWidth()
                 .height(50.dp),
             text = stringResource(R.string.save_changes),
             isLoading = state.isLoading,
-            bgColor = MaterialTheme.extendedColors.surfaceColor,
-            contentColor = MaterialTheme.extendedColors.onSurfaceColor
+            bgColor = MaterialTheme.extendedColors.surface,
+            contentColor = MaterialTheme.extendedColors.onSurface
         )
         Spacer(modifier = Modifier.height(40.dp))
     }
@@ -176,7 +181,7 @@ private fun ProfileImage(
                 .size(130.dp)
                 .clip(CircleShape)
                 .background(if (imageUri == null) Color.unSelected else Color.Unspecified)
-                .border(2.dp, MaterialTheme.extendedColors.secondaryColor, CircleShape)
+                .border(2.dp, MaterialTheme.extendedColors.secondary, CircleShape)
                 .clickable(onClick = onImageClick),
             contentAlignment = Alignment.Center
         ) {
@@ -190,7 +195,7 @@ private fun ProfileImage(
             if (isLoading) {
                 CircularProgressIndicator(
                     modifier = Modifier.size(32.dp),
-                    color = MaterialTheme.extendedColors.onBackgroundColor,
+                    color = MaterialTheme.extendedColors.onBackground,
                     strokeWidth = 2.dp
                 )
             }
@@ -212,7 +217,7 @@ fun GenderSwitch(selectedGender: Gender, onGenderSelected: (Gender) -> Unit) {
         Text(
             "Gender",
             // NEW: Theme-aware color
-            color = MaterialTheme.extendedColors.onSurfaceColor,
+            color = MaterialTheme.extendedColors.onSurface,
             style = MaterialTheme.typography.bodyMedium
         )
         Spacer(modifier = Modifier.height(10.dp))
@@ -220,21 +225,21 @@ fun GenderSwitch(selectedGender: Gender, onGenderSelected: (Gender) -> Unit) {
             modifier = Modifier
                 .fillMaxWidth()
                 .clip(RoundedCornerShape(12.dp))
-                .background(MaterialTheme.extendedColors.onSurfaceColor)
+                .background(MaterialTheme.extendedColors.onSurface)
         ) {
             // Animate background color
             val maleBgColor by animateColorAsState(
-                if (selectedGender == Gender.Male) MaterialTheme.extendedColors.primaryColor else Color.Transparent, label = ""
+                if (selectedGender == Gender.Male) MaterialTheme.extendedColors.primary else Color.Transparent, label = ""
             )
             val femaleBgColor by animateColorAsState(
-                if (selectedGender == Gender.Female) MaterialTheme.extendedColors.primaryColor else Color.Transparent, label = ""
+                if (selectedGender == Gender.Female) MaterialTheme.extendedColors.primary else Color.Transparent, label = ""
             )
             // Animate text color for contrast
             val maleTextColor by animateColorAsState(
-                if (selectedGender == Gender.Male) MaterialTheme.extendedColors.textPrimaryColor else MaterialTheme.extendedColors.surfaceColor, label = ""
+                if (selectedGender == Gender.Male) MaterialTheme.extendedColors.textPrimary else MaterialTheme.extendedColors.surface, label = ""
             )
             val femaleTextColor by animateColorAsState(
-                if (selectedGender == Gender.Female) MaterialTheme.extendedColors.textPrimaryColor else MaterialTheme.extendedColors.surfaceColor, label = ""
+                if (selectedGender == Gender.Female) MaterialTheme.extendedColors.textPrimary else MaterialTheme.extendedColors.surface, label = ""
             )
 
             Box(

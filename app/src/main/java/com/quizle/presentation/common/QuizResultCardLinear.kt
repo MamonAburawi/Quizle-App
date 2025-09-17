@@ -43,7 +43,7 @@ fun QuizResultCardLinear(
     onDeleteClick: () -> Unit,
     onTryAgainClick: () -> Unit,
     colors: CardColors = CardDefaults.cardColors(
-        containerColor = MaterialTheme.extendedColors.surfaceColor,
+        containerColor = MaterialTheme.extendedColors.surface,
     ),
     successColor: Color = Color.success,
     warningColor: Color = Color.warning,
@@ -78,13 +78,13 @@ fun QuizResultCardLinear(
                     Text(
                         text = topicTitle,
                         style = MaterialTheme.typography.titleMedium,
-                        color = MaterialTheme.extendedColors.onSurfaceColor,
+                        color = MaterialTheme.extendedColors.onSurface,
                         fontWeight = FontWeight.Bold
                     )
                     Text(
                         text = topicSubTitle,
                         style = MaterialTheme.typography.bodySmall,
-                        color = MaterialTheme.extendedColors.onSurfaceColor.copy(alpha = 0.8f)
+                        color = MaterialTheme.extendedColors.onSurface.copy(alpha = 0.8f)
                     )
                 }
                 Row(
@@ -122,7 +122,7 @@ fun QuizResultCardLinear(
             Text(
                 text = stringResource(R.string.completion_date_message, formattedDate),
                 style = MaterialTheme.typography.bodySmall,
-                color = MaterialTheme.extendedColors.onSurfaceColor
+                color = MaterialTheme.extendedColors.onSurface
             )
 
             AnimatedVisibility(
@@ -153,8 +153,8 @@ fun QuizResultCardLinear(
                         onClick = onTryAgainClick,
                         modifier = Modifier.weight(1f),
                         colors = ButtonDefaults.buttonColors(
-                            containerColor = MaterialTheme.extendedColors.primaryColor,
-                            contentColor = MaterialTheme.extendedColors.textPrimaryColor
+                            containerColor = MaterialTheme.extendedColors.primary,
+                            contentColor = MaterialTheme.extendedColors.textPrimary
                         )
                     ) {
                         Icon(imageVector = Icons.Default.Refresh, contentDescription = "Try Again")

@@ -6,8 +6,6 @@ package com.quizle.presentation.screens.home
 import androidx.annotation.DrawableRes
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.*
-import androidx.compose.animation.expandVertically
-import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -32,7 +30,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import coil3.compose.AsyncImage
 import com.quizle.R
@@ -125,7 +122,7 @@ private fun HomeContent(
     ) {
         LazyVerticalGrid(
             modifier = Modifier.fillMaxSize()
-                .background(MaterialTheme.extendedColors.backgroundColor),
+                .background(MaterialTheme.extendedColors.background),
             columns = GridCells.Fixed(3),
             horizontalArrangement = Arrangement.spacedBy(12.dp),
             verticalArrangement = Arrangement.spacedBy(12.dp),
@@ -319,7 +316,7 @@ private fun LazyGridScope.newVersionUpdateCard(
                         Text(
                             text = stringResource(R.string.new_update_available, versionName),
                             // NEW: Theme-aware color
-                            color = MaterialTheme.extendedColors.onSurfaceColor,
+                            color = MaterialTheme.extendedColors.onSurface,
                             style = MaterialTheme.typography.titleMedium,
                             fontWeight = FontWeight.Bold,
                             modifier = Modifier.weight(1f)
@@ -328,8 +325,8 @@ private fun LazyGridScope.newVersionUpdateCard(
                         Button(
                             onClick = onUpdateButtonClicked,
                             colors = ButtonDefaults.buttonColors(
-                                containerColor = MaterialTheme.extendedColors.primaryColor,
-                                contentColor = MaterialTheme.extendedColors.textPrimaryColor
+                                containerColor = MaterialTheme.extendedColors.primary,
+                                contentColor = MaterialTheme.extendedColors.textPrimary
                             )
                         ) {
                             Text(text = "Update", fontWeight = FontWeight.Bold)

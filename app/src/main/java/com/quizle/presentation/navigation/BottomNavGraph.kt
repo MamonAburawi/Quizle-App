@@ -47,7 +47,7 @@ fun BottomNavGraph(
 ){
     NavHost(
         modifier = Modifier
-            .background(MaterialTheme.extendedColors.backgroundColor),
+            .background(MaterialTheme.extendedColors.background),
         navController = bottomNavController,
         startDestination = startDestination,
     ){

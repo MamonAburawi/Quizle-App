@@ -35,8 +35,8 @@ fun QuizResultCard(
     enableAnimation: Boolean = true,
     // NEW: Card and score colors are now parameters with theme-based defaults
     colors: CardColors = CardDefaults.cardColors(
-        containerColor = MaterialTheme.extendedColors.surfaceColor,
-        contentColor = MaterialTheme.extendedColors.onSurfaceColor
+        containerColor = MaterialTheme.extendedColors.surface,
+        contentColor = MaterialTheme.extendedColors.onSurface
     ),
     successColor: Color = Color.success,
     warningColor: Color = Color.warning,
@@ -76,7 +76,7 @@ fun QuizResultCard(
             Text(
                 text = topicSubTitle,
                 style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.extendedColors.onSurfaceColor,
+                color = MaterialTheme.extendedColors.onSurface,
                 modifier = Modifier.padding(bottom = 12.dp)
             )
 
@@ -110,7 +110,7 @@ fun QuizResultCard(
             Text(
                 text = stringResource(R.string.completion_date_message, formattedDate),
                 style = MaterialTheme.typography.bodySmall,
-                color = MaterialTheme.extendedColors.onSurfaceColor,
+                color = MaterialTheme.extendedColors.onSurface,
                 modifier = Modifier.padding(vertical = 16.dp)
             )
 
@@ -135,12 +135,12 @@ private fun ResultDetail(label: String, value: String) {
         Text(
             text = label,
             style = MaterialTheme.typography.bodyMedium,
-            color = MaterialTheme.extendedColors.onSurfaceColor,
+            color = MaterialTheme.extendedColors.onSurface,
         )
         Text(
             text = value,
             style = MaterialTheme.typography.titleMedium,
-            color = MaterialTheme.extendedColors.onSurfaceColor,
+            color = MaterialTheme.extendedColors.onSurface,
             fontWeight = FontWeight.Bold
         )
     }

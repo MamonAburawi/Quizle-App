@@ -22,7 +22,7 @@ import com.quizle.presentation.theme.extendedColors
 fun PressableText(
     text: String,
     modifier: Modifier = Modifier,
-    defaultColor: Color = MaterialTheme.extendedColors.primaryColor,
+    defaultColor: Color = MaterialTheme.extendedColors.primary,
     pressedColor: Color = defaultColor.copy(alpha = 0.7f),
     fontSize: TextUnit = MaterialTheme.typography.bodyMedium.fontSize,
     fontWeight: FontWeight = FontWeight.Normal,

@@ -10,10 +10,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import com.quizle.presentation.theme.QuizleTheme
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.selection.selectable
-import androidx.compose.material3.RadioButtonColors
 import androidx.compose.material3.RadioButtonDefaults
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -33,11 +31,11 @@ fun RadioItem(
     isSelected: Boolean,
     onSelectedItem: () -> Unit,
     option: String,
-    selectedColor: Color = MaterialTheme.extendedColors.onSurfaceColor,
+    selectedColor: Color = MaterialTheme.extendedColors.onSurface,
     unSelectedColor: Color = Color.unSelected,
 
 
-) {
+    ) {
     val colors = RadioButtonDefaults.colors(
         selectedColor = selectedColor,
         unselectedColor = unSelectedColor,
@@ -81,7 +79,7 @@ private fun RadioItemLightPreview() {
         Column(modifier = Modifier.padding(16.dp)) {
             options.forEach { option ->
                 RadioItem(
-                    selectedColor = MaterialTheme.extendedColors.primaryColor,
+                    selectedColor = MaterialTheme.extendedColors.primary,
                     isSelected = (selectedOption == option),
                     onSelectedItem = { selectedOption = option },
                     option = option
@@ -101,7 +99,7 @@ private fun RadioItemDarkPreview() {
         Column(modifier = Modifier.padding(16.dp)) {
             options.forEach { option ->
                 RadioItem(
-                    selectedColor = MaterialTheme.extendedColors.primaryColor,
+                    selectedColor = MaterialTheme.extendedColors.primary,
                     isSelected = (selectedOption == option),
                     onSelectedItem = { selectedOption = option },
                     option = option

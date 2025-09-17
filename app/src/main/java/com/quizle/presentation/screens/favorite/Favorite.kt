@@ -24,7 +24,7 @@ fun FavoriteContent() {
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(MaterialTheme.extendedColors.backgroundColor),
+            .background(MaterialTheme.extendedColors.background),
         contentAlignment = Alignment.Center
     ) {
 

@@ -3,7 +3,6 @@ package com.quizle.presentation.screens.issue_report
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
@@ -113,53 +112,24 @@ private fun IssueReportContent(
                             onItemSelected = { onAction(IssueReportAction.OnIssueTypeSelected(it)) }
                         )
                         Spacer(modifier = Modifier.height(24.dp))
-                        TextField(
+
+                        TextFieldBox(
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .clip(MaterialTheme.shapes.medium)
                                 .height(200.dp),
-                            maxLines = 10,
-                            minLines = 1,
-                            singleLine = false,
                             value = state.additionalComment ?: "",
                             onValueChange = {
                                 onAction(IssueReportAction.OnAdditionalCommentChanged(it))
-//                        additionalComment = it
                             },
-                            label = {
-                                Text(
-                                    text = stringResource(R.string.additional_comment),
-                                    fontSize = MaterialTheme.typography.bodyMedium.fontSize,
-                                    color = Color.Gray
-                                )
-                            },
-                            colors = TextFieldDefaults.colors(
-                                cursorColor = MaterialTheme.extendedColors.primaryColor,
-                                focusedIndicatorColor = MaterialTheme.extendedColors.primaryColor,
-                                unfocusedIndicatorColor = MaterialTheme.extendedColors.primaryColor,
-                                unfocusedContainerColor = MaterialTheme.extendedColors.onSurfaceColor.copy(
-                                    alpha = 0.7f
-                                ),
-                                focusedContainerColor = MaterialTheme.extendedColors.onSurfaceColor,
-                                unfocusedLabelColor = MaterialTheme.extendedColors.primaryColor.copy(
-                                    alpha = 0.8f
-                                ),
-                                focusedLabelColor = MaterialTheme.extendedColors.primaryColor.copy(
-                                    alpha = 0.8f
-                                ),
-                                focusedTextColor = MaterialTheme.extendedColors.primaryColor,
-                                unfocusedTextColor = MaterialTheme.extendedColors.primaryColor.copy(
-                                    alpha = 0.8f
-                                )
-                            )
+                            hint = stringResource(R.string.additional_comment),
+                            singleLine = false,
+                            minLines = 1,
+                            maxLines = 10
                         )
-
-
-
                     }
 
-
-                    LoadingButton(
+                    PrimaryButton(
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(16.dp),
@@ -167,6 +137,7 @@ private fun IssueReportContent(
                         isLoading = state.submitReportLoading,
                         onClick = { onAction(IssueReportAction.OnSubmit) }
                     )
+
                 }
             }
         }
@@ -208,7 +179,7 @@ fun IssueTypeSection(
 
             Row(verticalAlignment = Alignment.CenterVertically) {
                 RadioItem(
-                    selectedColor = MaterialTheme.extendedColors.onSurfaceColor,
+                    selectedColor = MaterialTheme.extendedColors.onSurface,
                     option = "",
                     isSelected = issueType is IssueType.Other,
                     onSelectedItem = { onItemSelected(IssueType.Other(otherText)) }
@@ -224,7 +195,7 @@ fun IssueTypeSection(
                     label = {
                         Text(
                             text = stringResource(R.string.issue_type_other_label),
-                            color = MaterialTheme.extendedColors.onSurfaceColor.copy(alpha = 0.8f)
+                            color = MaterialTheme.extendedColors.onSurface.copy(alpha = 0.8f)
                         )
                     },
                     singleLine = true,
@@ -233,7 +204,7 @@ fun IssueTypeSection(
                     colors = TextFieldDefaults.colors(
                         focusedContainerColor = Color.Transparent,
                         unfocusedContainerColor = Color.Transparent,
-                        focusedIndicatorColor = MaterialTheme.extendedColors.secondaryColor,
+                        focusedIndicatorColor = MaterialTheme.extendedColors.secondary,
                         unfocusedIndicatorColor = Color.unSelected,
                         errorIndicatorColor = Color.Transparent,
                         errorContainerColor = Color.Transparent

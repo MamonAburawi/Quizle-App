@@ -28,41 +28,41 @@ import androidx.compose.runtime.CompositionLocalProvider
 
 @Immutable
 data class ExtendedColorScheme(
-    val textPrimaryColor: Color,
-    val textSecondaryColor: Color,
-    val backgroundColor: Color,
-    val surfaceColor: Color,
-    val onSurfaceColor: Color,
-    val onBackgroundColor: Color,
-    val primaryColor: Color,
-    val secondaryColor: Color,
+    val textPrimary: Color,
+    val textSecondary: Color,
+    val background: Color,
+    val surface: Color,
+    val onSurface: Color,
+    val onBackground: Color,
+    val primary: Color,
+    val secondary: Color,
     val error: Color
 )
 
 
 // Light Palette
 val lightExtendedColors = ExtendedColorScheme(
-    textPrimaryColor = TextPrimaryLight,
-    textSecondaryColor = TextSecondaryLight,
-    backgroundColor = BackGroundLight,
-    surfaceColor = SurfaceLight,
-    primaryColor = PrimaryLight,
-    secondaryColor = SecondaryLight,
-    onSurfaceColor = TextPrimaryLight,
-    onBackgroundColor = TextPrimaryLight,
+    textPrimary = TextPrimaryLight,
+    textSecondary = TextSecondaryLight,
+    background = BackGroundLight,
+    surface = SurfaceLight,
+    primary = PrimaryLight,
+    secondary = SecondaryLight,
+    onSurface = TextPrimaryLight,
+    onBackground = TextPrimaryLight,
     error = SemanticRed
 )
 
 // Dark Palette
 val darkExtendedColors = ExtendedColorScheme(
-    textPrimaryColor = TextPrimaryDark,
-    textSecondaryColor = TextSecondaryDark,
-    backgroundColor = BackGroundDark,
-    surfaceColor = SurfaceDark,
-    primaryColor = PrimaryDark,
-    secondaryColor = SecondaryDark,
-    onSurfaceColor = TextPrimaryDark,
-    onBackgroundColor = TextPrimaryDark,
+    textPrimary = TextPrimaryDark,
+    textSecondary = TextSecondaryDark,
+    background = BackGroundDark,
+    surface = SurfaceDark,
+    primary = PrimaryDark,
+    secondary = SecondaryDark,
+    onSurface = TextPrimaryDark,
+    onBackground = TextPrimaryDark,
     error = SemanticRed
 )
 

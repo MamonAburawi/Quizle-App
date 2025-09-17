@@ -9,6 +9,7 @@ import com.quizle.data.utils.LogEvent
 import com.quizle.domain.utils.onFailure
 import com.quizle.domain.utils.onSuccess
 import com.quizle.presentation.common.MessageType
+import com.quizle.presentation.util.Validator
 import com.quizle.presentation.util.getErrorMessage
 import kotlinx.coroutines.async
 import kotlinx.coroutines.channels.Channel
@@ -21,6 +22,7 @@ import kotlinx.coroutines.launch
 
 class ProfileViewModel(
     private val userRepository: UserRepositoryImpl,
+    private val validator: Validator
 ): ViewModel() {
 
 
@@ -54,8 +56,12 @@ class ProfileViewModel(
             }
 
             is ProfileAction.OnFullNameTextChanged -> {
-                val fullName = action.fullName
-                _state.update { it.copy(user = it.user.copy(userName = fullName)) }
+                _state.update {
+                    it.copy(
+                        fullNameError = validator.validateUserName(action.fullName),
+                        user = it.user.copy(userName = action.fullName)
+                    )
+                }
             }
 
             is ProfileAction.DeleteImageProfileButtonClicked ->{

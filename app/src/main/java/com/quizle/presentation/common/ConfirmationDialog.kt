@@ -43,7 +43,7 @@ fun ConfirmationDialog(
                     Text(
                         text = positiveBtnText,
                         fontWeight = FontWeight.Bold,
-                        color = MaterialTheme.extendedColors.onSurfaceColor
+                        color = MaterialTheme.extendedColors.onSurface
                     )
                 }
             },
@@ -53,15 +53,15 @@ fun ConfirmationDialog(
                         Text(
                             text = negativeBtnText,
                             fontWeight = FontWeight.Bold,
-                            color = MaterialTheme.extendedColors.onSurfaceColor
+                            color = MaterialTheme.extendedColors.onSurface
                         )
                     }
                 }
             },
             shape = MaterialTheme.shapes.large,
-            containerColor = MaterialTheme.extendedColors.surfaceColor,
-            titleContentColor = MaterialTheme.extendedColors.onSurfaceColor,
-            textContentColor = MaterialTheme.extendedColors.onSurfaceColor.copy(alpha = 0.6f)
+            containerColor = MaterialTheme.extendedColors.surface,
+            titleContentColor = MaterialTheme.extendedColors.onSurface,
+            textContentColor = MaterialTheme.extendedColors.onSurface.copy(alpha = 0.6f)
         )
     }
 }

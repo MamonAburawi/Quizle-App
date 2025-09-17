@@ -35,7 +35,7 @@ fun SecondaryTopicCard(
     onFavorite: (Boolean) -> Unit = {},
     isAvailable: Boolean = true,
     isFavorite: Boolean = false,
-    onContainerColor: Color = MaterialTheme.extendedColors.onSurfaceColor
+    onContainerColor: Color = MaterialTheme.extendedColors.onSurface
 ) {
     Card(
         modifier = modifier.fillMaxWidth(),
@@ -71,7 +71,7 @@ fun SecondaryTopicCard(
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .background(MaterialTheme.extendedColors.surfaceColor)
+                    .background(MaterialTheme.extendedColors.surface)
                     .padding(16.dp)
             ) {
                 Row(
@@ -83,7 +83,7 @@ fun SecondaryTopicCard(
                         modifier = Modifier.weight(1f, fill = false),
                         text = subtitle,
                         style = MaterialTheme.typography.titleMedium,
-                        color = MaterialTheme.extendedColors.onSurfaceColor, // NEW: Theme-aware text
+                        color = MaterialTheme.extendedColors.onSurface, // NEW: Theme-aware text
                         fontWeight = FontWeight.Bold,
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis
@@ -97,7 +97,7 @@ fun SecondaryTopicCard(
                                 .padding(horizontal = 8.dp, vertical = 4.dp),
                             text = "Soon",
                             style = MaterialTheme.typography.labelMedium,
-                            color = MaterialTheme.extendedColors.onSurfaceColor,
+                            color = MaterialTheme.extendedColors.onSurface,
                             fontWeight = FontWeight.Medium
                         )
                     }

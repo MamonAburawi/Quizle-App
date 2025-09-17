@@ -52,8 +52,8 @@ fun LoadingScreen(
     modifier: Modifier = Modifier,
     isLoading: Boolean = false,
     initMessage: String = "",
-    background: Color = MaterialTheme.extendedColors.backgroundColor,
-    contentColor: Color = MaterialTheme.extendedColors.onBackgroundColor
+    background: Color = MaterialTheme.extendedColors.background,
+    contentColor: Color = MaterialTheme.extendedColors.onBackground
 ) {
     AnimatedVisibility(
         visible = isLoading

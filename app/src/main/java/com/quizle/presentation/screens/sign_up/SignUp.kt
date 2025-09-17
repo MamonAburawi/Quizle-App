@@ -22,6 +22,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -32,11 +33,13 @@ import androidx.compose.ui.unit.dp
 import com.quizle.R
 import com.quizle.presentation.common.TextFieldBox
 import com.quizle.presentation.common.TextFieldPassword
-import com.quizle.presentation.common.LoadingButton
+import com.quizle.presentation.common.PrimaryButton
 import com.quizle.presentation.common.PressableText
 import com.quizle.presentation.common.ToastMessageController
 import com.quizle.presentation.navigation.navigateToDashboard
 import com.quizle.presentation.navigation.navigateToLogin
+import com.quizle.presentation.screens.login.LoginAction
+import com.quizle.presentation.theme.Color
 import com.quizle.presentation.theme.extendedColors
 
 @Composable
@@ -71,6 +74,7 @@ fun SignUpScreen(
     SignUpContent(
         state = state,
         onLoginClicked = { onAction(SignUpAction.LoginButtonClicked) },
+        onSignUpClicked = {onAction(SignUpAction.SignUpButtonClicked)},
         onNameChange = { onAction(SignUpAction.NameChanged(it))},
         onEmailChange = { onAction(SignUpAction.EmailChanged(it))},
         onPassChange = { onAction(SignUpAction.PasswordChanged(it)) },
@@ -84,6 +88,7 @@ fun SignUpScreen(
 fun SignUpContent(
     state: SignUpState,
     onLoginClicked: () -> Unit,
+    onSignUpClicked: ()-> Unit,
     onNameChange:(String) -> Unit,
     onEmailChange:(String) -> Unit,
     onPassChange:(String) -> Unit,
@@ -113,7 +118,7 @@ fun SignUpContent(
         Spacer(modifier = Modifier.height(16.dp))
 
         Text(
-            text = stringResource(R.string.resigter),
+            text = stringResource(R.string.register_new_info),
             style = MaterialTheme.typography.bodyMedium,
             textAlign = TextAlign.Center,
             color = MaterialTheme.extendedColors.onSurface
@@ -124,7 +129,7 @@ fun SignUpContent(
         TextFieldBox(
             value = state.name,
             onValueChange = { onNameChange(it) },
-            textPlaceHolder = stringResource(R.string.your_name),
+            hint = stringResource(R.string.your_name),
             error = state.nameFieldErrorMessage,
         )
         Spacer(modifier = Modifier.height(16.dp))
@@ -132,39 +137,30 @@ fun SignUpContent(
         TextFieldBox(
             value = state.email,
             onValueChange = { onEmailChange(it) },
-            textPlaceHolder = stringResource(R.string.email),
+            hint = stringResource(R.string.email),
             error = state.emailFieldErrorMessage,
             keyboardType = KeyboardType.Email
         )
-
         Spacer(modifier = Modifier.height(16.dp))
-
-
         TextFieldPassword(
-            modifier = Modifier.fillMaxWidth(),
             value = state.password,
-            textPlaceHolder = stringResource(R.string.password),
             onValueChange = { onPassChange(it) },
+            hint = stringResource(R.string.password),
             error = state.passwordFieldErrorMessage
         )
         Spacer(modifier = Modifier.height(15.dp))
-
-
         TextFieldPassword(
-            modifier = Modifier.fillMaxWidth(),
             value = state.confirmPassword,
-            textPlaceHolder = stringResource(R.string.confirm_password),
-            onValueChange = {onConfPassChange(it)},
+            onValueChange = { onConfPassChange(it) },
+            hint = stringResource(R.string.confirm_password),
             error = state.confirmPasswordErrorMessage
         )
-
         Spacer(modifier = Modifier.height(40.dp))
-
-        LoadingButton(
+        PrimaryButton(
             text = stringResource(R.string.signup),
             fontWeight = FontWeight.Bold,
             isLoading = state.isLoading,
-            onClick = onLoginClicked
+            onClick = onSignUpClicked
         )
 
         Spacer(modifier = Modifier.height(20.dp))
@@ -202,7 +198,8 @@ fun SignUpPreview() {
         error = null,
         passwordFieldErrorMessage = null,
         emailFieldErrorMessage = null,
-        confirmPasswordErrorMessage = null
+        confirmPasswordErrorMessage = null,
+        nameFieldErrorMessage = null
     )
 
     SignUpContent(
@@ -212,5 +209,6 @@ fun SignUpPreview() {
         onEmailChange = {},
         onPassChange = {},
         onConfPassChange = {},
+        onSignUpClicked = {}
     )
 }

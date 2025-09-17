@@ -9,7 +9,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import com.quizle.presentation.theme.extendedColors
@@ -25,7 +24,7 @@ private fun NotificationContent() {
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(MaterialTheme.extendedColors.backgroundColor),
+            .background(MaterialTheme.extendedColors.background),
         contentAlignment = Alignment.Center
     ) {
 
@@ -33,7 +32,7 @@ private fun NotificationContent() {
             text = "Notification",
             fontSize = MaterialTheme.typography.headlineMedium.fontSize,
             fontWeight = FontWeight.Bold,
-            color = MaterialTheme.extendedColors.onBackgroundColor
+            color = MaterialTheme.extendedColors.onBackground
         )
 
     }

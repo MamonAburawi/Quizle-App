@@ -18,8 +18,8 @@ import com.quizle.presentation.theme.extendedColors
 @Composable
 fun EmptyScreen(
     modifier: Modifier = Modifier,
-    background: Color = MaterialTheme.extendedColors.backgroundColor,
-    contentColor: Color = MaterialTheme.extendedColors.onBackgroundColor,
+    background: Color = MaterialTheme.extendedColors.background,
+    contentColor: Color = MaterialTheme.extendedColors.onBackground,
     message: String
 ) {
     Column(

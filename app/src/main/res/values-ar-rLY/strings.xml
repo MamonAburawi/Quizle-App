@@ -100,4 +100,20 @@
         <string name="validation_passwords_no_match">كلمات المرور غير متطابقة.</string>
 
 
+        <string name="general">عام</string>
+        <string name="hang_tight_your_quiz_is_loading">انتظر قليلاً، جارٍ تحميل اختبارك.</string>
+        <string name="exist_dialog_info">هل أنت متأكد أنك تريد الخروج؟ ستفقد تقدمك.</string>
+        <string name="exit_quiz">الخروج من الاختبار</string>
+        <string name="exit">خروج</string>
+        <string name="cancel">إلغاء</string>
+        <string name="time_s_up">انتهى الوقت!</string>
+        <string name="time_s_up_info">لقد انتهى الوقت المحدد. هيا نرى نتيجتك.</string>
+        <string name="see_result">عرض النتيجة</string>
+        <string name="explanation">الشرح: %1$s</string>
+        <string name="quiz_time_toggle_description">عند التفعيل، سيكون للاختبار مؤقت عد تنازلي.</string>
+        <string name="quiz">اختبار</string>
+        <string name="welcome_back">مرحباً بعودتك</string>
+        <string name="no_question_found">لم يتم العثور على أسئلة</string>
+        <string name="register_new_info">تسجيل حساب جديد</string>
+
 </resources>

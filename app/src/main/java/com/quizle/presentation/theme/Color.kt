@@ -146,6 +146,7 @@ object Color{
     val unSelectedTabColor = Color(0xFFA0A0A0)
 
     val CorrectAnswerColor = Color(0xFF1B5E20)
+    val White = Color(0xFFFFFFFF)
 
 }
 

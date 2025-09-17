@@ -22,8 +22,7 @@ import androidx.navigation.NavController
 import com.quizle.R
 import com.quizle.presentation.common.TextFieldPassword
 import com.quizle.presentation.common.TextFieldBox
-import com.quizle.presentation.common.LoadingButton
-import com.quizle.presentation.common.MessageType
+import com.quizle.presentation.common.PrimaryButton
 import com.quizle.presentation.common.PressableText
 import com.quizle.presentation.common.ToastMessageController
 import com.quizle.presentation.navigation.navigateToDashboard
@@ -31,7 +30,6 @@ import com.quizle.presentation.navigation.navigateToSignUp
 import com.quizle.presentation.theme.QuizleTheme // Assuming you have a theme file
 import com.quizle.presentation.theme.extendedColors
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.emptyFlow
 
 @Composable
 fun LoginScreen(
@@ -41,19 +39,34 @@ fun LoginScreen(
     onAction: (LoginAction) -> Unit,
     event: Flow<LoginEvent>,
 ) {
+
+    LaunchedEffect(key1 = Unit) {
+        event.collect { event ->
+            when (event) {
+                is LoginEvent.NavigateToDashboardScreen -> navController.navigateToDashboard()
+                is LoginEvent.ShowToastMessage -> toastMessageController.showToast(event.message, event.type)
+                is LoginEvent.NavigateToSignUpScreen -> navController.navigateToSignUp()
+            }
+        }
+    }
+
+
     LoginContent(
         state = state,
         onAction = onAction,
-        event = event,
-        navigateToDashboard = {
-            navController.navigateToDashboard()
+        onLoginClick = {
+            onAction(LoginAction.LoginButtonClicked)
         },
-        navigateToSignUp = {
-            navController.navigateToSignUp()
+        onSignUpClick = {
+            onAction(LoginAction.SignUpButtonClicked)
         },
-        onToastMessage = { message, type ->
-            toastMessageController.showToast(message, type)
-        }
+        onRememberMeChanged = {
+            onAction(LoginAction.RememberMeChanged(it))
+        },
+        onPassChanged = {
+            onAction(LoginAction.PasswordChanged(it))
+        },
+
     )
 }
 
@@ -61,20 +74,12 @@ fun LoginScreen(
 fun LoginContent(
     state: LoginState,
     onAction: (LoginAction) -> Unit,
-    event: Flow<LoginEvent>,
-    navigateToDashboard: () -> Unit = {},
-    navigateToSignUp: () -> Unit = {},
-    onToastMessage: (String, MessageType) -> Unit,
+    onRememberMeChanged:(Boolean)-> Unit,
+    onPassChanged:(String)-> Unit,
+    onLoginClick: () -> Unit,
+    onSignUpClick: () -> Unit,
 ) {
-    LaunchedEffect(key1 = Unit) {
-        event.collect { event ->
-            when (event) {
-                is LoginEvent.NavigateToDashboardScreen -> navigateToDashboard()
-                is LoginEvent.ShowToastMessage -> onToastMessage(event.message, event.type)
-                is LoginEvent.NavigateToSignUpScreen -> navigateToSignUp()
-            }
-        }
-    }
+
 
     Surface(
         modifier = Modifier.fillMaxSize(),
@@ -88,33 +93,36 @@ fun LoginContent(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
-            // --- Header Section ---
+
             HeaderSection()
 
             Spacer(modifier = Modifier.height(48.dp))
 
-            // --- Form Section ---
-            EmailField(
+            TextFieldBox(
                 value = state.email,
                 onValueChange = { onAction(LoginAction.EmailChanged(it)) },
-                error = state.emailFieldErrorMessage
+                hint = stringResource(R.string.email),
+                error = state.emailFieldErrorMessage,
+                keyboardType = KeyboardType.Email
             )
-
             Spacer(modifier = Modifier.height(16.dp))
-
-            PasswordField(
+            TextFieldPassword(
                 value = state.password,
-                onValueChange = { onAction(LoginAction.PasswordChanged(it)) },
+                onValueChange = {
+                    onPassChanged(it)
+                },
+                hint = stringResource(R.string.password),
                 error = state.passwordFieldErrorMessage
             )
+
 
             Spacer(modifier = Modifier.height(24.dp))
 
 
             OptionsSection(
                 rememberMeChecked = state.rememberMe,
-                onRememberMeChanged = { onAction(LoginAction.RememberMeChanged(it)) },
-                onForgotPasswordClicked = { }
+                onRememberMeChanged = { onRememberMeChanged(it) },
+                onForgotPasswordClicked = onLoginClick
             )
 
             Spacer(modifier = Modifier.height(32.dp))
@@ -162,35 +170,6 @@ private fun HeaderSection() {
 }
 
 @Composable
-private fun EmailField(
-    value: String,
-    onValueChange: (String) -> Unit,
-    error: String?
-) {
-    TextFieldBox(
-        value = value,
-        onValueChange = onValueChange,
-        textPlaceHolder = stringResource(R.string.email),
-        error = error,
-        keyboardType = KeyboardType.Email
-    )
-}
-
-@Composable
-private fun PasswordField(
-    value: String,
-    onValueChange: (String) -> Unit,
-    error: String?
-) {
-    TextFieldPassword(
-        value = value,
-        onValueChange = onValueChange,
-        textPlaceHolder = stringResource(R.string.password),
-        error = error
-    )
-}
-
-@Composable
 private fun OptionsSection(
     rememberMeChecked: Boolean,
     onRememberMeChanged: (Boolean) -> Unit,
@@ -231,7 +210,7 @@ private fun ActionsSection(
         modifier = Modifier.fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        LoadingButton(
+        PrimaryButton(
             modifier = Modifier.fillMaxWidth(),
             text = stringResource(R.string.login),
             isLoading = isLoading,
@@ -255,7 +234,7 @@ private fun ActionsSection(
     }
 }
 
-// --- Preview ---
+
 
 @Preview(showBackground = true, name = "Login Screen Light")
 @Composable
@@ -274,8 +253,10 @@ fun LoginPreview() {
         LoginContent(
             state = state,
             onAction = {},
-            event = emptyFlow(),
-            onToastMessage = { _, _ -> }
+            onLoginClick = {},
+            onSignUpClick = {},
+            onRememberMeChanged = {},
+            onPassChanged = {},
         )
     }
 }
@@ -284,18 +265,20 @@ fun LoginPreview() {
 @Composable
 fun LoginPreviewDark() {
     val state = LoginState(
-        email = "example@email.com",
-        password = "password123",
+//        email = "example@email.com",
+//        password = "password123",
         rememberMe = true,
         isLoading = false,
-        emailFieldErrorMessage = "Invalid email format" // Previewing an error state
+        emailFieldErrorMessage = null
     )
     QuizleTheme(darkTheme = true) {
         LoginContent(
             state = state,
             onAction = {},
-            event = emptyFlow(),
-            onToastMessage = { _, _ -> }
+            onLoginClick = {},
+            onSignUpClick = {},
+            onRememberMeChanged = {},
+            onPassChanged = {},
         )
     }
 }

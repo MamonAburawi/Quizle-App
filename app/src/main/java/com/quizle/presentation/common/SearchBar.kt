@@ -13,9 +13,6 @@ import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
@@ -34,8 +31,8 @@ fun SearchBar(
     enabled: Boolean = true,
     imeAction: ImeAction = ImeAction.Search,
     onTextChange: (String) -> Unit = {},
-    colorContainer: Color = MaterialTheme.extendedColors.onSurfaceColor,
-    colorContent: Color = MaterialTheme.extendedColors.primaryColor,
+    colorContainer: Color = MaterialTheme.extendedColors.onSurface,
+    colorContent: Color = MaterialTheme.extendedColors.primary,
     onSearchClick: (String) -> Unit = {},
 ) {
     TextField(

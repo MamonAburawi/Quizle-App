@@ -1,14 +1,12 @@
 package com.quizle.presentation.common
 
 import androidx.compose.animation.core.FastOutSlowInEasing
-import androidx.compose.animation.core.RepeatMode
 import androidx.compose.animation.core.animateFloat
 import androidx.compose.animation.core.infiniteRepeatable
 import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -34,9 +32,9 @@ fun TopicCardShimmerEffect(
 ) {
     // NEW: Shimmer colors are now derived from the current theme.
     val shimmerColorShades = listOf(
-        MaterialTheme.extendedColors.onSurfaceColor.copy(0.6f),
-        MaterialTheme.extendedColors.surfaceColor,
-        MaterialTheme.extendedColors.onSurfaceColor.copy(0.6f),
+        MaterialTheme.extendedColors.onSurface.copy(0.6f),
+        MaterialTheme.extendedColors.surface,
+        MaterialTheme.extendedColors.onSurface.copy(0.6f),
     )
 
     Card(

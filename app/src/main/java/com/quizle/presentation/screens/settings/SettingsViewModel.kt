@@ -66,24 +66,24 @@ class SettingsViewModel(
     }
 
     private fun logout() {
-        _state.update { it.copy(isLoading = true, error = null) }
+        _state.update { it.copy(isLoggingOut = true, error = null) }
         viewModelScope.launch {
             userRepository.logout()
                 .onSuccess(
                     onMessageSuccess = {
-                        _state.update { it.copy(isLoading = false) }
                         async { userRepository.logEvent(LogEvent.LOGOUT_EVENT)}.await()
                         _event.send(SettingsEvent.NavigateToSignUp)
+                        _state.update { it.copy(isLoggingOut = false) }
                     }
                 )
                 .onFailure { error ->
-                    _state.update { it.copy(isLoading = false, error = error.getErrorMessage()) }
+                    _state.update { it.copy(isLoggingOut = false, error = error.getErrorMessage()) }
                 }
         }
     }
 
     private fun updateSettings(){
-        _state.update { it.copy(isLoading = true, error = null) }
+        _state.update { it.copy(isLoadingSettings = true, error = null) }
         viewModelScope.launch {
             val isQuizTimeEnabled = _state.value.isQuizTimeEnabled
             val isCustomTimeEnabled = _state.value.isEnableCustomTimeSwitch
@@ -93,7 +93,7 @@ class SettingsViewModel(
 
 
             if (customTimeInMinutes == 0 && isCustomTimeEnabled){
-                _state.update { it.copy(isLoading = false) }
+                _state.update { it.copy(isLoadingSettings = false) }
                 return@launch
             }
 
@@ -108,16 +108,16 @@ class SettingsViewModel(
                 .onSuccess(
                     onMessageSuccess = { message ->
                         viewModelScope.launch {
-                            _state.update { it.copy(isLoading = false) }
                             _event.send(SettingsEvent.ShowToast(message, MessageType.Success))
                             delay(500)
                             _event.send(SettingsEvent.ApplySettings(selectedLanguage))
+                            _state.update { it.copy(isLoadingSettings = false) }
                         }
                     }
                 )
                 .onFailure { error ->
                     _event.send(SettingsEvent.ShowToast(error.getErrorMessage(), MessageType.Error))
-                    _state.update { it.copy(isLoading = false, error = error.getErrorMessage()) }
+                    _state.update { it.copy(isLoadingSettings = false, error = error.getErrorMessage()) }
                 }
 
         }
@@ -125,10 +125,10 @@ class SettingsViewModel(
 
     private fun initSettings(){
         viewModelScope.launch {
-            _state.update { it.copy(isLoading = true, error = null) }
+            _state.update { it.copy(isLoadingSettings = true, error = null) }
             val settings = userRepository.loadSettings()
             _state.update { it.copy(
-                isLoading = false,
+                isLoadingSettings = false,
                 isNotificationsEnabled = settings.isEnableNotificationApp,
                 selectedLanguage = settings.language,
                 isQuizTimeEnabled = settings.isEnableQuizTimeInMin,

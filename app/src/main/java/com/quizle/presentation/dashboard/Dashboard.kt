@@ -190,7 +190,7 @@ fun DashboardBottomBar(
     onItemSelected: (NavBottom) -> Unit
 ) {
     BottomAppBar(
-        containerColor = MaterialTheme.extendedColors.backgroundColor,
+        containerColor = MaterialTheme.extendedColors.background,
         tonalElevation = 0.dp
     ) {
         Row(

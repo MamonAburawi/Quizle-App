@@ -26,7 +26,7 @@ fun TimeDisplay(
     timeInMinutes: Int,
     // NEW: Defaults are now from the MaterialTheme color scheme
     containerColor: Color = MaterialTheme.extendedColors.error,
-    contentColor: Color = MaterialTheme.extendedColors.onSurfaceColor
+    contentColor: Color = MaterialTheme.extendedColors.onSurface
 ) {
     val displayString = when {
         timeInMinutes < 1 -> stringResource(R.string.seconds_short, timeInMinutes * 60)

@@ -24,7 +24,7 @@ fun NestedNavGraph(
 ) {
     NavHost(
         modifier = modifier
-            .background(MaterialTheme.extendedColors.backgroundColor),
+            .background(MaterialTheme.extendedColors.background),
         navController = navController,
         startDestination = GraphRoute.Auth
     ) {

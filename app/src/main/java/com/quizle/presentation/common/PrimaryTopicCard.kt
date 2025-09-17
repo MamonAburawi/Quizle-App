@@ -3,7 +3,6 @@ package com.quizle.presentation.common
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.spring
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsPressedAsState
 import androidx.compose.foundation.layout.*
@@ -35,7 +34,7 @@ fun PrimaryTopicCard(
     timeInMin: Int? = null,
     showQuizTime: Boolean,
     colors: CardColors = CardDefaults.cardColors(
-        containerColor = MaterialTheme.extendedColors.surfaceColor
+        containerColor = MaterialTheme.extendedColors.surface
     )
 ) {
     val scale = remember { Animatable(1f) }
@@ -85,7 +84,7 @@ fun PrimaryTopicCard(
                         .padding(horizontal = 4.dp),
                     text = topicName,
                     // NEW: Text color is now theme-aware
-                    color = MaterialTheme.extendedColors.onSurfaceColor,
+                    color = MaterialTheme.extendedColors.onSurface,
                     fontWeight = FontWeight.Medium,
                     style = MaterialTheme.typography.bodyMedium,
                     maxLines = 2,

@@ -26,8 +26,8 @@ fun PrimaryAppBar(
     title: String,
     onBack: () -> Unit,
     // NEW: Defaults are now from the MaterialTheme color scheme
-    containerColor: Color = MaterialTheme.extendedColors.surfaceColor,
-    contentColor: Color = MaterialTheme.extendedColors.onSurfaceColor,
+    containerColor: Color = MaterialTheme.extendedColors.surface,
+    contentColor: Color = MaterialTheme.extendedColors.onSurface,
     fontSize: TextUnit = MaterialTheme.typography.titleLarge.fontSize
 ) {
     TopAppBar(

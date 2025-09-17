@@ -10,7 +10,10 @@ import com.quizle.presentation.common.ToastMessageController
 import com.quizle.presentation.screens.login.LoginScreen
 import com.quizle.presentation.screens.login.LoginViewModel
 import com.quizle.presentation.screens.sign_up.SignUpScreen
+
 import com.quizle.presentation.screens.sign_up.SignUpViewModel
+
+
 import com.quizle.presentation.screens.splash_screen.SplashScreen
 import com.quizle.presentation.screens.splash_screen.SplashViewModel
 import com.quizle.presentation.util.ScaleTransitionDirection
@@ -70,6 +73,13 @@ fun NavGraphBuilder.authNavGraph(
                 onAction = viewModel::onAction,
                 event = viewModel.event
             )
+//            SignUpScreen(
+//                navController = navController,
+//                state = state,
+//                toastMessageController = toastMessageController,
+//                onAction = viewModel::onAction,
+//                event = viewModel.event
+//            )
         }
 
     }
