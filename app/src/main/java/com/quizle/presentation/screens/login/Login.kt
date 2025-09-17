@@ -1,45 +1,35 @@
 package com.quizle.presentation.screens.login
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material3.Checkbox
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.quizle.R
-import com.quizle.presentation.common.BordTextField
-import com.quizle.presentation.common.BordPasswordTextField
+import com.quizle.presentation.common.TextFieldPassword
+import com.quizle.presentation.common.TextFieldBox
 import com.quizle.presentation.common.LoadingButton
 import com.quizle.presentation.common.MessageType
 import com.quizle.presentation.common.PressableText
 import com.quizle.presentation.common.ToastMessageController
-import com.quizle.presentation.common.rememberToastMessageController
 import com.quizle.presentation.navigation.navigateToDashboard
 import com.quizle.presentation.navigation.navigateToSignUp
+import com.quizle.presentation.theme.QuizleTheme // Assuming you have a theme file
+import com.quizle.presentation.theme.extendedColors
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
 
@@ -50,8 +40,7 @@ fun LoginScreen(
     toastMessageController: ToastMessageController,
     onAction: (LoginAction) -> Unit,
     event: Flow<LoginEvent>,
-){
-
+) {
     LoginContent(
         state = state,
         onAction = onAction,
@@ -66,9 +55,7 @@ fun LoginScreen(
             toastMessageController.showToast(message, type)
         }
     )
-
 }
-
 
 @Composable
 fun LoginContent(
@@ -78,165 +65,203 @@ fun LoginContent(
     navigateToDashboard: () -> Unit = {},
     navigateToSignUp: () -> Unit = {},
     onToastMessage: (String, MessageType) -> Unit,
-
-
-    ) {
-    // Replace with your actual icon resource
-    val appIcon = painterResource(id = R.drawable.ic_app_transparent) // Example icon
-
-
+) {
     LaunchedEffect(key1 = Unit) {
-        event.collect{ event ->
-            when(event){
-                is LoginEvent.NavigateToDashboardScreen ->{
-                    navigateToDashboard()
-                }
-                is LoginEvent.ShowToastMessage -> {
-                    val message = event.message
-                    val toastType = event.type
-                    onToastMessage(message,toastType)
-                    // show toast message
-                }
-                is LoginEvent.NavigateToSignUpScreen ->{
-                    navigateToSignUp()
-                }
-
+        event.collect { event ->
+            when (event) {
+                is LoginEvent.NavigateToDashboardScreen -> navigateToDashboard()
+                is LoginEvent.ShowToastMessage -> onToastMessage(event.message, event.type)
+                is LoginEvent.NavigateToSignUpScreen -> navigateToSignUp()
             }
         }
     }
 
-
-
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(Color.White)
-            .padding(16.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
+    Surface(
+        modifier = Modifier.fillMaxSize(),
+        color = MaterialTheme.colorScheme.background
     ) {
-        // Centered Icon
-        Image(
+        Column(
             modifier = Modifier
-                .size(120.dp)
-                .clip(CircleShape),
-            painter = appIcon,
-            contentDescription = "App Icon",
-
-            )
-
-        Spacer(modifier = Modifier.height(32.dp))
-
-        // Email TextField
-        BordTextField(
-            value = state.email,
-            onValueChange = {
-                onAction(LoginAction.EmailChanged(it))
-            },
-            label = stringResource(R.string.email),
-            error = state.emailFieldErrorMessage,
-            keyboardType = KeyboardType.Email
-        )
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        // Password TextField
-        BordPasswordTextField(
-            modifier = Modifier.fillMaxWidth(),
-            value = state.password,
-            label = stringResource(R.string.password),
-            onValueChange = {
-                onAction(LoginAction.PasswordChanged(it))
-            },
-            error = state.passwordFieldErrorMessage
-        )
-        Spacer(modifier = Modifier.height(15.dp))
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
+                .fillMaxSize()
+                .padding(horizontal = 24.dp)
+                .verticalScroll(rememberScrollState()), // Makes the screen scrollable on smaller devices
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
         ) {
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-            ) {
-                Checkbox(
-                    checked = state.rememberMe,
-                    onCheckedChange = { newState ->
-                        onAction(LoginAction.RememberMeChanged(newState))
-                    }
-                )
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                ) {
-                    Text(
-                        text = stringResource(R.string.remember_me),
-                        fontSize = MaterialTheme.typography.labelMedium.fontSize
-                    )
-                    Spacer(modifier = Modifier.width(5.dp))
-                    Text(
-                        text = stringResource(R.string._3_months),
-                        fontSize = 10.sp,
-                        fontWeight = FontWeight.Bold
-                    )
-                }
+            // --- Header Section ---
+            HeaderSection()
 
+            Spacer(modifier = Modifier.height(48.dp))
 
-            }
-            PressableText(
-                text = stringResource(R.string.forgot_your_password),
-                onClick = {
-
-                },
-                fontWeight = FontWeight.Normal,
-                defaultColor = Color.Black,
-                fontSize = MaterialTheme.typography.labelMedium.fontSize
+            // --- Form Section ---
+            EmailField(
+                value = state.email,
+                onValueChange = { onAction(LoginAction.EmailChanged(it)) },
+                error = state.emailFieldErrorMessage
             )
 
+            Spacer(modifier = Modifier.height(16.dp))
+
+            PasswordField(
+                value = state.password,
+                onValueChange = { onAction(LoginAction.PasswordChanged(it)) },
+                error = state.passwordFieldErrorMessage
+            )
+
+            Spacer(modifier = Modifier.height(24.dp))
+
+
+            OptionsSection(
+                rememberMeChecked = state.rememberMe,
+                onRememberMeChanged = { onAction(LoginAction.RememberMeChanged(it)) },
+                onForgotPasswordClicked = { }
+            )
+
+            Spacer(modifier = Modifier.height(32.dp))
+
+
+            ActionsSection(
+                isLoading = state.isLoading,
+                onLoginClick = { onAction(LoginAction.LoginButtonClicked) },
+                onSignUpClick = { onAction(LoginAction.SignUpButtonClicked) }
+            )
+
+            Spacer(modifier = Modifier.height(24.dp))
         }
-
-        Spacer(modifier = Modifier.height(40.dp))
-
-        LoadingButton(
-            text = stringResource(R.string.login),
-            fontWeight = FontWeight.Bold,
-            isLoading = state.isLoading,
-            onClick = {
-                onAction(LoginAction.LoginButtonClicked)
-            }
-        )
-
-        Spacer(modifier = Modifier.height(20.dp))
-
-        Row(
-            modifier = Modifier,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Text(
-                text = stringResource(R.string.you_don_t_have_an_account),
-                fontSize = MaterialTheme.typography.bodyMedium.fontSize
-            )
-            Spacer(modifier = Modifier.width(5.dp))
-            PressableText(
-                text = stringResource(R.string.signup),
-                fontWeight = FontWeight.Bold,
-                fontSize = MaterialTheme.typography.bodyLarge.fontSize,
-                onClick = {
-                    onAction(LoginAction.SignUpButtonClicked)
-                }
-            )
-        }
-
-
-
     }
 }
 
 
-@Preview(showBackground = true)
+
+@Composable
+private fun HeaderSection() {
+    val appIcon = painterResource(id = R.drawable.ic_app_transparent)
+    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+        Image(
+            painter = appIcon,
+            contentDescription = "App Icon",
+            modifier = Modifier
+                .size(100.dp)
+                .clip(RoundedCornerShape(16.dp))
+        )
+        Spacer(modifier = Modifier.height(16.dp))
+        Text(
+            text = stringResource(R.string.welcome_back),
+            style = MaterialTheme.typography.headlineMedium,
+            fontWeight = FontWeight.Bold,
+            color = MaterialTheme.colorScheme.onBackground
+        )
+        Spacer(modifier = Modifier.height(8.dp))
+        Text(
+            text = stringResource(R.string.login),
+            style = MaterialTheme.typography.bodyMedium,
+            textAlign = TextAlign.Center,
+            color = MaterialTheme.colorScheme.onSurface
+        )
+    }
+}
+
+@Composable
+private fun EmailField(
+    value: String,
+    onValueChange: (String) -> Unit,
+    error: String?
+) {
+    TextFieldBox(
+        value = value,
+        onValueChange = onValueChange,
+        textPlaceHolder = stringResource(R.string.email),
+        error = error,
+        keyboardType = KeyboardType.Email
+    )
+}
+
+@Composable
+private fun PasswordField(
+    value: String,
+    onValueChange: (String) -> Unit,
+    error: String?
+) {
+    TextFieldPassword(
+        value = value,
+        onValueChange = onValueChange,
+        textPlaceHolder = stringResource(R.string.password),
+        error = error
+    )
+}
+
+@Composable
+private fun OptionsSection(
+    rememberMeChecked: Boolean,
+    onRememberMeChanged: (Boolean) -> Unit,
+    onForgotPasswordClicked: () -> Unit
+) {
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            Checkbox(
+                checked = rememberMeChecked,
+                onCheckedChange = onRememberMeChanged,
+            )
+            Text(
+                text = stringResource(R.string.remember_me),
+                style = MaterialTheme.typography.labelMedium,
+                color = MaterialTheme.extendedColors.onBackground
+            )
+        }
+        PressableText(
+            text = stringResource(R.string.forgot_your_password),
+            onClick = onForgotPasswordClicked,
+            fontWeight = FontWeight.Bold,
+            defaultColor = MaterialTheme.extendedColors.onBackground
+        )
+    }
+}
+
+@Composable
+private fun ActionsSection(
+    isLoading: Boolean,
+    onLoginClick: () -> Unit,
+    onSignUpClick: () -> Unit
+) {
+    Column(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        LoadingButton(
+            modifier = Modifier.fillMaxWidth(),
+            text = stringResource(R.string.login),
+            isLoading = isLoading,
+            onClick = onLoginClick
+        )
+        Spacer(modifier = Modifier.height(24.dp))
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            Text(
+                text = stringResource(R.string.you_don_t_have_an_account),
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.extendedColors.onSurface.copy(alpha = 0.8f)
+            )
+            Spacer(modifier = Modifier.width(8.dp))
+            PressableText(
+                text = stringResource(R.string.signup),
+                onClick = onSignUpClick,
+                fontWeight = FontWeight.Bold,
+                defaultColor = MaterialTheme.extendedColors.onSurface
+            )
+        }
+    }
+}
+
+// --- Preview ---
+
+@Preview(showBackground = true, name = "Login Screen Light")
 @Composable
 fun LoginPreview() {
     val state = LoginState(
-        email = "william.henry.harrison@example-pet-store.com",
+        email = "example@email.com",
         password = "password123",
         rememberMe = true,
         isLoading = false,
@@ -245,10 +270,32 @@ fun LoginPreview() {
         emailFieldErrorMessage = null
     )
 
-    LoginContent(
-        state = state,
-        onAction = {},
-        event = emptyFlow(),
-        onToastMessage = { _, _ ->}
+    QuizleTheme {
+        LoginContent(
+            state = state,
+            onAction = {},
+            event = emptyFlow(),
+            onToastMessage = { _, _ -> }
+        )
+    }
+}
+
+@Preview(showBackground = true, name = "Login Screen Dark")
+@Composable
+fun LoginPreviewDark() {
+    val state = LoginState(
+        email = "example@email.com",
+        password = "password123",
+        rememberMe = true,
+        isLoading = false,
+        emailFieldErrorMessage = "Invalid email format" // Previewing an error state
     )
+    QuizleTheme(darkTheme = true) {
+        LoginContent(
+            state = state,
+            onAction = {},
+            event = emptyFlow(),
+            onToastMessage = { _, _ -> }
+        )
+    }
 }
