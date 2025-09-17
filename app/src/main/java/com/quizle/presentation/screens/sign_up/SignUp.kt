@@ -15,32 +15,29 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.quizle.R
-import com.quizle.presentation.common.BordTextField
-import com.quizle.presentation.common.BordPasswordTextField
+import com.quizle.presentation.common.TextFieldBox
+import com.quizle.presentation.common.TextFieldPassword
 import com.quizle.presentation.common.LoadingButton
-import com.quizle.presentation.common.MessageType
 import com.quizle.presentation.common.PressableText
 import com.quizle.presentation.common.ToastMessageController
-import com.quizle.presentation.common.rememberToastMessageController
 import com.quizle.presentation.navigation.navigateToDashboard
 import com.quizle.presentation.navigation.navigateToLogin
-
-import kotlinx.coroutines.flow.emptyFlow
+import com.quizle.presentation.theme.extendedColors
 
 @Composable
 fun SignUpScreen(
@@ -51,20 +48,33 @@ fun SignUpScreen(
     toastMessageController: ToastMessageController
 ){
 
-    // todo: add gender radio button
+
+    LaunchedEffect(key1 = Unit) {
+        event.collect{ event ->
+            when(event){
+                SignUpEvent.NavigateToDashboardScreen -> {
+                    navController.navigateToDashboard()
+                }
+                is SignUpEvent.NavigateToLoginScreen -> {
+                    navController.navigateToLogin()
+                }
+                is SignUpEvent.ShowToastMessage -> {
+                    val message = event.message
+                    val toastType = event.type
+                    toastMessageController.showToast(message, toastType)
+                }
+
+            }
+        }
+    }
+
     SignUpContent(
         state = state,
-        onAction = onAction,
-        event = event,
-        navigateToDashboard = {
-            navController.navigateToDashboard()
-        },
-        navigateToLogin = {
-            navController.navigateToLogin()
-        },
-        onToastMessage = { message, type ->
-            toastMessageController.showToast(message, type)
-        }
+        onLoginClicked = { onAction(SignUpAction.LoginButtonClicked) },
+        onNameChange = { onAction(SignUpAction.NameChanged(it))},
+        onEmailChange = { onAction(SignUpAction.EmailChanged(it))},
+        onPassChange = { onAction(SignUpAction.PasswordChanged(it)) },
+        onConfPassChange = { onAction(SignUpAction.ConfirmPasswordChanged(it)) },
     )
 
 }
@@ -73,104 +83,78 @@ fun SignUpScreen(
 @Composable
 fun SignUpContent(
     state: SignUpState,
-    onAction: (SignUpAction) -> Unit,
-    event: Flow<SignUpEvent>,
-    navigateToDashboard: () -> Unit = {},
-    navigateToLogin: () -> Unit = {},
-    onToastMessage: (String, MessageType) -> Unit,
-    ) {
+    onLoginClicked: () -> Unit,
+    onNameChange:(String) -> Unit,
+    onEmailChange:(String) -> Unit,
+    onPassChange:(String) -> Unit,
+    onConfPassChange:(String) -> Unit
+
+)
+    {
     // Replace with your actual icon resource
     val appIcon = painterResource(id = R.drawable.ic_app_transparent) // Example icon
-    val toastController = rememberToastMessageController(
-        alignment = Alignment.Top
-    )
-
-    LaunchedEffect(key1 = Unit) {
-        event.collect{ event ->
-            when(event){
-                SignUpEvent.NavigateToDashboardScreen -> {
-                    navigateToDashboard()
-                }
-                is SignUpEvent.NavigateToLoginScreen -> {
-                    navigateToLogin()
-                }
-                is SignUpEvent.ShowToastMessage -> {
-                    val message = event.message
-                    val toastType = event.type
-                    onToastMessage(message,toastType)
-                }
-
-            }
-        }
-    }
-
-
 
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color.White)
+            .background(MaterialTheme.extendedColors.background)
             .padding(16.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
-        // Centered Icon
         Image(
-            modifier = Modifier
-                .size(120.dp)
-                .clip(CircleShape),
             painter = appIcon,
             contentDescription = "App Icon",
+            modifier = Modifier
+                .size(100.dp)
+                .clip(RoundedCornerShape(16.dp))
+        )
 
-            )
+        Spacer(modifier = Modifier.height(16.dp))
+
+        Text(
+            text = stringResource(R.string.resigter),
+            style = MaterialTheme.typography.bodyMedium,
+            textAlign = TextAlign.Center,
+            color = MaterialTheme.extendedColors.onSurface
+        )
 
         Spacer(modifier = Modifier.height(32.dp))
 
-        // Email TextField
-        BordTextField(
+        TextFieldBox(
             value = state.name,
-            onValueChange = {
-                onAction(SignUpAction.NameChanged(it))
-            },
-            label = stringResource(R.string.your_name),
+            onValueChange = { onNameChange(it) },
+            textPlaceHolder = stringResource(R.string.your_name),
             error = state.nameFieldErrorMessage,
         )
         Spacer(modifier = Modifier.height(16.dp))
 
-
-        // Email TextField
-        BordTextField(
+        TextFieldBox(
             value = state.email,
-            onValueChange = {
-                onAction(SignUpAction.EmailChanged(it))
-            },
-            label = stringResource(R.string.email),
+            onValueChange = { onEmailChange(it) },
+            textPlaceHolder = stringResource(R.string.email),
             error = state.emailFieldErrorMessage,
             keyboardType = KeyboardType.Email
         )
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        // Password TextField
-        BordPasswordTextField(
+
+        TextFieldPassword(
             modifier = Modifier.fillMaxWidth(),
             value = state.password,
-            label = stringResource(R.string.password),
-            onValueChange = {
-                onAction(SignUpAction.PasswordChanged(it))
-            },
+            textPlaceHolder = stringResource(R.string.password),
+            onValueChange = { onPassChange(it) },
             error = state.passwordFieldErrorMessage
         )
         Spacer(modifier = Modifier.height(15.dp))
 
-        // Password TextField
-        BordPasswordTextField(
+
+        TextFieldPassword(
             modifier = Modifier.fillMaxWidth(),
             value = state.confirmPassword,
-            label = stringResource(R.string.confirm_password),
-            onValueChange = {
-                onAction(SignUpAction.ConfirmPasswordChanged(it))
-            },
+            textPlaceHolder = stringResource(R.string.confirm_password),
+            onValueChange = {onConfPassChange(it)},
             error = state.confirmPasswordErrorMessage
         )
 
@@ -180,32 +164,26 @@ fun SignUpContent(
             text = stringResource(R.string.signup),
             fontWeight = FontWeight.Bold,
             isLoading = state.isLoading,
-            onClick = {
-                onAction(SignUpAction.SignUpButtonClicked)
-            }
+            onClick = onLoginClicked
         )
 
         Spacer(modifier = Modifier.height(20.dp))
 
-        Row(
-            modifier = Modifier,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
+        Spacer(modifier = Modifier.height(24.dp))
+        Row(verticalAlignment = Alignment.CenterVertically) {
             Text(
-                text = "You don't have an account",
-                fontSize = MaterialTheme.typography.bodyMedium.fontSize
+                text = stringResource(R.string.you_don_t_have_an_account),
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.extendedColors.onSurface.copy(alpha = 0.8f)
             )
-            Spacer(modifier = Modifier.width(5.dp))
+            Spacer(modifier = Modifier.width(8.dp))
             PressableText(
                 text = stringResource(R.string.login),
+                onClick = onLoginClicked,
                 fontWeight = FontWeight.Bold,
-                fontSize = MaterialTheme.typography.bodyLarge.fontSize,
-                onClick = {
-                    onAction(SignUpAction.LoginButtonClicked)
-                }
+                defaultColor = MaterialTheme.extendedColors.onSurface
             )
         }
-
 
 
     }
@@ -214,7 +192,7 @@ fun SignUpContent(
 
 @Preview(showBackground = true)
 @Composable
-fun LoginPreview() {
+fun SignUpPreview() {
     val state = SignUpState(
         name = "Ahmed",
         email = "william.henry.harrison@example-pet-store.com",
@@ -229,8 +207,10 @@ fun LoginPreview() {
 
     SignUpContent(
         state = state,
-        onAction = {},
-        event = emptyFlow(),
-        onToastMessage = { _, _ ->}
+        onLoginClicked = {},
+        onNameChange = {},
+        onEmailChange = {},
+        onPassChange = {},
+        onConfPassChange = {},
     )
 }
