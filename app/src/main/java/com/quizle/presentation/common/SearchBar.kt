@@ -13,10 +13,16 @@ import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.quizle.presentation.theme.QuizleTheme
@@ -28,28 +34,32 @@ fun SearchBar(
     modifier: Modifier = Modifier,
     hint: String = "",
     text: String,
-    enabled: Boolean = true,
-    imeAction: ImeAction = ImeAction.Search,
+    isLoading: Boolean = true,
     onTextChange: (String) -> Unit = {},
     colorContainer: Color = MaterialTheme.extendedColors.onSurface,
     colorContent: Color = MaterialTheme.extendedColors.primary,
     onSearchClick: (String) -> Unit = {},
 ) {
-    TextField(
+    var isEnabled by remember { mutableStateOf(true) }
+
+    LaunchedEffect(isLoading) {
+        isEnabled = !isLoading
+    }
+
+    TextFieldBox(
         modifier = modifier
-            .fillMaxWidth()
-            .height(56.dp) // Standard height for text fields
-            .clip(RoundedCornerShape(50)), // Fully rounded corners
+            .fillMaxWidth(),
         value = text,
         onValueChange = onTextChange,
-        enabled = enabled,
-        placeholder = {
-            Text(
-                text = hint,
-                style = MaterialTheme.typography.bodyLarge,
-                color = colorContent.copy(alpha = 0.5f) // Correct placeholder color
-            )
-        },
+        enabled = isEnabled,
+        hint = hint,
+        shape = RoundedCornerShape(50.dp),
+        hintColor = colorContent.copy(alpha = 0.5f),
+        textColor = colorContent,
+        cursorColor = colorContent,
+        focusContainerColor = colorContainer,
+        unFocusContainerColor = colorContainer,
+        keyboardType = KeyboardType.Text,
         leadingIcon = {
             IconButton(onClick = { onSearchClick(text) }) {
                 Icon(
@@ -71,18 +81,10 @@ fun SearchBar(
             }
         },
         maxLines = 1,
-        keyboardOptions = KeyboardOptions(imeAction = imeAction),
+        imeAction = ImeAction.Search,
         keyboardActions = KeyboardActions(onSearch = { onSearchClick(text) }),
-        shape = RoundedCornerShape(50),
-        colors = TextFieldDefaults.colors(
-            focusedIndicatorColor = colorContent,
-            unfocusedIndicatorColor = colorContent,
-            disabledIndicatorColor = colorContent,
-            focusedContainerColor = colorContainer,
-            unfocusedContainerColor = colorContainer,
-            focusedTextColor = colorContent,
-            unfocusedTextColor = colorContent,
-        )
+        singleLine = true,
+        minLines = 1
     )
 }
 
@@ -103,16 +105,3 @@ private fun SearchBarEmptyLightPreview() {
     }
 }
 
-@Preview(name = "Search Bar With Text - Dark")
-@Composable
-private fun SearchBarWithTextDarkPreview() {
-    QuizleTheme(darkTheme = true) {
-        Box(modifier = Modifier.padding(16.dp)) {
-            SearchBar(
-                hint = "Search topics...",
-                text = "Android",
-                onTextChange = { }
-            )
-        }
-    }
-}

@@ -73,7 +73,8 @@ private fun TopicContent(
                     searchQuery = it
                 }, // Update text in state
                 hint = stringResource(R.string.search_for_title_subtitle_or_tag),
-                onSearchClick = onSearchClick
+                onSearchClick = onSearchClick,
+                isLoading = state.isLoading
             )
         }
     ) { innerPadding ->

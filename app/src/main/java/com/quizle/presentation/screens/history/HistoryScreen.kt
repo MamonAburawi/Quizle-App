@@ -67,6 +67,7 @@ private fun HistoryContent(
                 }, // Update text in state
                 hint = stringResource(R.string.search_for_title_subtitle_or_tag),
                 onSearchClick = onSearchClick,
+                isLoading = state.isLoading,
                 text = searchQuery
             )
         }

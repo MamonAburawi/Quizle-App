@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -21,7 +22,9 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
@@ -36,6 +39,7 @@ import kotlin.math.max
 fun TextFieldBox(
     modifier: Modifier = Modifier,
     value: String,
+    shape: Shape = RoundedCornerShape(8.dp),
     visualTransformation: VisualTransformation = VisualTransformation.None,
     onValueChange: (String) -> Unit,
     hint: String? = null,
@@ -53,13 +57,18 @@ fun TextFieldBox(
     singleLine: Boolean = true,
     maxLines: Int = if (singleLine) 1 else Int.MAX_VALUE,
     minLines: Int = 1,
+    enabled: Boolean = true,
+    keyboardActions: KeyboardActions = KeyboardActions.Default,
+    imeAction: ImeAction = ImeAction.Unspecified
 ) {
     Column {
         OutlinedTextField(
             modifier = modifier
-                .fillMaxWidth()
-                .clip(RoundedCornerShape(8.dp)),
+                .fillMaxWidth(),
+            shape = shape,
             value = value,
+            keyboardActions = keyboardActions,
+            enabled = enabled,
             leadingIcon = leadingIcon,
             trailingIcon = trailingIcon,
             singleLine = singleLine,
@@ -79,7 +88,7 @@ fun TextFieldBox(
                     )
                 }
             },
-            keyboardOptions = KeyboardOptions(keyboardType = keyboardType),
+            keyboardOptions = KeyboardOptions(keyboardType = keyboardType, imeAction = imeAction),
             colors = OutlinedTextFieldDefaults.colors(
                 focusedTextColor = textColor,
                 unfocusedTextColor = textColor,
@@ -87,6 +96,14 @@ fun TextFieldBox(
                 unfocusedContainerColor = unFocusContainerColor,
                 focusedContainerColor = focusContainerColor,
                 errorContainerColor = focusContainerColor,
+                disabledContainerColor = focusContainerColor,
+                disabledTextColor = textColor,
+                disabledLeadingIconColor = textColor,
+                disabledTrailingIconColor = textColor,
+                disabledBorderColor = focusContainerColor,
+                disabledPlaceholderColor = hintColor,
+                disabledSuffixColor = textColor,
+                disabledPrefixColor = textColor,
                 cursorColor = cursorColor,
             ),
             isError = error != null
@@ -241,7 +258,7 @@ private fun TextFieldBoxPreview() {
             onValueChange = {},
             hint = "Email",
             keyboardType = KeyboardType.Email,
-            error = "Invalid Email"
+            error = "Invalid Email",
         )
     }
 }
